@@ -431,6 +431,69 @@ input[type=range]::-moz-range-thumb{
   padding:5px 0;color:var(--encre2)}
 .exo .verifier input{margin-top:4px;width:16px;height:16px;accent-color:var(--vert);flex:none}
 
+/* ──────────────────────────── series d'entrainement
+   Le tableau a remplir du polycopie, en deux colonnes d'items. Il travaille,
+   il ne corrige pas : une croix sur l'item faux, jamais la valeur attendue. */
+.serie{margin:22px 0;max-width:660px;background:var(--carte);
+  border:1px solid var(--trait2);border-left:3px solid var(--tiede);
+  border-radius:var(--r);padding:16px 18px 18px;box-shadow:var(--ombre)}
+.serie>.k{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--tiede);margin:0 0 6px;font-weight:600}
+.serie h4{margin:0 0 8px;font-size:17px;font-weight:700;letter-spacing:-.01em}
+.serie .enonce>*:last-child{margin-bottom:0}
+.serie.fait{border-left-color:var(--froid)}
+
+.serie ol.items{display:grid;grid-template-columns:1fr 1fr;gap:6px 22px;
+  margin:13px 0 0;padding:0;list-style:none;counter-reset:it}
+.serie ol.items.larges{grid-template-columns:1fr}
+.serie ol.items li{display:flex;align-items:center;justify-content:space-between;
+  gap:10px;padding:6px 8px;border-radius:var(--r);border:1px solid transparent}
+.serie ol.items li .q{font-size:16px;color:var(--encre)}
+.serie ol.items li.juste{border-color:var(--vert);background:var(--carte2)}
+.serie ol.items li.faux{border-color:var(--chaud);background:var(--carte2)}
+.serie .rep{display:flex;align-items:center;gap:6px;flex:none}
+.serie input[type=text]{font-family:"IBM Plex Mono",monospace;font-size:15.5px;
+  color:var(--encre);background:var(--fond);border:1px solid var(--trait);
+  border-radius:var(--r);padding:6px 9px;width:88px;text-align:right}
+.serie input:focus{outline:2px solid var(--vert);outline-offset:1px;
+  border-color:var(--vert)}
+/* une reponse en mots a besoin de place, et se lit de gauche a droite */
+.serie input.texte{width:138px;text-align:left;font-size:14.5px}
+.serie .unite{font-family:"IBM Plex Mono",monospace;font-size:12.5px;
+  color:var(--encre2);min-width:1.5em}
+.serie .marque{font-size:15px;font-weight:700;width:1em;text-align:center}
+.serie li.juste .marque{color:var(--vert)}
+.serie li.faux .marque{color:var(--chaud)}
+
+.serie .barre{display:flex;flex-wrap:wrap;gap:9px;margin:15px 0 0}
+.serie .btn{font-family:"Bricolage Grotesque",sans-serif;font-size:13.5px;font-weight:600;
+  cursor:pointer;color:var(--fond);background:var(--tiede);border:1px solid var(--tiede);
+  border-radius:var(--r);padding:9px 16px}
+.serie .btn:hover{filter:brightness(1.08)}
+.serie .btn.creux{color:var(--encre2);background:none;border-color:var(--trait)}
+.serie .btn.creux:hover{color:var(--tiede);border-color:var(--tiede);filter:none}
+.serie .btn:focus-visible{outline:2px solid var(--froid);outline-offset:2px}
+.serie .verdict{margin:11px 0 0;font-size:15.5px;color:var(--encre2);min-height:1px}
+.serie .verdict.juste{color:var(--vert);font-weight:600}
+.serie .verdict.faux{color:var(--chaud);font-weight:600}
+.serie .verdict.deja{color:var(--froid)}
+.serie .indice{margin:12px 0 0;padding:11px 14px;border-radius:var(--r);
+  background:var(--carte2);border-left:2px solid var(--tiede);
+  font-size:15.5px;color:var(--encre2)}
+.serie .indice::before{content:"Indice — ";font-family:"Bricolage Grotesque",sans-serif;
+  font-weight:700;color:var(--tiede)}
+
+/* Sous 700 px la grille passe a une colonne : deux items cote a cote y
+   reduiraient la case de saisie a rien. */
+@media (max-width:700px){
+  .serie ol.items{grid-template-columns:1fr;gap:4px}
+}
+@media (max-width:560px){
+  .serie{padding:14px 15px 16px}
+  .serie input[type=text]{width:76px;padding:9px}
+  .serie .btn{padding:12px 18px;font-size:15px}
+}
+
 @media (max-width:560px){
   .exo{padding:15px 16px 17px}
   .exo input[type=text]{width:100%}

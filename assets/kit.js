@@ -102,6 +102,12 @@ function aplat(s){
   return (s.normalize?s.normalize("NFD").replace(/[\u0300-\u036f]/g,""):s)
          .toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
 }
+function memeTexte(a,b){
+  /* « 1,5 m », « 1,5m » et « 1.5 m » sont la meme reponse : l'eleve tape vite,
+     et l'espace avant l'unite n'est pas ce qu'on evalue. */
+  var x=aplat(a),y=aplat(b);
+  return x===y||x.replace(/ /g,"")===y.replace(/ /g,"");
+}
 function nombre(s){
   /* « 1 376 » et « 1,38 » et « 1.38e3 » : l'eleve tape comme il veut */
   var t=s.replace(/\s/g,"").replace(",",".");   /* \s couvre U+00A0 et U+202F */
@@ -197,6 +203,96 @@ function nombre(s){
 });
 
 
+
+/* ───────────────────────────────── series d'entrainement
+   Le pendant web du tableau a remplir du polycopie : une case par item, on
+   remplit, on verifie tout d'un coup. Meme regle que l'exercice — la page dit
+   juste ou faux et rappelle la methode, elle ne donne jamais la reponse.
+   Une case fausse GARDE ce qui a ete tape : on corrige, on ne recommence pas. */
+[].forEach.call(document.querySelectorAll(".serie"),function(se){
+  var sec;try{sec=JSON.parse(atob(se.getAttribute("data-a")).split("").map(
+    function(c){return String.fromCharCode(c.charCodeAt(0)^0x5A);}).join(""));}
+  catch(e){return;}
+  var id=se.getAttribute("data-serie");
+  var items=[].slice.call(se.querySelectorAll("ol.items > li"));
+  var indice=se.querySelector(".indice"), cases=[];
+
+  items.forEach(function(li,i){
+    var d=(sec.i||[])[i]||{};
+    var rep=E("span",{"class":"rep"});
+    var inp=E("input",{type:"text",autocomplete:"off",
+      inputmode:d.v!==undefined?"decimal":"text",
+      "class":d.v!==undefined?"":"texte",
+      "aria-label":"Réponse"});
+    rep.appendChild(inp);
+    if(sec.u)rep.appendChild(E("span",{"class":"unite"},sec.u));
+    var mq=E("span",{"class":"marque"},"");
+    rep.appendChild(mq);
+    li.appendChild(rep);
+    cases.push({e:inp,m:mq,d:d,li:li});
+    inp.addEventListener("input",function(){
+      li.classList.remove("juste","faux");mq.textContent="";
+    });
+    inp.addEventListener("keydown",function(ev){
+      if(ev.key!=="Enter")return;
+      ev.preventDefault();
+      if(i+1<cases.length)cases[i+1].e.focus();else juger();
+    });
+  });
+
+  function juste(d,txt){
+    if(!txt.trim())return null;                    /* non traite */
+    if(d.v!==undefined){
+      var v=nombre(txt);
+      if(isNaN(v))return false;
+      return Math.abs(v-d.v)<=Math.abs(d.v)*(sec.tol/100)+1e-9;
+    }
+    return !!txt.trim()&&(d.a||[]).some(function(a){return memeTexte(a,txt);});
+  }
+
+  var verdict=E("p",{"class":"verdict"},"");
+  var valider=E("button",{type:"button","class":"btn"},"Vérifier la série");
+  var barre=E("div",{"class":"barre"});
+  barre.appendChild(valider);
+  if(indice){
+    var bi=E("button",{type:"button","class":"btn creux"},"Voir l’indice");
+    bi.addEventListener("click",function(){
+      indice.hidden=!indice.hidden;
+      bi.textContent=indice.hidden?"Voir l’indice":"Masquer l’indice";
+    });
+    barre.appendChild(bi);
+  }
+  se.appendChild(barre);se.appendChild(verdict);
+  if(indice)se.appendChild(indice);
+
+  function juger(){
+    var bons=0,faux=0,vides=0;
+    cases.forEach(function(c){
+      var r=juste(c.d,c.e.value);
+      c.li.classList.remove("juste","faux");
+      if(r===null){vides++;c.m.textContent="";return;}
+      if(r){bons++;c.li.classList.add("juste");c.m.textContent="✓";}
+      else {faux++;c.li.classList.add("faux");c.m.textContent="✗";}
+    });
+    var tout=bons===cases.length;
+    verdict.className="verdict "+(tout?"juste":(faux?"faux":""));
+    var reste=[];
+    if(faux)reste.push(faux+" à reprendre");
+    if(vides)reste.push(vides+(vides>1?" non traitées":" non traitée"));
+    verdict.textContent=tout
+      ?"La série entière est juste."
+      :bons+" sur "+cases.length+(reste.length?" — "+reste.join(", "):"")+".";
+    if(tout)se.classList.add("fait");else se.classList.remove("fait");
+    exoNote(id,tout?"juste":"vu");
+    if(faux&&indice)indice.hidden=false;
+  }
+  valider.addEventListener("click",juger);
+
+  if(exoLu()[id]==="juste"){
+    se.classList.add("fait");
+    verdict.className="verdict deja";verdict.textContent="Déjà réussie.";
+  }
+});
 
 /* ═══════════════════════════════════════════════════ PSYCHROMETRIE
    Une seule implementation pour tout le depot. Pression atmospherique
