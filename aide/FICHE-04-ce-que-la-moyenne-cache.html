@@ -1,0 +1,117 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta name="robots" content="noindex, nofollow">
+<title>Fiche 4 — la moyenne</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap">
+<link rel="stylesheet" href="../assets/kit.css?v=258bd563">
+<link rel="stylesheet" href="../assets/site.css?v=258bd563">
+
+<div class="page" data-site="ciel2" data-page="aide/FICHE-04-ce-que-la-moyenne-cache">
+<div class="jauge-lecture" id="jauge-lecture"><i></i></div><div class="barre-site"><a class="accueil" href="../index.html">Maths et physique-chimie — 2de Bac Pro CIEL</a><span class="fleches"><a class="fleche" href="FICHE-03-mettre-en-equation.html" rel="prev" title="Fiche 3 — mettre en équation" aria-label="Fiche 3 — mettre en équation">&lsaquo;</a></span><button type="button" class="lu" data-lu="aide/FICHE-04-ce-que-la-moyenne-cache">Marquer comme lu</button></div>
+<header class="tete">
+  
+  <div class="titraille">
+    <p class="sur">2de Bac Pro CIEL · fiche d'aide</p>
+    <h1>Ce que la moyenne<span>ne dit pas</span></h1>
+  </div>
+  <p class="accroche">Deux liaisons réseau annoncent 30 ms de latence moyenne. L'une est confortable, l'autre inutilisable pour de la visioconférence. La moyenne ne les distingue pas — un autre nombre, si.</p>
+  <p class="contenu">4 exercices · 1 repli</p>
+  <p class="k-savoirs">Savoirs travaillés</p><div class="savoirs"><span class="tag">STAT Statistique à une variable</span><span class="tag">AU Automatismes</span></div>
+</header>
+<nav class="somm"><div class="in"><a href="#le-blocage">Le blocage</a><a href="#la-moyenne-et-ce-qu-elle-ecrase">La moyenne, et ce qu’elle écrase</a><a href="#le-piege-qui-coute-des-points">Le piège qui coûte des points</a><a href="#vous-verifier">Vous vérifier</a><a href="#a-retenir-en-trois-lignes">À retenir en trois lignes</a></div></nav>
+<h2 id="le-blocage">Le blocage</h2>
+<p>Calculer une moyenne, vous savez. Ce qu’on vous demande ensuite, c’est de dire <strong>ce qu’elle vaut</strong> — et là, il manque un mot.</p>
+<p>Ce mot, c’est la <strong>dispersion</strong> : à quel point les valeurs s’écartent les unes des autres.</p>
+<h2 id="la-moyenne-et-ce-qu-elle-ecrase">La moyenne, et ce qu’elle écrase</h2>
+<div class="formule">
+<p><strong>Moyenne = somme des valeurs ÷ nombre de valeurs</strong></p>
+<p><strong>Étendue = valeur la plus grande − valeur la plus petite</strong></p>
+<blockquote>
+<p>La moyenne dit <strong>autour de quoi</strong> ça tourne. L’étendue dit <strong>de combien</strong> ça bouge. Il faut les deux.</p>
+</blockquote>
+</div>
+<p>Deux relevés de latence, en millisecondes, sur deux liaisons :</p>
+<div class="enveloppe-tbl"><table>
+<thead>
+<tr>
+<th>Liaison</th>
+<th>Relevés</th>
+<th style="text-align: right;">Moyenne</th>
+<th style="text-align: right;">Étendue</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>A</strong></td>
+<td>28 · 30 · 31 · 29 · 32</td>
+<td style="text-align: right;"><strong>30 ms</strong></td>
+<td style="text-align: right;"><strong>4 ms</strong></td>
+</tr>
+<tr>
+<td><strong>B</strong></td>
+<td>8 · 12 · 55 · 60 · 15</td>
+<td style="text-align: right;"><strong>30 ms</strong></td>
+<td style="text-align: right;"><strong>52 ms</strong></td>
+</tr>
+</tbody>
+</table></div>
+<div class="cle">
+<p><strong>Même moyenne, et pourtant rien à voir.</strong> La liaison A est régulière : une visioconférence y passe. La liaison B saute de 8 à 60 ms : l’image se fige, alors que sa moyenne est identique.</p>
+</div>
+<h2 id="le-piege-qui-coute-des-points">Le piège qui coûte des points</h2>
+<div class="piege">
+<p><strong>« La moyenne est bonne, donc tout va bien » est un raisonnement faux</strong>, et il tombe à chaque évaluation.</p>
+<p>Une moyenne peut être excellente avec la moitié des valeurs catastrophiques : il suffit que l’autre moitié compense. <strong>On regarde toujours l’étendue, ou les valeurs extrêmes, avant de conclure.</strong></p>
+</div>
+<div class="replis"><p class="chapeau">Pour aller plus loin</p><details class="appro"><summary><span class="niv"></span><span class="titre-appro">Trois façons de voir la dispersion, de la plus simple à la plus fine</span><span class="etiq">Pour aller plus loin</span><span class="chev">&rsaquo;</span></summary><div class="corps"><p><strong>1. L’étendue.</strong> La plus simple : le maximum moins le minimum. Elle a un défaut — <strong>une seule valeur bizarre la fait exploser</strong>. Sur 8 · 12 · 15 · 55, l’étendue vaut 47 à cause du seul 55.</p>
+<p><strong>2. Regarder les valeurs extrêmes elles-mêmes.</strong> Souvent plus parlant qu’un nombre : <em>« trois relevés sur cinq dépassent 50 ms »</em> dit exactement ce qui gêne.</p>
+<p><strong>3. La médiane, à côté de la moyenne.</strong> La médiane est la valeur du milieu quand on range les nombres. Sur 8 · 12 · 15 · 55 · 60, la médiane est <strong>15</strong> alors que la moyenne est <strong>30</strong>.</p>
+<div class="cle">
+<p><strong>Quand la moyenne et la médiane s’écartent beaucoup, c’est que quelques valeurs extrêmes tirent la moyenne.</strong> C’est le signal le plus rapide qu’un relevé n’est pas régulier — et il se lit sans aucun calcul supplémentaire.</p>
+</div>
+<p><strong>Un cas de terrain.</strong> On mesure le temps de réponse d’un serveur : 20 · 22 · 21 · 19 · 320 ms. La moyenne est de <strong>80,4 ms</strong>, ce qui semble médiocre. La médiane est de <strong>21 ms</strong>, ce qui est bon. <strong>La vérité est qu’il y a un incident isolé</strong>, pas un serveur lent — et c’est la médiane qui le dit.</p></div></details>
+</div><h2 id="vous-verifier">Vous vérifier</h2>
+<section class="exo" id="FICHE-04-ce-que-la-moyenne-cache-e1" data-exo="FICHE-04-ce-que-la-moyenne-cache-e1" data-type="calcul" data-savoir="STAT" data-a="IXgueGB4OTs2OS82eHZ4LHhgaGl0anZ4LjU2eGBrdGp2eC94YHgGL2pqOGoZeCc="><p class="k">Exercice · STAT</p><h4>Une moyenne</h4><div class="enonce">
+
+<p>Six relevés de température dans une baie : <strong>22 · 24 · 23 · 25 · 21 · 23</strong> °C. Quelle est la moyenne ?</p>
+</div><div class="indice" hidden>On additionne les six, on divise par six. Rien de plus.</div></section>
+<section class="exo" id="FICHE-04-ce-que-la-moyenne-cache-e2" data-exo="FICHE-04-ce-que-la-moyenne-cache-e2" data-type="calcul" data-savoir="STAT" data-a="IXgueGB4OTs2OS82eHZ4LHhgb2h0anZ4LjU2eGBrdGp2eC94YHg3KXgn"><p class="k">Exercice · STAT</p><h4>L’étendue</h4><div class="enonce">
+
+<p>Sur les relevés de latence <strong>8 · 12 · 55 · 60 · 15</strong> ms, quelle est l’étendue ?</p>
+</div><div class="indice" hidden>La plus grande moins la plus petite. Repérez-les d’abord, la série n’est pas rangée.</div></section>
+<section class="exo" id="FICHE-04-ce-que-la-moyenne-cache-e3" data-exo="FICHE-04-ce-que-la-moyenne-cache-e3" data-type="calcul" data-savoir="STAT" data-a="IXgueGB4OTs2OS82eHZ4LHhga290anZ4LjU2eGBrdGp2eC94YHg3KXgn"><p class="k">Exercice · STAT</p><h4>La médiane</h4><div class="enonce">
+
+<p>Sur ces mêmes relevés — <strong>8 · 12 · 55 · 60 · 15</strong> ms — quelle est la médiane ?</p>
+</div><div class="indice" hidden>Rangez d’abord les cinq valeurs dans l’ordre. La médiane est celle du milieu.</div></section>
+<section class="exo" id="FICHE-04-ce-que-la-moyenne-cache-e4" data-exo="FICHE-04-ce-que-la-moyenne-cache-e4" data-type="justification" data-savoir="STAT" data-a="IXgueGB4MC8pLjM8Mzk7LjM1NHgn"><p class="k">Exercice · STAT</p><h4>Le fournisseur qui annonce 30 ms</h4><div class="enonce">
+
+<p>Un fournisseur vous propose une liaison en annonçant « 30 ms de latence moyenne ». Vous devez y faire passer de la visioconférence. Dites ce que vous lui demandez en plus, et pourquoi la moyenne ne suffit pas.</p>
+</div><div class="indice" hidden>Deux liaisons peuvent avoir la même moyenne et se comporter à l’opposé. Qu’est-ce qui les distingue ?</div><ul class="verifier" hidden><li>J’ai dit ce que la moyenne ne montre pas</li><li>J’ai demandé au moins un renseignement précis, et je l’ai nommé</li><li>J’ai expliqué ce qui gêne une visioconférence, concrètement</li><li>J’ai donné un exemple de deux séries de même moyenne et de comportements différents</li></ul></section>
+<h2 id="a-retenir-en-trois-lignes">À retenir en trois lignes</h2>
+<div class="enveloppe-tbl"><table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr>
+<td>La moyenne dit <strong>autour de quoi</strong></td>
+<td>l’étendue dit <strong>de combien ça bouge</strong></td>
+</tr>
+<tr>
+<td>Deux séries de <strong>même moyenne</strong></td>
+<td>peuvent n’avoir rien en commun</td>
+</tr>
+<tr>
+<td>Moyenne et <strong>médiane</strong> très écartées</td>
+<td>quelques valeurs extrêmes tirent la moyenne</td>
+</tr>
+</tbody>
+</table></div>
+<nav class="suite"><p class="chapeau-s">La suite</p><div class="pas-a-pas"><a class="av" href="FICHE-03-mettre-en-equation.html" rel="prev"><span class="k">&lsaquo; Précédent</span><span class="t">Fiche 3 — mettre en équation</span></a></div></nav>
+<p class="pied">Fiche d'aide. Aucun corrigé ; rien n'est enregistré, rien n'est noté.</p>
+</div>
+<script src="../assets/kit.js?v=258bd563"></script>
+<script src="../assets/site.js?v=258bd563"></script>

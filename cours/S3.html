@@ -1,0 +1,97 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta name="robots" content="noindex, nofollow">
+<title>Séquence 3 — loi d'Ohm</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap">
+<link rel="stylesheet" href="../assets/kit.css?v=258bd563">
+<link rel="stylesheet" href="../assets/site.css?v=258bd563">
+
+<div class="page" data-site="ciel2" data-page="cours/S3">
+<div class="jauge-lecture" id="jauge-lecture"><i></i></div><div class="barre-site"><a class="accueil" href="../index.html">Maths et physique-chimie — 2de Bac Pro CIEL</a><span class="fleches"><a class="fleche" href="S0.html" rel="prev" title="Où j'en suis" aria-label="Où j'en suis">&lsaquo;</a></span><button type="button" class="lu" data-lu="cours/S3">Marquer comme lu</button></div>
+<header class="tete">
+  
+  <div class="titraille">
+    <p class="sur">2de Bac Pro CIEL</p>
+    <h1>Loi d'Ohm<span>et diviseur de tension</span></h1>
+  </div>
+  <p class="accroche">Une LED qui ne supporte que 2 V, branchée sur du 5 V. Le technicien a mis une résistance en série. Pourquoi, et comment on la choisit — avec un calculateur pour essayer dix valeurs en dix secondes.</p>
+  <p class="contenu">1 outil · 3 exercices · 1 repli</p>
+  <p class="k-savoirs">Savoirs travaillés</p><div class="savoirs"><span class="tag">ELEC Électricité — U, I, R, montages</span><span class="tag">PREM Résolution d'un problème du premier degré</span><span class="tag">AU Automatismes</span></div>
+</header>
+<nav class="somm"><div class="in"><a href="#la-situation">La situation</a><a href="#la-loi-d-ohm">La loi d’Ohm</a><a href="#deux-dipoles-en-serie-la-tension-se-partage">Deux dipôles en série : la tension se partage</a><a href="#essayez-c-est-plus-rapide-que-de-lire">Essayez, c’est plus rapide que de lire</a><a href="#choisir-la-resistance-de-la-led">Choisir la résistance de la LED</a><a href="#vous-verifier">Vous vérifier</a><a href="#pour-aller-plus-loin">Pour aller plus loin</a></div></nav>
+<h2 id="la-situation">La situation</h2>
+<p>Sur une carte, une <strong>LED témoin</strong> doit s’allumer sous <strong>5 V</strong>. Elle ne supporte que <strong>2 V</strong> à ses bornes et <strong>20 mA</strong> au maximum.</p>
+<p>Le technicien a placé une <strong>résistance en série</strong> avec elle. Un stagiaire demande : <em>« pourquoi ? on ne peut pas brancher la LED directement ? »</em></p>
+<div class="cle">
+<p><strong>Non — et la réponse tient en une phrase.</strong> Rien ne limiterait le courant. La LED garde 2 V à ses bornes quoi qu’il arrive ; sans résistance, c’est l’intensité qui s’envole, et elle grille.</p>
+</div>
+<h2 id="la-loi-d-ohm">La loi d’Ohm</h2>
+<div class="formule">
+<p><strong>U = R × I</strong></p>
+<ul>
+<li><strong>U</strong><span>tension aux bornes du dipôle, en volts (V)</span></li>
+<li><strong>R</strong><span>résistance, en ohms (Ω)</span></li>
+<li><strong>I</strong><span>intensité qui le traverse, en ampères (A)</span></li>
+</ul>
+<blockquote>
+<p>Attention aux milliampères : <strong>20 mA = 0,020 A</strong>. C’est l’erreur la plus fréquente de la séquence.</p>
+</blockquote>
+</div>
+<p>Un résistor a une caractéristique U = ƒ(I) qui est une <strong>droite passant par l’origine</strong> : U et I y sont proportionnels, et le coefficient directeur <strong>est</strong> la résistance. C’est ce que le TP a mesuré.</p>
+<div class="piege">
+<p>La LED, elle, <strong>n’est pas</strong> un dipôle ohmique. Sa caractéristique n’est pas une droite : sa tension reste bloquée autour de 2 V pendant que le courant varie. C’est pour cela qu’on ne peut pas lui appliquer U = R × I.</p>
+</div>
+<h2 id="deux-dipoles-en-serie-la-tension-se-partage">Deux dipôles en série : la tension se partage</h2>
+<div class="formule">
+<p><strong>Loi des mailles : E = U₁ + U₂</strong></p>
+<p><strong>Loi des nœuds : le courant est le même partout</strong>, sur une seule maille</p>
+<blockquote>
+<p>Les deux tensions s’ajoutent pour faire celle de l’alimentation. C’est tout ce qu’il faut pour le diviseur.</p>
+</blockquote>
+</div>
+<h2 id="essayez-c-est-plus-rapide-que-de-lire">Essayez, c’est plus rapide que de lire</h2>
+<div class="outil" data-outil="diviseur">
+
+</div>
+<div class="cle">
+<p>Bougez R1 et regardez U1. <strong>La tension se partage proportionnellement aux résistances</strong> : celle qui vaut 60 % du total prend 60 % de la tension. Vous n’avez pas à me croire — mettez R1 = R2 et voyez.</p>
+</div>
+<h2 id="choisir-la-resistance-de-la-led">Choisir la résistance de la LED</h2>
+<div class="etapes">
+<ol type="1">
+<li>La LED garde <strong>2 V</strong>. La résistance encaisse donc <strong>5 − 2 = 3 V</strong>.</li>
+<li>On veut au plus <strong>20 mA</strong>, soit <strong>0,020 A</strong>.</li>
+<li>Loi d’Ohm sur la résistance : <strong>R = U / I = 3 / 0,020</strong>.</li>
+<li>On obtient <strong>150 Ω</strong> — et on prend la valeur normalisée juste <strong>au-dessus</strong>.</li>
+</ol>
+</div>
+<div class="piege">
+<p>Prendre la valeur normalisée <strong>en dessous</strong> ferait passer plus de 20 mA. Quand un calcul donne un maximum, on arrondit <strong>du côté qui protège</strong>, pas au plus proche.</p>
+</div>
+<h2 id="vous-verifier">Vous vérifier</h2>
+<section class="exo" id="S3-e1" data-exo="S3-e1" data-type="calcul" data-savoir="ELEC" data-a="IXgueGB4OTs2OS82eHZ4LHhgbGxtdGp2eC41NnhgaXRqdngveGB4Bi9qaTtjeCc="><p class="k">Exercice · ELEC</p><h4>La résistance à mettre</h4><div class="enonce">
+
+<p>Une LED de <strong>2 V</strong> doit être alimentée sous <strong>12 V</strong> avec un courant de <strong>15 mA</strong>. Quelle résistance faut-il en série ?</p>
+</div><div class="indice" hidden>Commencez par la tension que la résistance doit encaisser. Puis U = R × I, mais dans l’autre sens — et en ampères.</div></section>
+<section class="exo" id="S3-e2" data-exo="S3-e2" data-type="calcul" data-savoir="ELEC" data-a="IXgueGB4OTs2OS82eHZ4LHhgaHRjbnZ4LjU2eGBpdGp2eC94YHgMeCc="><p class="k">Exercice · ELEC</p><h4>Le partage de la tension</h4><div class="enonce">
+
+<p>Deux résistances en série, <strong>R1 = 330 Ω</strong> et <strong>R2 = 470 Ω</strong>, sous <strong>5 V</strong>. Quelle tension trouve-t-on aux bornes de <strong>R2</strong> ?</p>
+</div><div class="indice" hidden>Le courant est le même dans les deux. Trouvez-le d’abord avec la résistance totale, puis appliquez la loi d’Ohm à R2 seule.</div></section>
+<section class="exo" id="S3-e3" data-exo="S3-e3" data-type="justification" data-savoir="ELEC" data-a="IXgueGB4MC8pLjM8Mzk7LjM1NHgn"><p class="k">Exercice · ELEC</p><h4>La question du stagiaire</h4><div class="enonce">
+
+<p>Répondez au stagiaire : pourquoi ne peut-on pas brancher la LED directement sur le 5 V ?</p>
+</div><div class="indice" hidden>La LED impose sa tension. Ce qui la détruit, c’est l’autre grandeur.</div><ul class="verifier" hidden><li>J’ai dit quelle tension la LED garde à ses bornes</li><li>J’ai dit ce qui n’est plus limité s’il n’y a pas de résistance</li><li>J’ai dit ce qui arrive à la LED</li><li>J’ai évité de dire que la LED « reçoit trop de tension » — ce n’est pas ça</li></ul></section>
+<h2 id="pour-aller-plus-loin">Pour aller plus loin</h2>
+<div class="replis"><p class="chapeau">Pour aller plus loin</p><details class="appro"><summary><span class="niv"></span><span class="titre-appro">Pourquoi on ne met jamais la résistance « du bon côté »</span><span class="etiq">Pour aller plus loin</span><span class="chev">&rsaquo;</span></summary><div class="corps"><p>Une question revient à chaque TP : faut-il mettre la résistance <strong>avant</strong> ou <strong>après</strong> la LED ?</p>
+<p><strong>Cela ne change rien.</strong> Le courant est le même en tout point d’une maille unique : la résistance limite le courant du circuit, pas « le courant qui arrive à la LED ». Avant ou après, la LED voit la même intensité.</p>
+<div class="cle">
+<p>Ce qui change, en revanche, c’est le <strong>sens de la LED</strong>. Elle ne laisse passer le courant que dans un sens — montée à l’envers, elle reste éteinte, sans être abîmée. C’est le premier réflexe de dépannage sur une carte.</p>
+</div>
+<p><strong>Et si l’on met deux LED en série sous 5 V ?</strong> Elles gardent 2 V chacune, soit 4 V ; il ne reste qu’<strong>un volt</strong> pour la résistance. Le calcul se refait, et la résistance devient trois fois plus petite. Essayez-le dans le calculateur en mettant l’alimentation à 5 V et en réfléchissant à ce qui reste.</p></div></details>
+</div><nav class="suite"><p class="chapeau-s">La suite</p><div class="pas-a-pas"><a class="av" href="S0.html" rel="prev"><span class="k">&lsaquo; Précédent</span><span class="t">Où j'en suis</span></a></div></nav>
+<p class="pied">Cette page rappelle la séquence. Elle ne remplace pas les documents distribués et ne donne aucun corrigé. Tous les calculs se font dans votre tablette ; rien n'est enregistré.</p>
+</div>
+<script src="../assets/kit.js?v=258bd563"></script>
+<script src="../assets/site.js?v=258bd563"></script>
