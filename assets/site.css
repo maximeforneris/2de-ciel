@@ -603,16 +603,6 @@ nav.somm::after{
 }
 .suggestions i{font-style:normal;color:var(--encre2)}
 
-/* ── en-tete illustre de l'accueil ── */
-.tete.a-img{display:grid;gap:10px 34px;align-items:start;
-  grid-template-columns:minmax(0,1fr) clamp(210px,26vw,330px)}
-.tete.a-img>.tete-img{grid-column:2;grid-row:1 / span 3;align-self:center}
-.tete.a-img>.sur,.tete.a-img>h1,.tete.a-img>.accroche{grid-column:1}
-.tete-img svg{display:block;width:100%;height:auto}
-@media (max-width:760px){
-  .tete.a-img{grid-template-columns:minmax(0,1fr)}
-  .tete.a-img>.tete-img{grid-column:1;grid-row:auto;max-width:330px;margin-top:6px}
-}
 
 /* ═══════════════════════════════════════════════════════════════════════
    LARGEUR — les pages de catalogue prennent l'écran, les pages de cours non

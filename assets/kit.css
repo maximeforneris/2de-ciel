@@ -50,6 +50,21 @@ h1,h2,h3,h4,.gro{font-family:"Bricolage Grotesque","Helvetica Neue",Arial,sans-s
 p{margin:0 0 13px}
 a{color:var(--froid)}
 
+/* ─────────────────────────────────────────────── entete illustre
+   « image: » nomme un schema du kit, qui vient se ranger a droite du titre.
+   L'accueil a trois enfants, une page de cours en a six : plutot que de leur
+   imposer une grille dont le nombre de lignes varie — span 99 fabriquait 98
+   gouttieres vides et un en-tete d'un metre de haut — on reserve la place a
+   droite et on y pose le dessin. */
+.tete.a-img{position:relative;padding-right:calc(clamp(210px,26vw,330px) + 34px)}
+.tete.a-img>.tete-img{position:absolute;right:0;top:50%;
+  transform:translateY(-50%);width:clamp(210px,26vw,330px)}
+.tete-img svg{display:block;width:100%;height:auto}
+@media (max-width:760px){
+  .tete.a-img{padding-right:0}
+  .tete.a-img>.tete-img{position:static;transform:none;max-width:330px;margin-top:14px}
+}
+
 /* ─────────────────────────────────────────────── entete
    Le numero de seance est un reperage, pas une mention de plus dans une ligne
    grise : on le reconnait avant d'avoir lu le titre. */

@@ -1,0 +1,328 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   LE SCHÉMA DE CÂBLAGE — charte v2 du site 2de Bac Pro CIEL.
+   Le monde est celui qu'ils ont dans les mains en atelier : le code
+   couleur T568 des huit conducteurs d'un RJ45 — orange, vert, bleu, brun,
+   chacun en uni et en rayé blanc. Ce code est le système de la page :
+   chaque espace est un bornier, chaque séance un conducteur numéroté par
+   son embout, et une séance non produite est le conducteur rayé de la
+   paire — pas un lien mort. Ce qui est lu allume sa LED de liaison.
+   Écrit le 9 septembre 2026. Tirage 12b55835, index 4.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url(polices/jetbrains-mono-400-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url(polices/jetbrains-mono-400-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:700;font-display:swap;src:url(polices/jetbrains-mono-700-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:700;font-display:swap;src:url(polices/jetbrains-mono-700-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Red Hat Text';font-style:normal;font-weight:400;font-display:swap;src:url(polices/red-hat-text-400-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Red Hat Text';font-style:normal;font-weight:400;font-display:swap;src:url(polices/red-hat-text-400-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Red Hat Text';font-style:normal;font-weight:500;font-display:swap;src:url(polices/red-hat-text-500-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Red Hat Text';font-style:normal;font-weight:500;font-display:swap;src:url(polices/red-hat-text-500-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Red Hat Text';font-style:normal;font-weight:700;font-display:swap;src:url(polices/red-hat-text-700-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Red Hat Text';font-style:normal;font-weight:700;font-display:swap;src:url(polices/red-hat-text-700-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+
+:root{
+  --fond:#eef0ee;            /* la feuille du schéma */
+  --carte:#ffffff;
+  --carte2:#f4f6f4;
+  --encre:#17191c;
+  --encre2:#545a60;
+  --trait:#b4bab8;
+  --trait2:#d3d8d6;
+  /* les quatre paires T568 */
+  --p-orange:#e8720c;--p-vert:#1f9a3a;--p-bleu:#1f5fd0;--p-brun:#8b5a2b;
+  --led:#2ecc5b;
+  --froid:var(--p-bleu);--tiede:var(--p-orange);--chaud:#c6262e;
+  --vert:var(--p-vert);--violet:var(--p-brun);
+  --ombre:0 1px 0 rgba(23,25,28,.10);
+  --r:2px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --fond:#121416;--carte:#1a1d20;--carte2:#22262a;--encre:#e8ebe9;--encre2:#9aa3a8;
+    --trait:#3b4246;--trait2:#2b3135;
+    --p-orange:#f28a3a;--p-vert:#3fbf5f;--p-bleu:#4f86e8;--p-brun:#b07a45;--chaud:#e2564f;
+    --ombre:0 1px 0 rgba(0,0,0,.6);
+  }
+}
+
+body{font-family:"Red Hat Text",system-ui,sans-serif}
+h1,h2,h3,h4,.gro{font-family:"Red Hat Text","Helvetica Neue",Arial,sans-serif}
+.mono,code{font-family:"JetBrains Mono",ui-monospace,monospace}
+header.tete .num{font-family:"Red Hat Text",sans-serif}
+.sur{font-family:"JetBrains Mono",monospace}
+/* ce que la page contient — la meme information que sur les cartes de la frise */ .contenu{font-family:"JetBrains Mono",monospace}
+.k-savoirs{font-family:"JetBrains Mono",monospace}
+.tag{font-family:"JetBrains Mono",monospace}
+nav.somm a{font-family:"Red Hat Text",sans-serif}
+.formule>p:first-child{font-family:"JetBrains Mono",monospace}
+.formule li strong:first-child{font-family:"JetBrains Mono",monospace}
+.piege::before{font-family:"Red Hat Text",sans-serif}
+.etapes li::before{font-family:"JetBrains Mono",monospace}
+.mission>p:first-child strong{font-family:"Red Hat Text",sans-serif}
+figcaption{font-family:"Red Hat Text",sans-serif}
+.s-nom{font-family:"Red Hat Text",sans-serif}
+.s-pet{font-family:"JetBrains Mono",monospace}
+.s-lab{font-family:"JetBrains Mono",monospace}
+.s-tit{font-family:"Red Hat Text",sans-serif}
+.replis>.chapeau{font-family:"Red Hat Text",sans-serif}
+.titre-appro{font-family:"Red Hat Text",sans-serif}
+.etiq{font-family:"JetBrains Mono",monospace}
+th{font-family:"Red Hat Text",sans-serif}
+.quiz>.chapeau{font-family:"Red Hat Text",sans-serif}
+.qq button{font-family:"JetBrains Mono",monospace}
+.score{font-family:"JetBrains Mono",monospace}
+.outil .k{font-family:"JetBrains Mono",monospace}
+.chaine{font-family:"JetBrains Mono",monospace}
+.champ .v{font-family:"JetBrains Mono",monospace}
+input[type=number],select{font-family:"JetBrains Mono",monospace}
+.bt{font-family:"Red Hat Text",sans-serif}
+.lignec .rr{font-family:"JetBrains Mono",monospace}
+.entete-c{font-family:"Red Hat Text",sans-serif}
+.res .gros{font-family:"JetBrains Mono",monospace}
+.res .gros b{font-family:"Red Hat Text",sans-serif}
+.barre .p{font-family:"JetBrains Mono",monospace}
+.case-sym span{font-family:"Red Hat Text",sans-serif}
+.s-sym{font-family:"JetBrains Mono",monospace}
+.s-rep{font-family:"JetBrains Mono",monospace}
+.exo>.k{font-family:"JetBrains Mono",monospace}
+.exo input[type=text]{font-family:"JetBrains Mono",monospace}
+.exo textarea{font-family:"Red Hat Text",system-ui,sans-serif}
+.exo .unite{font-family:"JetBrains Mono",monospace}
+.exo .btn{font-family:"Red Hat Text",sans-serif}
+.exo .indice::before{font-family:"Red Hat Text",sans-serif}
+.bilan-epreuve .compte{font-family:"Red Hat Text",sans-serif}
+/* ═══════════════════════════════════════════════════════════════════════    SITE — l'enveloppe de navigation autour des pages du kit.    Elle vient APRES kit.css et n'en redefinit aucune variable : les couleurs,    les polices et le mode sombre sont ceux du kit. Ne pas la dupliquer dans    un sous-projet. Voir GUIDE-SITE.md.    ═══════════════════════════════════════════════════════════════════════ */  /* ─────────────────────────────────────────────── barre de site    Elle defile avec la page : le sommaire de seance, lui, est colle en haut    (kit.css). Deux barres collantes se marchent dessus.     Elle s'appelait « barre » tout court, et kit.css nomme deja ainsi les    barres de ses graphiques : site.css etant chargee ensuite, elle ecrasait    leur grille a trois colonnes. Un nom de classe partage entre deux feuilles    ne pardonne pas — d'ou le suffixe. */ .barre-site{font-family:"Red Hat Text",sans-serif}
+/* .pas-pas : remplace par .fleches, plus bas */ .barre-site .lu{font-family:inherit}
+.chercher input{font-family:"Red Hat Text",sans-serif}
+.resultats a{font-family:"Red Hat Text",sans-serif}
+.resultats .ou{font-family:"JetBrains Mono",monospace}
+.raccourcis a{font-family:"Red Hat Text",sans-serif}
+.espace>.compte{font-family:"JetBrains Mono",monospace}
+.frise .n{font-family:"JetBrains Mono",monospace}
+.frise .t{font-family:"Red Hat Text",sans-serif}
+.frise .meta{font-family:"JetBrains Mono",monospace}
+.recap{font-family:"Red Hat Text",sans-serif}
+.outils-grille .t{font-family:"Red Hat Text",sans-serif}
+.outils-grille .ou{font-family:"JetBrains Mono",monospace}
+/* ─────────────────────────────────────────────── banque d'exercices    Un repertoire, pas une copie : chaque ligne renvoie a la seance qui porte    l'exercice. */ .filtres{font-family:"Red Hat Text",sans-serif}
+.filtres select{font-family:inherit}
+.exo-ligne a{font-family:"Red Hat Text",sans-serif}
+.exo-ligne .ou{font-family:"JetBrains Mono",monospace}
+.exo-ligne .etat{font-family:"JetBrains Mono",monospace}
+.partie .n{font-family:"JetBrains Mono",monospace}
+.partie .t{font-family:"Red Hat Text",sans-serif}
+.partie .meta{font-family:"JetBrains Mono",monospace}
+.partie .sv{font-family:"JetBrains Mono",monospace}
+.partie .rep{font-family:"JetBrains Mono",monospace}
+.chiffres b{font-family:"Red Hat Text",sans-serif}
+.chiffres span{font-family:"JetBrains Mono",monospace}
+.porte .n{font-family:"JetBrains Mono",monospace}
+.porte .t{font-family:"Red Hat Text",sans-serif}
+/* ─────────────────────────────────────────────── reprendre la lecture */ .reprendre{font-family:"Red Hat Text",sans-serif}
+.sequence .rang{font-family:"JetBrains Mono",monospace}
+/* l'avancement de lecture, posé par site.js */ .sequence .jauge{font-family:"JetBrains Mono",monospace}
+.chapeau-f{font-family:"JetBrains Mono",monospace}
+.grille-f .k{font-family:"JetBrains Mono",monospace}
+.grille-f .t{font-family:"Red Hat Text",sans-serif}
+/* ─────────────────────────────────────────────── le fil de séquence */ .barre-site .fil{font-family:"JetBrains Mono",monospace}
+.chapeau-s{font-family:"JetBrains Mono",monospace}
+.pas-a-pas .k{font-family:"JetBrains Mono",monospace}
+.pas-a-pas .t{font-family:"Red Hat Text",sans-serif}
+.vers-recap{font-family:"Red Hat Text",sans-serif}
+.theme-outils .rang{font-family:"JetBrains Mono",monospace}
+/* ─────────────────────────────────────────────── exercices, par savoir */ .avancee{font-family:"JetBrains Mono",monospace}
+.seg{font-family:"Red Hat Text",sans-serif}
+.titre-savoir .code{font-family:"JetBrains Mono",monospace}
+.exo-ligne .genre{font-family:"JetBrains Mono",monospace}
+.exo-ligne a{font-family:"Red Hat Text",sans-serif}
+.suggestions .ou{font-family:"JetBrains Mono",monospace}
+.recap.tenu{font-family:"Red Hat Text",sans-serif}
+
+.page,.frise .n,.partie .n,table,.res,.champ .v,.compteur,.chiffres{font-variant-numeric:tabular-nums}
+
+/* ─── la feuille : une grille fine de schéma ─── */
+body{
+  background-image:
+    linear-gradient(to right, rgba(23,25,28,.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(23,25,28,.045) 1px, transparent 1px);
+  background-size:24px 24px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) body{
+    background-image:
+      linear-gradient(to right, rgba(232,235,233,.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(232,235,233,.05) 1px, transparent 1px);
+  }
+}
+
+/* ─── le cartouche d'en-tête, avec le brochage T568B ─── */
+header.tete{
+  position:relative;background:var(--carte);border:1.5px solid var(--encre);
+  padding:24px 22px 22px;margin-top:16px;
+  padding-right:clamp(0px,30vw,340px);
+}
+header.tete::after{
+  content:"";position:absolute;right:14px;top:50%;transform:translateY(-50%);
+  width:clamp(0px,26vw,300px);aspect-ratio:16/10;
+  background:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 200'><path d='M206 40 h78 a8 8 0 0 1 8 8 v104 a8 8 0 0 1 -8 8 h-78 z' fill='none' stroke='%2317191c' stroke-width='2'/><path d='M292 74 h14 v52 h-14' fill='none' stroke='%2317191c' stroke-width='2'/><path d='M206 52 v96' stroke='%2317191c' stroke-width='1' stroke-dasharray='3 3' fill='none'/><path d='M24 54 H232' stroke='%23e8720c' stroke-width='7' stroke-linecap='round' fill='none'/><path d='M28 54 H228' stroke='%23ffffff' stroke-width='3' stroke-dasharray='9 8' fill='none'/><text x='250' y='57' font-family='monospace' font-size='9' fill='%2317191c'>1</text><path d='M24 67 H232' stroke='%23e8720c' stroke-width='7' stroke-linecap='round' fill='none'/><text x='250' y='70' font-family='monospace' font-size='9' fill='%2317191c'>2</text><path d='M24 80 H232' stroke='%231f9a3a' stroke-width='7' stroke-linecap='round' fill='none'/><path d='M28 80 H228' stroke='%23ffffff' stroke-width='3' stroke-dasharray='9 8' fill='none'/><text x='250' y='83' font-family='monospace' font-size='9' fill='%2317191c'>3</text><path d='M24 93 H232' stroke='%231f5fd0' stroke-width='7' stroke-linecap='round' fill='none'/><text x='250' y='96' font-family='monospace' font-size='9' fill='%2317191c'>4</text><path d='M24 106 H232' stroke='%231f5fd0' stroke-width='7' stroke-linecap='round' fill='none'/><path d='M28 106 H228' stroke='%23ffffff' stroke-width='3' stroke-dasharray='9 8' fill='none'/><text x='250' y='109' font-family='monospace' font-size='9' fill='%2317191c'>5</text><path d='M24 119 H232' stroke='%231f9a3a' stroke-width='7' stroke-linecap='round' fill='none'/><text x='250' y='122' font-family='monospace' font-size='9' fill='%2317191c'>6</text><path d='M24 132 H232' stroke='%238b5a2b' stroke-width='7' stroke-linecap='round' fill='none'/><path d='M28 132 H228' stroke='%23ffffff' stroke-width='3' stroke-dasharray='9 8' fill='none'/><text x='250' y='135' font-family='monospace' font-size='9' fill='%2317191c'>7</text><path d='M24 145 H232' stroke='%238b5a2b' stroke-width='7' stroke-linecap='round' fill='none'/><text x='250' y='148' font-family='monospace' font-size='9' fill='%2317191c'>8</text><text x='24' y='182' font-family='monospace' font-size='9' fill='%23545a60'>T568B</text><text x='232' y='182' font-family='monospace' font-size='9' fill='%23545a60'>RJ45</text></svg>") no-repeat center/contain;
+  pointer-events:none;
+}
+@media (max-width:780px){
+  header.tete{padding-right:22px;padding-bottom:200px}
+  header.tete::after{right:auto;left:18px;top:auto;bottom:14px;transform:none;width:min(300px,80%)}
+}
+header.tete .sur{
+  font-family:"JetBrains Mono",monospace;font-size:11.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--p-bleu);
+}
+header.tete h1{font-family:"Red Hat Text",sans-serif;font-weight:700;letter-spacing:-.02em}
+header.tete h1 span{color:var(--encre2);font-weight:500}
+
+/* ─── la bande de chiffres : une étiquette de câble ─── */
+.chiffres{border-top:1.5px solid var(--encre);border-bottom:1px solid var(--trait2)}
+.chiffres b{font-family:"JetBrains Mono",monospace;font-weight:700;letter-spacing:-.02em}
+.chiffres span{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.12em}
+
+/* ─── recherche et portes ─── */
+.chercher input{
+  min-height:52px;font-size:16.5px;background:var(--carte);color:var(--encre);
+  border:1.5px solid var(--encre);border-radius:var(--r);padding:0 14px;
+  font-family:"JetBrains Mono",monospace;
+}
+.chercher input::placeholder{color:var(--encre2);opacity:1}
+.chercher input:focus{outline:none;box-shadow:inset 0 0 0 2px var(--p-bleu)}
+nav.portes .porte{
+  background:var(--carte);border:1.5px solid var(--encre);border-radius:var(--r);
+  box-shadow:none;
+}
+nav.portes .porte::before{display:none}
+nav.portes .porte:hover{background:var(--carte2)}
+nav.portes .porte .n{font-family:"JetBrains Mono",monospace;color:var(--p-bleu)}
+nav.portes .porte .t{font-family:"Red Hat Text",sans-serif;font-weight:700}
+nav.portes .porte.exos .n{color:var(--p-orange)}
+
+/* ═══ LE BORNIER — chaque espace est une réglette de bornes ═════════════
+   Le titre s'accroche à droite d'une rangée de bornes à vis. */
+.espace{--paire:var(--p-bleu)}
+#aide{--paire:var(--p-orange)}
+#defis{--paire:var(--p-vert)}
+.espace>h2{
+  display:flex;align-items:center;gap:14px;
+  font-family:"Red Hat Text",sans-serif;font-weight:700;letter-spacing:-.015em;
+  padding-bottom:10px;border-bottom:1.5px solid var(--encre);
+}
+.espace>h2::before{
+  content:"";flex:none;width:132px;height:22px;
+  background:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><rect x='1' y='1' width='20' height='20' fill='%23ffffff' stroke='%2317191c' stroke-width='1.4'/><circle cx='11' cy='11' r='4.6' fill='none' stroke='%2317191c' stroke-width='1.4'/><path d='M7.8 9.2 L14.2 12.8' stroke='%2317191c' stroke-width='1.4'/></svg>") repeat-x left center/22px 22px;
+}
+.espace>h2::after{
+  content:"";flex:none;width:34px;height:6px;background:var(--paire);border-radius:3px;
+  margin-left:auto;
+}
+.espace>.compte{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.1em}
+
+/* ═══ LES CONDUCTEURS — chaque séance est un fil numéroté ═════════════ */
+.sequence{position:relative;padding-left:0}
+.sequence>h3{font-family:"Red Hat Text",sans-serif;font-weight:700;font-size:20px}
+.sequence>.quoi{color:var(--encre2);max-width:66ch}
+
+.frise{display:block;grid-template-columns:none;gap:0;padding:0;margin:12px 0 0;position:relative}
+.frise li{position:relative;margin:0}
+.frise a,.frise .vide{
+  display:grid;grid-template-columns:86px 1fr;align-items:baseline;gap:0 14px;
+  height:auto;padding:12px 10px 12px 36px;border:0;border-radius:0;
+  background:none;box-shadow:none;text-decoration:none;
+  border-bottom:1px solid var(--trait2);
+}
+.frise li:last-child a,.frise li:last-child .vide{border-bottom:0}
+.frise a:hover{background:var(--carte)}
+
+/* le conducteur : une couleur pleine pour une page en ligne… */
+.frise li::before{
+  content:"";position:absolute;left:12px;top:0;bottom:0;width:7px;
+  background:var(--paire);
+}
+.frise li:first-child::before{top:8px;border-radius:4px 4px 0 0}
+.frise li:last-child::before{bottom:8px;border-radius:0 0 4px 4px}
+/* …et le conducteur rayé de la paire pour ce qui n'est pas encore produit */
+.frise li:has(.vide)::before{
+  background:repeating-linear-gradient(180deg,var(--paire) 0 7px,var(--carte) 7px 14px);
+}
+
+/* l'embout numéroté, serti sur le fil */
+.frise .n{
+  grid-column:1;justify-self:start;
+  font-family:"JetBrains Mono",monospace;font-weight:700;font-size:11.5px;
+  letter-spacing:.04em;color:var(--encre);
+  background:var(--carte);border:1.5px solid var(--encre);border-radius:3px;
+  padding:2px 7px;position:relative;
+}
+.frise .n::before{
+  content:"";position:absolute;left:-24px;top:50%;width:22px;height:2px;
+  background:var(--encre);margin-top:-1px;
+}
+.frise .t{grid-column:2;font-family:"Red Hat Text",sans-serif;font-weight:700;font-size:16.5px;color:var(--encre)}
+.frise .meta{grid-column:2;font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--encre2)}
+.frise .vide .t{color:var(--encre2);font-weight:500}
+.frise .vide .meta{display:inline-block;background:var(--carte);padding:1px 6px;border:1px solid var(--trait)}
+.frise .vide .n{color:var(--encre2);border-style:dashed}
+
+/* ═══ LA LED DE LIAISON — lu = le lien monte ═══════════════════════════ */
+.frise li.lu .n::after{
+  content:"";position:absolute;right:-13px;top:50%;width:8px;height:8px;margin-top:-4px;
+  border-radius:50%;background:var(--led);
+  box-shadow:0 0 0 2px var(--carte),0 0 8px 2px rgba(46,204,91,.55);
+}
+.frise li.lu .t{color:var(--encre2)}
+
+/* ─── les fiches d'aide et les défis : les mêmes conducteurs ─── */
+.chapeau-f{
+  font-family:"JetBrains Mono",monospace;font-size:11.5px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--encre);
+  display:inline-block;background:var(--carte);border:1.5px solid var(--encre);
+  padding:3px 9px;border-radius:3px;margin-bottom:10px;
+}
+.grille-f{grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.grille-f a{
+  position:relative;border:1.5px solid var(--encre);border-radius:var(--r);
+  background:var(--carte);box-shadow:none;padding:14px 16px 14px 22px;
+}
+.grille-f a::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:7px;background:var(--p-orange);
+}
+.grille-f a[href^="defis/"]::before{background:var(--p-vert)}
+.grille-f a:hover{background:var(--carte2)}
+.grille-f a .k{
+  font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.06em;
+  color:var(--encre);background:var(--carte);border:1.5px solid var(--encre);
+  border-radius:3px;padding:1px 6px;display:inline-block;opacity:1;
+}
+.grille-f a .t{font-family:"Red Hat Text",sans-serif;font-weight:700;font-size:16.5px;color:var(--encre);display:block;margin-top:6px}
+.grille-f a .d{color:var(--encre2);font-size:14.5px}
+
+/* ─── marquer comme lu = monter le lien ─── */
+.barre-site .lu{
+  font-family:"JetBrains Mono",monospace;font-size:12px;
+  border:1.5px solid var(--encre);border-radius:3px;color:var(--encre);
+  background:var(--carte);min-height:38px;padding:6px 14px;
+}
+.barre-site .lu[aria-pressed="true"]{position:relative;color:var(--encre2);padding-left:26px}
+.barre-site .lu[aria-pressed="true"]::before{
+  content:"";position:absolute;left:10px;top:50%;width:8px;height:8px;margin-top:-4px;
+  border-radius:50%;background:var(--led);box-shadow:0 0 8px 2px rgba(46,204,91,.55);
+}
+
+/* ─── surfaces du navigateur ─── */
+::selection{background:var(--p-bleu);color:#fff}
+input,textarea{caret-color:var(--p-bleu)}
+:where(a,button,input,select,textarea,[tabindex]):focus-visible{outline:2px solid var(--p-orange);outline-offset:2px}
+a{text-underline-offset:3px;text-decoration-thickness:1.5px}
+html{scrollbar-color:var(--encre) var(--fond);scrollbar-width:thin}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important}}
+
+/* === LA NUIT DU CIEL : le brochage et les bornes en encre claire. */
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) header.tete::after{background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 200'><path d='M206 40 h78 a8 8 0 0 1 8 8 v104 a8 8 0 0 1 -8 8 h-78 z' fill='none' stroke='%23e8ebe9' stroke-width='2'/><path d='M292 74 h14 v52 h-14' fill='none' stroke='%23e8ebe9' stroke-width='2'/><path d='M206 52 v96' stroke='%23e8ebe9' stroke-width='1' stroke-dasharray='3 3' fill='none'/><path d='M24 54 H232' stroke='%23f28a3a' stroke-width='7' stroke-linecap='round' fill='none'/><path d='M28 54 H228' stroke='%231a1d20' stroke-width='3' stroke-dasharray='9 8' fill='none'/><text x='250' y='57' font-family='monospace' font-size='9' fill='%23e8ebe9'>1</text><path d='M24 67 H232' stroke='%23f28a3a' stroke-width='7' stroke-linecap='round' fill='none'/><text x='250' y='70' font-family='monospace' font-size='9' fill='%23e8ebe9'>2</text><path d='M24 80 H232' stroke='%233fbf5f' stroke-width='7' stroke-linecap='round' fill='none'/><path d='M28 80 H228' stroke='%231a1d20' stroke-width='3' stroke-dasharray='9 8' fill='none'/><text x='250' y='83' font-family='monospace' font-size='9' fill='%23e8ebe9'>3</text><path d='M24 93 H232' stroke='%234f86e8' stroke-width='7' stroke-linecap='round' fill='none'/><text x='250' y='96' font-family='monospace' font-size='9' fill='%23e8ebe9'>4</text><path d='M24 106 H232' stroke='%234f86e8' stroke-width='7' stroke-linecap='round' fill='none'/><path d='M28 106 H228' stroke='%231a1d20' stroke-width='3' stroke-dasharray='9 8' fill='none'/><text x='250' y='109' font-family='monospace' font-size='9' fill='%23e8ebe9'>5</text><path d='M24 119 H232' stroke='%233fbf5f' stroke-width='7' stroke-linecap='round' fill='none'/><text x='250' y='122' font-family='monospace' font-size='9' fill='%23e8ebe9'>6</text><path d='M24 132 H232' stroke='%23b07a45' stroke-width='7' stroke-linecap='round' fill='none'/><path d='M28 132 H228' stroke='%231a1d20' stroke-width='3' stroke-dasharray='9 8' fill='none'/><text x='250' y='135' font-family='monospace' font-size='9' fill='%23e8ebe9'>7</text><path d='M24 145 H232' stroke='%23b07a45' stroke-width='7' stroke-linecap='round' fill='none'/><text x='250' y='148' font-family='monospace' font-size='9' fill='%23e8ebe9'>8</text><text x='24' y='182' font-family='monospace' font-size='9' fill='%239aa3a8'>T568B</text><text x='232' y='182' font-family='monospace' font-size='9' fill='%239aa3a8'>RJ45</text></svg>")}
+  :root:not([data-theme="light"]) .espace>h2::before{background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'><rect x='1' y='1' width='20' height='20' fill='%231a1d20' stroke='%23e8ebe9' stroke-width='1.4'/><circle cx='11' cy='11' r='4.6' fill='none' stroke='%23e8ebe9' stroke-width='1.4'/><path d='M7.8 9.2 L14.2 12.8' stroke='%23e8ebe9' stroke-width='1.4'/></svg>")}
+  :root:not([data-theme="light"]) .frise li:has(.vide)::before{background:repeating-linear-gradient(180deg,var(--paire) 0 7px,var(--fond) 7px 14px)}
+}
