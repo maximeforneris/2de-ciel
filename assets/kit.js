@@ -6681,6 +6681,608 @@ SCHEMAS["chaufferie-embleme"]=function(el){
   svg.appendChild(S("text",{x:cx,y:cy+R+26,"text-anchor":"middle","class":"s-pet"},"12 h"));
 };
 
+/* ═══════════════════════════════════════════ LE PRODUCTIBLE PHOTOVOLTAIQUE
+   Seance 22. Quatre nombres suffisent a un productible, trois de plus a ce
+   qu'il vaut : la puissance crete, l'irradiation du plan, le ratio de
+   performance, puis la consommation, la part autoconsommee et les deux prix.
+   L'outil ne connait pas la courbe horaire : la part autoconsommee est un
+   curseur, et c'est voulu — c'est elle que le cours discute. */
+OUTILS["productible-pv"] = {
+  titre:"Le productible, et ce qu'il vaut",
+  intro:"Déplacez la puissance crête, l'orientation et le ratio de performance : "+
+        "le productible suit. Puis la part autoconsommée et les deux prix : "+
+        "c'est là que se joue le temps de retour.",
+  monte:function(d){
+    var ORI=[["Sud, 30°",1.00],["Sud, 10°",0.95],["Sud, 60°",0.90],["Est ou ouest, 10°",0.86],
+             ["Est ou ouest, 30°",0.80],["Sud, vertical",0.70]];
+    var NOMS_ORI=ORI.map(function(o){return o[0];});
+    var P={pc:90, irr:1750, ori:"Est ou ouest, 10°", pr:0.80, conso:520, auto:72, achat:25, vente:11.07, cout:1100};
+    var maj=[];
+    var g=E("div",{"class":"g2"}), c1=E("div"), c2=E("div");
+    curseur(c1,maj,P,"Puissance crête","pc",3,500,1,0," kWc",calc);
+    curseur(c1,maj,P,"Irradiation du site, plan sud 30°","irr",1000,2000,10,0," kWh/m²",calc);
+    maj.push(choixListe(c1,P,"ori",NOMS_ORI,"Orientation et inclinaison",calc,
+      function(n){for(var i=0;i<ORI.length;i++) if(ORI[i][0]===n) return "coefficient "+frs(ORI[i][1],2);return "";}));
+    curseur(c1,maj,P,"Ratio de performance","pr",0.6,0.9,0.01,2,"",calc);
+    curseur(c2,maj,P,"Consommation annuelle du bâtiment","conso",10,2000,10,0," MWh",calc);
+    curseur(c2,maj,P,"Part de la production autoconsommée","auto",0,100,1,0," %",calc);
+    curseur(c2,maj,P,"Prix du kWh acheté","achat",10,40,0.5,1," ct",calc);
+    curseur(c2,maj,P,"Prix du kWh vendu","vente",0,20,0.5,2," ct",calc);
+    curseur(c2,maj,P,"Coût de l'installation","cout",600,2500,50,0," €/kWc",calc);
+    g.appendChild(c1); g.appendChild(c2); d.appendChild(g);
+    var res=E("div",{"class":"res",style:"margin-top:12px"}); d.appendChild(res);
+    function calc(){
+      maj.forEach(function(x){x();});
+      var k=1; for(var i=0;i<ORI.length;i++) if(ORI[i][0]===P.ori) k=ORI[i][1];
+      var hepp=P.irr*k, E_=P.pc*hepp*P.pr;              /* kWh/an */
+      var autoK=E_*P.auto/100, surplus=E_-autoK, conso=P.conso*1000;
+      var autoprod=conso>0?100*autoK/conso:0;
+      var eco=autoK*P.achat/100, vente=surplus*P.vente/100, gain=eco+vente;
+      var inv=P.pc*P.cout, retour=gain>0?inv/gain:0;
+      var alerte="";
+      if (autoK>conso) alerte="<p><b>Impossible :</b> on ne peut pas autoconsommer plus que ce que le bâtiment consomme. Baissez la part autoconsommée ou la puissance.</p>";
+      res.innerHTML="<div class='gros'>"+
+        "<span><b>Heures équivalentes</b><span>"+fr(hepp,0)+" h/an</span></span>"+
+        "<span><b>Productible</b><span>"+fr(E_/1000,1)+" MWh/an</span></span>"+
+        "<span><b>Par kWc</b><span>"+fr(E_/P.pc,0)+" kWh/kWc</span></span>"+
+        "<span><b>Facteur de charge</b><span>"+fr(100*E_/(P.pc*8760),1)+" %</span></span>"+
+        "</div><div class='gros' style='margin-top:8px'>"+
+        "<span><b>Autoconsommé</b><span>"+fr(autoK/1000,1)+" MWh</span></span>"+
+        "<span><b>Surplus</b><span>"+fr(surplus/1000,1)+" MWh</span></span>"+
+        "<span><b>Taux d'autoproduction</b><span>"+fr(autoprod,1)+" %</span></span>"+
+        "</div><div class='gros' style='margin-top:8px'>"+
+        "<span><b>Économie</b><span>"+fr(eco,0)+" €/an</span></span>"+
+        "<span><b>Revente</b><span>"+fr(vente,0)+" €/an</span></span>"+
+        "<span><b>Gain</b><span>"+fr(gain,0)+" €/an</span></span>"+
+        "<span><b>Investissement</b><span>"+fr(inv,0)+" €</span></span>"+
+        "<span><b>Retour brut</b><span>"+(retour?fr(retour,1)+" ans":"—")+"</span></span>"+
+        "</div>"+alerte+
+        "<p>Le kilowattheure autoconsommé vaut <b>"+fr(P.achat,1)+" ct</b>, le kilowattheure vendu <b>"+
+        fr(P.vente,2)+" ct</b> : chaque kilowattheure déplacé du surplus vers l'autoconsommation rapporte "+
+        fr(P.achat-P.vente,2)+" ct de plus. "+(P.auto<50?"À moins de la moitié autoconsommée, l'installation est trop grande pour le bâtiment, ou ses consommations sont au mauvais moment.":"")+"</p>";
+    }
+    calc();
+  }
+};
+
+/* ═══════════════════════════════════════════ ÉCLAIRER UNE SALLE
+   Seance 23. La methode du facteur d'utilisation, telle qu'elle se fait a
+   la main : le flux a installer, le nombre de luminaires, la puissance au
+   metre carre, et ce que la gestion en retire sur l'annee. */
+OUTILS["eclairement"] = {
+  titre:"Éclairer une salle : combien de luminaires, combien de watts",
+  intro:"La surface, le niveau à maintenir, le luminaire et ses deux facteurs : "+
+        "le flux à installer suit, puis le nombre de luminaires et les watts par "+
+        "mètre carré. Les heures et la gestion disent ce que ça coûte sur l'année.",
+  monte:function(d){
+    var P={L:8, l:7, E:300, flux:4000, W:36, ui:0.55, fm:0.80, h:1400, pres:20, grad:30, prix:25};
+    var maj=[];
+    var g=E("div",{"class":"g2"}), c1=E("div"), c2=E("div");
+    curseur(c1,maj,P,"Longueur de la salle","L",3,20,0.5,1," m",calc);
+    curseur(c1,maj,P,"Largeur","l",3,15,0.5,1," m",calc);
+    curseur(c1,maj,P,"Éclairement à maintenir","E",100,750,25,0," lux",calc);
+    curseur(c1,maj,P,"Flux d'un luminaire","flux",1000,8000,100,0," lm",calc);
+    curseur(c1,maj,P,"Puissance d'un luminaire","W",8,80,1,0," W",calc);
+    curseur(c2,maj,P,"Facteur d'utilisation Ui","ui",0.3,0.8,0.01,2,"",calc);
+    curseur(c2,maj,P,"Facteur de maintenance Fm","fm",0.6,0.95,0.01,2,"",calc);
+    curseur(c2,maj,P,"Heures d'occupation par an","h",200,4000,50,0," h",calc);
+    curseur(c2,maj,P,"Gain de la détection de présence","pres",0,50,5,0," %",calc);
+    curseur(c2,maj,P,"Gain de la gradation lumière du jour","grad",0,60,5,0," %",calc);
+    curseur(c2,maj,P,"Prix du kilowattheure","prix",10,40,0.5,1," ct",calc);
+    g.appendChild(c1); g.appendChild(c2); d.appendChild(g);
+    var res=E("div",{"class":"res",style:"margin-top:12px"}); d.appendChild(res);
+    function calc(){
+      maj.forEach(function(x){x();});
+      var S=P.L*P.l, phi=P.E*S/(P.ui*P.fm), n=Math.ceil(phi/P.flux), Pinst=n*P.W;
+      var Ereel=n*P.flux*P.ui*P.fm/S, wm2=Pinst/S, eff=P.flux/P.W;
+      var Ean=Pinst*P.h/1000, Egere=Ean*(1-P.pres/100)*(1-P.grad/100);
+      var K=S/((2.2)*(P.L+P.l));
+      res.innerHTML="<div class='gros'>"+
+        "<span><b>Surface</b><span>"+fr(S,1)+" m²</span></span>"+
+        "<span><b>Flux à installer</b><span>"+fr(phi,0)+" lm</span></span>"+
+        "<span><b>Luminaires</b><span>"+n+"</span></span>"+
+        "<span><b>Éclairement obtenu</b><span>"+fr(Ereel,0)+" lux</span></span>"+
+        "</div><div class='gros' style='margin-top:8px'>"+
+        "<span><b>Puissance installée</b><span>"+fr(Pinst,0)+" W</span></span>"+
+        "<span><b>Par mètre carré</b><span>"+fr(wm2,1)+" W/m²</span></span>"+
+        "<span><b>Efficacité du luminaire</b><span>"+fr(eff,0)+" lm/W</span></span>"+
+        "<span><b>Indice du local</b><span>K = "+fr(K,1)+"</span></span>"+
+        "</div><div class='gros' style='margin-top:8px'>"+
+        "<span><b>Énergie sans gestion</b><span>"+fr(Ean,0)+" kWh/an</span></span>"+
+        "<span><b>Avec gestion</b><span>"+fr(Egere,0)+" kWh/an</span></span>"+
+        "<span><b>Économie</b><span>"+fr(Ean-Egere,0)+" kWh, "+fr((Ean-Egere)*P.prix/100,0)+" €/an</span></span>"+
+        "</div><p>"+(wm2/(P.E/100)>2.5
+          ? "<b>Plus de 2,5 W/m² pour 100 lux :</b> le luminaire est peu efficace, ou les facteurs sont sévères. Une LED récente tient entre 1,5 et 2,2."
+          : "Ratio "+fr(wm2/(P.E/100),1)+" W/m² pour 100 lux : dans la plage d'une installation LED correcte.")+
+        " L'indice du local K sert à lire Ui dans la table du fabricant ; en dessous de 1, une salle étroite ou haute, Ui tombe vers 0,4.</p>";
+    }
+    calc();
+  }
+};
+
+/* ═══════════════════════════════════════════ QUINZE MINUTES DE LECTURE
+   Page d'essai. L'epreuve commence par quinze a vingt minutes de lecture,
+   et 40 % de ses points sont de l'extraction. Ce jeu entraine le geste sans
+   le contenu : un dossier fictif, dix questions, et pour chacune deux choix,
+   OU chercher, et QUELLE FORME de reponse le verbe demande. Le chronometre
+   tourne. Le retour dit juste ou faux et rappelle la methode ; il ne donne
+   jamais la reponse de fond, il n'y en a pas. */
+var DOSSIER_LECTURE = {
+  titre:"Groupe scolaire des Terrasses, extension et rénovation énergétique",
+  docs:[
+    ["DT 1","Présentation du projet, plan de masse, sources d'énergie"],
+    ["DT 2","Schéma de principe de la chaufferie, régimes d'eau"],
+    ["DT 3","Fiche technique de la chaudière à condensation"],
+    ["DT 4","Schéma de la CTA de la salle polyvalente, occupation, débits"],
+    ["DT 5","Diagramme de l'air humide"],
+    ["DT 6","Extrait de catalogue : sondes de CO₂"],
+    ["DT 7","Tableau de points et programme horaire de la GTB"],
+    ["DT 8","Index des compteurs et facture annuelle"],
+    ["DR 1","Schéma hydraulique à surligner"],
+    ["DR 2","Graphe de régulation de la batterie chaude à compléter"]
+  ],
+  formes:[
+    "un mot, ou une valeur avec son unité",
+    "trois lignes : la donnée, la règle, la conclusion",
+    "l'ordre des étapes, numérotées",
+    "la formule, les valeurs, le résultat souligné avec son unité",
+    "sur le document réponse, au crayon"
+  ],
+  /* question, document, forme, ce que rappelle le retour */
+  questions:[
+    ["Indiquer la puissance nominale de la chaudière et son rendement sur PCI.",2,0,
+     "« Indiquer » et une fiche technique : on relève, on n'explique pas."],
+    ["Justifier le choix d'une chaudière à condensation au regard du régime d'eau des radiateurs.",1,1,
+     "Le régime d'eau est sur le schéma de principe ; « justifier » demande la donnée, la règle et la conclusion."],
+    ["Surligner le circuit primaire sur le schéma hydraulique.",8,4,
+     "« Surligner » se fait sur le DR, jamais sur la copie."],
+    ["Déterminer le débit d'air neuf de la salle polyvalente pour l'occupation prévue.",3,3,
+     "L'occupation est une donnée du schéma de la CTA ; « déterminer » est un calcul, avec l'unité."],
+    ["Placer le point de soufflage sur le diagramme et lire sa teneur en eau.",4,4,
+     "Un point se place sur le diagramme fourni, qui est un document réponse de fait."],
+    ["Expliquer pourquoi la sonde de CO₂ est installée sur la reprise et non sur le soufflage.",3,1,
+     "« Expliquer » : trois lignes, et la donnée est la position de la sonde sur le schéma de la CTA."],
+    ["Choisir la sonde de CO₂ adaptée et relever sa plage de mesure et son signal de sortie.",5,0,
+     "Un extrait de catalogue se lit ; « relever » donne des valeurs, pas des phrases."],
+    ["Compléter le tableau de points : la nature de chaque point de la CTA.",6,4,
+     "Un tableau à compléter est un document réponse, même s'il est dans un DT."],
+    ["Calculer la consommation de chauffage de l'année à partir des index.",7,3,
+     "Deux index, une différence, une unité : c'est un calcul, et il s'écrit."],
+    ["Compléter le graphe de régulation de la batterie chaude avec les valeurs manquantes.",9,4,
+     "Un graphe se complète sur le DR, au crayon d'abord."],
+    ["Décrire, dans l'ordre, ce que fait la GTB à la relance de 6 h.",6,2,
+     "« Décrire » demande un ordre ; le programme horaire est dans le tableau de points de la GTB."],
+    ["Citer les deux sources d'énergie du groupe scolaire.",0,0,
+     "« Citer » : deux mots, pris dans la présentation du projet."]
+  ]
+};
+
+OUTILS["lecture-dossier"] = {
+  titre:"Quinze minutes de lecture : où chercher, et sous quelle forme répondre",
+  intro:"Un dossier fictif, douze questions. Pour chacune, dites dans quel "+
+        "document se trouve la réponse, et quelle forme le verbe de consigne "+
+        "attend. Le chronomètre tourne : l'épreuve donne quinze minutes.",
+  monte:function(d){
+    var D=DOSSIER_LECTURE, debut=null, fini=false, tick=null;
+    var tete=E("div",{"class":"res"});
+    tete.innerHTML="<p><b>"+D.titre+"</b> · les documents du dossier :</p>"+
+      "<ul style='columns:2;margin:6px 0 0;padding-left:18px'>"+D.docs.map(function(x){
+        return "<li><b>"+x[0]+"</b> · "+x[1]+"</li>";}).join("")+"</ul>";
+    d.appendChild(tete);
+    var cmd=E("div",{style:"display:flex;gap:8px;margin:12px 0;flex-wrap:wrap;align-items:center"});
+    var bGo=E("button",{"class":"bt p",type:"button"},"Commencer");
+    var bVer=E("button",{"class":"bt",type:"button",disabled:"disabled"},"Vérifier");
+    var chrono=E("span",{"class":"s-lab",style:"font-family:'IBM Plex Mono',monospace;font-size:15px"},"00:00");
+    cmd.appendChild(bGo); cmd.appendChild(bVer); cmd.appendChild(chrono); d.appendChild(cmd);
+    var liste=E("div",{style:"display:none"}); d.appendChild(liste);
+    var res=E("div",{"class":"res",style:"margin-top:12px;display:none"}); d.appendChild(res);
+    var ordre=[], selD=[], selF=[], lignes=[];
+    function construit(){
+      liste.innerHTML=""; selD=[]; selF=[]; lignes=[];
+      ordre=D.questions.map(function(q,i){return i;});
+      for (var i=ordre.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=ordre[i];ordre[i]=ordre[j];ordre[j]=t;}
+      ordre.forEach(function(qi,k){
+        var q=D.questions[qi];
+        var bloc=E("div",{"class":"champ",style:"margin:10px 0;padding:10px 12px;border:1px solid var(--trait);border-radius:8px"});
+        bloc.appendChild(E("p",{style:"margin:0 0 8px"},"<b>"+(k+1)+".</b> "+q[0]));
+        var g=E("div",{style:"display:flex;gap:10px;flex-wrap:wrap"});
+        var s1=E("select",{},"<option value=''>Où chercher ?</option>"+D.docs.map(function(x,i){
+          return "<option value='"+i+"'>"+x[0]+" · "+x[1]+"</option>";}).join(""));
+        var s2=E("select",{},"<option value=''>Quelle forme de réponse ?</option>"+D.formes.map(function(x,i){
+          return "<option value='"+i+"'>"+x+"</option>";}).join(""));
+        g.appendChild(s1); g.appendChild(s2); bloc.appendChild(g);
+        var retour=E("p",{style:"margin:8px 0 0;display:none"}); bloc.appendChild(retour);
+        liste.appendChild(bloc); selD.push(s1); selF.push(s2); lignes.push(retour);
+      });
+    }
+    function affiche(){
+      if (!debut) return;
+      var s=Math.floor((Date.now()-debut)/1000), m=Math.floor(s/60); s=s%60;
+      chrono.textContent=(m<10?"0":"")+m+":"+(s<10?"0":"")+s+(m>=15?"  · au-delà des quinze minutes":"");
+      chrono.style.color=m>=15?V("chaud"):V("encre");
+    }
+    bGo.addEventListener("click",function(){
+      construit(); liste.style.display="block"; res.style.display="none";
+      fini=false; debut=Date.now(); bVer.disabled=false; bGo.textContent="Recommencer";
+      if (tick) clearInterval(tick); tick=setInterval(affiche,500); affiche();
+    });
+    bVer.addEventListener("click",function(){
+      if (fini) return;
+      fini=true; clearInterval(tick); affiche();
+      var nd=0, nf=0, vides=0;
+      ordre.forEach(function(qi,k){
+        var q=D.questions[qi], vd=selD[k].value, vf=selF[k].value;
+        if (vd===""&&vf==="") vides++;
+        var okd=(+vd===q[1]), okf=(+vf===q[2]);
+        if (okd) nd++; if (okf) nf++;
+        selD[k].disabled=true; selF[k].disabled=true;
+        var r=lignes[k]; r.style.display="block";
+        r.innerHTML=(okd?"<span style='color:"+V("vert")+"'><b>Document :</b> juste.</span> ":"<span style='color:"+V("chaud")+"'><b>Document :</b> non, c'était le "+D.docs[q[1]][0]+".</span> ")+
+                    (okf?"<span style='color:"+V("vert")+"'><b>Forme :</b> juste.</span> ":"<span style='color:"+V("chaud")+"'><b>Forme :</b> non, "+D.formes[q[2]]+".</span> ")+
+                    "<span style='color:var(--encre2)'>"+q[3]+"</span>";
+      });
+      var s=Math.floor((Date.now()-debut)/1000), m=Math.floor(s/60);
+      res.style.display="block";
+      res.innerHTML="<div class='gros'>"+
+        "<span><b>Documents trouvés</b><span>"+nd+" / "+ordre.length+"</span></span>"+
+        "<span><b>Formes justes</b><span>"+nf+" / "+ordre.length+"</span></span>"+
+        "<span><b>Temps</b><span>"+m+" min "+(s%60)+" s</span></span>"+
+        "<span><b>Sans réponse</b><span>"+vides+"</span></span></div>"+
+        "<p>"+(m>=15?"<b>Plus de quinze minutes :</b> à l'épreuve, ce temps est pris sur la première partie. ":"<b>Dans les quinze minutes.</b> ")+
+        (nd<ordre.length-2?"Plusieurs documents ratés : relisez le sommaire des DT avant les questions, c'est la règle 1 de la lecture. ":"")+
+        (nf<ordre.length-2?"Plusieurs formes ratées : le verbe de la consigne dit ce que le correcteur attend, relisez le tableau des verbes de la séance 25.":"")+"</p>";
+      res.scrollIntoView({behavior:"smooth",block:"nearest"});
+    });
+  }
+};
+
+/* ═══════════════════════════════════════════ LA CARTE DES PREREQUIS
+   Page d'essai. Le site ecrit prerequis.js, la carte des pages publiees et
+   des pages que chacune suppose lues. L'outil la dessine en colonnes, une par
+   sequence, et la croise avec les marques « lu » du navigateur : on choisit
+   la page qu'on va lire, et la carte dit ce qu'il faut avoir lu avant, et ce
+   qui ne l'est pas encore. Tout reste dans le navigateur, rien ne sort. */
+OUTILS["carte-prerequis"] = {
+  titre:"Ce qu'il faut avoir lu avant : la carte des prérequis",
+  intro:"Chaque page du site annonce ses prérequis. Mises bout à bout, elles font "+
+        "une carte. Choisissez la page que vous allez lire : ses prérequis "+
+        "s'allument, et ceux que vous n'avez pas encore marqués « lu » sont en rouge.",
+  monte:function(d){
+    var socle=document.querySelector("[data-site]");
+    var res=E("div",{"class":"res"});
+    if (!socle){
+      res.innerHTML="<p>La carte ne vit que sur le site de classe : elle lit la liste des pages publiées, que seule la construction du site connaît.</p>";
+      d.appendChild(res); return;
+    }
+    var CLE="fed."+socle.getAttribute("data-site")+".lu";
+    function lues(){ try{ return JSON.parse(localStorage.getItem(CLE)||"{}")||{}; }catch(e){ return {}; } }
+    var sc=document.createElement("script");
+    sc.src="../prerequis.js";
+    sc.onload=function(){ dessine(window.PREREQUIS||{}); };
+    sc.onerror=function(){ res.innerHTML="<p>La carte n'a pas pu être chargée : reconstruire le site.</p>"; d.appendChild(res); };
+    document.head.appendChild(sc);
+
+    function dessine(C){
+      var ids=Object.keys(C);
+      if (!ids.length){ res.innerHTML="<p>Aucune page publiée ne déclare de prérequis.</p>"; d.appendChild(res); return; }
+      /* les colonnes : un groupe par sequence, puis le reste dans l'ordre d'apparition */
+      var groupes=[], parG={};
+      ids.forEach(function(id){
+        var g=C[id].groupe; if (!parG[g]){ parG[g]=[]; groupes.push(g); }
+        parG[g].push(id);
+      });
+      groupes.sort(function(a,b){
+        var sa=/^Séquence (\d+)/.exec(a), sb=/^Séquence (\d+)/.exec(b);
+        if (sa&&sb) return +sa[1]-+sb[1];
+        if (sa) return -1; if (sb) return 1; return 0;
+      });
+      groupes.forEach(function(g){ parG[g].sort(function(a,b){ return (C[a].ordre-C[b].ordre)||(a<b?-1:1); }); });
+      var CW=150, RH=54, X0=20, Y0=54, nmax=0;
+      groupes.forEach(function(g){ nmax=Math.max(nmax,parG[g].length); });
+      var W=X0*2+groupes.length*CW, H=Y0+nmax*RH+20;
+      var pos={};
+      groupes.forEach(function(g,ci){ parG[g].forEach(function(id,ri){ pos[id]={x:X0+ci*CW+CW/2,y:Y0+ri*RH+RH/2}; }); });
+      /* la page qu'on va lire : par defaut la premiere non lue dans l'ordre des colonnes */
+      var lu=lues(), choix=null;
+      for (var i=0;i<groupes.length&&!choix;i++) for (var j=0;j<parG[groupes[i]].length;j++){ var id=parG[groupes[i]][j]; if(!lu[id]){ choix=id; break; } }
+      if (!choix) choix=ids[0];
+      var ch=E("div",{"class":"champ"}); ch.appendChild(E("label",{},"La page que je vais lire"));
+      var vS=E("span",{"class":"v"},""); ch.appendChild(vS);
+      var sel=E("select",{},groupes.map(function(g){ return parG[g].map(function(id){ return "<option value='"+id+"'"+(id===choix?" selected":"")+">"+C[id].nom+"</option>"; }).join(""); }).join(""));
+      ch.appendChild(sel); d.appendChild(ch);
+      var enveloppe=E("div",{style:"overflow-x:auto;margin-top:8px"}); d.appendChild(enveloppe);
+      var svg=S("svg",{viewBox:"0 0 "+W+" "+H,width:W,role:"img","aria-label":"Carte des pages du site et de leurs prérequis"});
+      svg.style.minWidth=W+"px"; enveloppe.appendChild(svg);
+      d.appendChild(res);
+      function amont(id,acc){ (C[id].pre||[]).forEach(function(p){ if(!acc[p[0]]){ acc[p[0]]=p[1]; amont(p[0],acc); } }); return acc; }
+      function peint(){
+        lu=lues(); choix=sel.value; vS.textContent=lu[choix]?"déjà lue":"à lire";
+        while (svg.firstChild) svg.removeChild(svg.firstChild);
+        var directs={}; (C[choix].pre||[]).forEach(function(p){ directs[p[0]]=p[1]; });
+        var tous=amont(choix,{});
+        groupes.forEach(function(g,ci){
+          svg.appendChild(S("text",{x:X0+ci*CW+CW/2,y:26,"text-anchor":"middle","class":"s-lab",fill:V("encre2")},g));
+        });
+        /* les liaisons : de la page prerequise vers la page qui la suppose */
+        ids.forEach(function(id){ (C[id].pre||[]).forEach(function(p){
+          var a=pos[p[0]], b=pos[id]; if(!a||!b) return;
+          var fort=(id===choix), amontChoix=(tous[id]!==undefined&&tous[p[0]]!==undefined);
+          var coul=fort?(lu[p[0]]?"vert":"chaud"):(amontChoix?"tiede":"trait2");
+          var dx=(b.x-a.x)/2;
+          svg.appendChild(S("path",{d:"M"+a.x+","+a.y+" C"+(a.x+dx)+","+a.y+" "+(b.x-dx)+","+b.y+" "+b.x+","+b.y,
+            fill:"none",stroke:V(coul),"stroke-width":fort?3:(amontChoix?2:1),opacity:fort?1:(amontChoix?0.9:0.35)}));
+        }); });
+        ids.forEach(function(id){
+          var p=pos[id], estChoix=(id===choix), direct=directs[id]!==undefined, loin=tous[id]!==undefined;
+          var fond=estChoix?"encre":(direct?(lu[id]?"vert":"chaud"):(loin?"tiede":(lu[id]?"vert":"carte")));
+          var g=S("g",{style:"cursor:pointer"});
+          g.appendChild(S("rect",{x:p.x-64,y:p.y-18,width:128,height:36,rx:"8",fill:V(fond),opacity:estChoix||direct||loin?1:(lu[id]?0.55:1),stroke:V(lu[id]?"vert":"trait"),"stroke-width":lu[id]?2:1}));
+          var nom=C[id].code||C[id].nom.split(" — ")[0].split(" · ")[0];
+          if (nom.length>16) nom=nom.slice(0,15)+"…";
+          g.appendChild(S("text",{x:p.x,y:p.y+5,"text-anchor":"middle","class":"s-pet",fill:V(estChoix||direct||loin?"carte":"encre")},nom));
+          g.addEventListener("click",function(){ sel.value=id; peint(); });
+          svg.appendChild(g);
+        });
+        /* le compte rendu : la liste des prerequis, lus ou non, avec le lien */
+        var manque=[], ok=[];
+        (C[choix].pre||[]).forEach(function(p){ (lu[p[0]]?ok:manque).push(p); });
+        var h="<p><b>"+C[choix].nom+"</b> suppose "+(C[choix].pre||[]).length+" page"+((C[choix].pre||[]).length>1?"s":"")+" lue"+((C[choix].pre||[]).length>1?"s":"")+".</p>";
+        if (manque.length) h+="<p><b>À lire avant, pas encore marqué « lu » :</b></p><ul>"+manque.map(function(p){ return "<li><a href='../"+p[0]+".html'>"+C[p[0]].nom+"</a> — "+p[1]+"</li>"; }).join("")+"</ul>";
+        if (ok.length) h+="<p><b>Déjà lu :</b> "+ok.map(function(p){ return C[p[0]].nom; }).join(" · ")+"</p>";
+        if (!(C[choix].pre||[]).length) h+="<p>Cette page ne suppose rien : on peut commencer par elle.</p>";
+        var loinL=Object.keys(tous).filter(function(id){ return !directs[id]&&!lu[id]; });
+        if (loinL.length) h+="<p style='color:var(--encre2)'>Plus en amont, non lus : "+loinL.map(function(id){ return C[id].nom; }).join(" · ")+".</p>";
+        h+="<p style='color:var(--encre2)'>Les marques « lu » sont celles de ce navigateur, sur cet appareil ; personne d'autre ne les voit.</p>";
+        res.innerHTML=h;
+      }
+      sel.addEventListener("change",peint);
+      window.addEventListener("storage",peint);
+      peint();
+    }
+  }
+};
+
+/* ═══════════════════════════════════════════ UNE SAISON DE POMPE A CHALEUR
+   Page d'essai. Une journee ne dit rien d'une pompe a chaleur : son COP
+   change avec l'exterieur et avec la temperature qu'on lui demande, sa
+   puissance tombe quand il fait froid, et l'appoint prend le relais sous le
+   point de bivalence. Il faut une saison, jour par jour, du 1er octobre au
+   30 avril. Le batiment est celui du fil rouge : G kW/K, une consigne, des
+   apports gratuits qui valent 3 K. La PAC est definie a +7/35 et suit une loi
+   simple : la puissance perd 3 % par kelvin sous +7, le COP vaut la moitie de
+   Carnot avec un givrage entre -3 et +5 °C. */
+var CLIMATS = {
+  "Fréjus":     {tm:[17,12,9,8,9,11,14],  base:-5,  amp:7},
+  "Lyon":       {tm:[13,7,4,3,4,8,11],    base:-10, amp:9},
+  "Lille":      {tm:[12,7,4,3,4,7,10],    base:-9,  amp:8},
+  "Strasbourg": {tm:[11,5,2,1,2,6,10],    base:-15, amp:10}
+};
+var NOMS_CLIMATS = ["Fréjus","Lyon","Lille","Strasbourg"];
+var EMETTEURS = {
+  "Plancher chauffant 35/28":  {tbase:35, pente:0.67},
+  "Radiateurs basse T 55/45":  {tbase:55, pente:1.5},
+  "Radiateurs existants 65/55":{tbase:65, pente:1.9}
+};
+var NOMS_EMETTEURS = ["Plancher chauffant 35/28","Radiateurs basse T 55/45","Radiateurs existants 65/55"];
+var MOIS_SAISON = ["oct.","nov.","déc.","janv.","févr.","mars","avr."];
+var JOURS_MOIS = [31,30,31,31,28,31,30];
+
+OUTILS["saison-pac"] = {
+  titre:"Une saison de pompe à chaleur, jour par jour",
+  intro:"Appuyez sur Lire : du 1er octobre au 30 avril, la PAC seule en automne, "+
+        "l'appoint sous le point de bivalence en janvier, le COP qui remonte en "+
+        "mars. Le SCOP est ce qui reste à la fin.",
+  monte:function(d){
+    var DEF={climat:"Fréjus", G:3, part:50, emet:"Radiateurs basse T 55/45", appoint:"électrique", mode:"parallèle", pe:25, pg:10};
+    var P={}; for (var k0 in DEF) P[k0]=DEF[k0];
+    var SCEN=[
+      ["Libre", null],
+      ["1 · Fréjus, radiateurs 55/45, PAC à 50 % de la base", {}],
+      ["2 · La même PAC à Lille", {climat:"Lille"}],
+      ["3 · Plancher chauffant", {emet:"Plancher chauffant 35/28"}],
+      ["4 · Radiateurs existants 65/55", {emet:"Radiateurs existants 65/55"}],
+      ["5 · PAC dimensionnée à 100 % de la base", {part:100}],
+      ["6 · Appoint gaz en alternatif", {appoint:"gaz", mode:"alternatif"}],
+      ["7 · PAC trop petite, 35 % de la base", {part:35}]
+    ];
+    var maj=[], reg={}, enScen=false;
+    var g=E("div",{"class":"g2"}), c1=E("div"), c2=E("div");
+    var chS=E("div",{"class":"champ"});
+    chS.appendChild(E("label",{},"Scénario du cours"));
+    var vS=E("span",{"class":"v"},""); chS.appendChild(vS);
+    var selS=E("select",{},SCEN.map(function(s,i){
+      return '<option value="'+i+'"'+(i===1?" selected":"")+'>'+s[0]+"</option>";}).join(""));
+    chS.appendChild(selS); c1.appendChild(chS);
+    function touche(){ if(!enScen){selS.value="0";} reset(); }
+    maj.push(choixListe(c1,P,"climat",NOMS_CLIMATS,"Climat",touche,
+      function(n){return "base "+CLIMATS[n].base+" °C";},reg));
+    curseur(c1,maj,P,"Déperditions du bâtiment G","G",1,10,0.5,1," kW/K",touche,reg);
+    curseur(c1,maj,P,"Puissance de la PAC, en part de la base","part",30,120,5,0," %",touche,reg);
+    maj.push(choixListe(c1,P,"emet",NOMS_EMETTEURS,"Émetteurs",touche,
+      function(n){return EMETTEURS[n].tbase+" °C par temps de base";},reg));
+    maj.push(choixListe(c2,P,"appoint",["électrique","gaz"],"Appoint",touche,null,reg));
+    maj.push(choixListe(c2,P,"mode",["parallèle","alternatif"],"Bivalence",touche,
+      function(n){return n==="parallèle"?"la PAC continue sous le point de bivalence":"l'appoint seul sous le point de bivalence";},reg));
+    curseur(c2,maj,P,"Prix du kWh électrique","pe",10,40,0.5,1," ct",touche,reg);
+    curseur(c2,maj,P,"Prix du kWh de gaz","pg",5,20,0.5,1," ct",touche,reg);
+    g.appendChild(c1); g.appendChild(c2); d.appendChild(g);
+    selS.addEventListener("change",function(){
+      var s=SCEN[+this.value]; if(!s[1]) return;
+      enScen=true;
+      for (var k in DEF) P[k]=DEF[k];
+      for (var k2 in s[1]) P[k2]=s[1][k2];
+      for (var k3 in reg) reg[k3].value=P[k3];
+      enScen=false; reset();
+    });
+    maj.push(function(){vS.textContent=selS.value==="0"?"réglages à la main":"chargé";});
+
+    var cmd=E("div",{style:"display:flex;gap:8px;margin:10px 0 6px;flex-wrap:wrap"});
+    var bLire=E("button",{"class":"bt p",type:"button"},"Lire");
+    var bMois=E("button",{"class":"bt",type:"button"},"+ 1 mois");
+    var bRaz=E("button",{"class":"bt",type:"button"},"Recommencer");
+    cmd.appendChild(bLire); cmd.appendChild(bMois); cmd.appendChild(bRaz); d.appendChild(cmd);
+
+    var W=680,H=360, X0=54,X1=420,Y0=26,Y1=180, XB=54,YB=236,HB=96;
+    var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+      "aria-label":"Température extérieure jour par jour, puis chaleur fournie par la PAC et par l'appoint, mois par mois"});
+    d.appendChild(svg);
+    var res=E("div",{"class":"res",style:"margin-top:12px"}); d.appendChild(res);
+
+    var NJ=212, TINT=19, SEUIL=16;
+    var S_={}, anim=null, acc=0, dernier=0;
+
+    function climat(){ return CLIMATS[P.climat]; }
+    function pn(){                  /* puissance nominale a +7/35, deduite de la part de la base */
+      var c=climat(), pbase=P.G*(TINT-c.base);
+      return P.part/100*pbase/(1+0.03*(c.base-7));
+    }
+    function ppac(te){ return Math.max(0, pn()*(1+0.03*(te-7))); }
+    function tdep(te){ var e=EMETTEURS[P.emet]; return Math.max(25, Math.min(e.tbase, TINT+e.pente*(TINT-te))); }
+    function cop(te){
+      var td=tdep(te), c=0.40*(td+273.15)/Math.max(8, td-te);
+      if (te>-3&&te<5) c*=0.9;                       /* le givrage et son degivrage */
+      return Math.max(1.3, Math.min(5.5, c));
+    }
+    function tbiv(){
+      var G=P.G, p=pn();
+      return (SEUIL*G-0.79*p)/(G+0.03*p);
+    }
+    function text(j){                /* jour 0..211, une temperature moyenne du jour */
+      var c=climat(), pos=j/NJ*7, i=Math.min(6,Math.floor(pos)), f=pos-i;
+      var tm=c.tm[i]*(1-f)+c.tm[Math.min(6,i+1)]*f;
+      var bruit=Math.sin(j*0.9)*0.5+Math.sin(j*0.23+1.7)*0.45+Math.sin(j*0.07+0.4)*0.35;   /* des vagues de froid de quelques jours */
+      return tm+c.amp*bruit;
+    }
+    function mois(j){ var s=0; for (var i=0;i<7;i++){ s+=JOURS_MOIS[i]; if (j<s) return i; } return 6; }
+
+    function reset(){
+      maj.forEach(function(x){x();});
+      if (anim){cancelAnimationFrame(anim);anim=null;bLire.textContent="Lire";}
+      S_={j:0, tr:[], mB:[0,0,0,0,0,0,0], mP:[0,0,0,0,0,0,0], mA:[0,0,0,0,0,0,0], mE:[0,0,0,0,0,0,0], mEA:[0,0,0,0,0,0,0],
+          besoin:0, chP:0, chA:0, elP:0, elA:0, gazA:0, jApp:0, jours:0, copMin:9, teMin:99, jourApp:[], ppacJour:[]};
+      dessine(); acc=0;
+    }
+    function pas(){
+      var j=S_.j; if (j>=NJ) return;
+      var te=text(j), m=mois(j);
+      var besoin=P.G*Math.max(0,SEUIL-te)*24;          /* kWh du jour */
+      var cap=ppac(te)*24, c=cop(te);
+      var chP, chA;
+      if (besoin<=0){ chP=0; chA=0; }
+      else if (P.mode==="alternatif"&&te<tbiv()){ chP=0; chA=besoin; }
+      else { chP=Math.min(besoin,cap); chA=besoin-chP; }
+      var elP=chP/c, elA=0, gazA=0;
+      if (chA>0){ if (P.appoint==="gaz") gazA=chA/0.95; else elA=chA; S_.jApp++; }
+      S_.mB[m]+=besoin; S_.mP[m]+=chP; S_.mA[m]+=chA; S_.mE[m]+=elP; S_.mEA[m]+=elA+gazA;
+      S_.besoin+=besoin; S_.chP+=chP; S_.chA+=chA; S_.elP+=elP; S_.elA+=elA; S_.gazA+=gazA;
+      if (besoin>0){ S_.jours++; if (c<S_.copMin) S_.copMin=c; }
+      if (te<S_.teMin) S_.teMin=te;
+      S_.tr.push(te); S_.jourApp.push(chA>0); S_.ppacJour.push(cap);
+      S_.j++;
+    }
+
+    function px(j){return X0+(X1-X0)*j/NJ;}
+    function py(t){return Y1-(Y1-Y0)*(t+16)/40;}
+    function txt(x,y,t,cls,anc,coul){
+      svg.appendChild(S("text",{x:x,y:y,"text-anchor":anc||"middle","class":cls||"s-pet",fill:V(coul||"encre2")},t));
+    }
+    function dessine(){
+      while (svg.firstChild) svg.removeChild(svg.firstChild);
+      /* la temperature, jour par jour, avec le point de bivalence */
+      var s=0;
+      for (var i=0;i<7;i++){
+        var x=px(s);
+        svg.appendChild(S("line",{x1:x,y1:Y0,x2:x,y2:Y1,stroke:V("trait2"),"stroke-width":"1",opacity:"0.6"}));
+        txt(px(s+JOURS_MOIS[i]/2),Y1+14,MOIS_SAISON[i]);
+        s+=JOURS_MOIS[i];
+      }
+      [-10,0,10,20].forEach(function(t){
+        svg.appendChild(S("line",{x1:X0,y1:py(t),x2:X1,y2:py(t),stroke:V("trait2"),"stroke-width":"1",opacity:"0.4"}));
+        txt(X0-6,py(t)+4,t+" °C","s-pet","end");
+      });
+      var tb=tbiv();
+      if (tb>-16&&tb<24){
+        svg.appendChild(S("line",{x1:X0,y1:py(tb),x2:X1,y2:py(tb),stroke:V("chaud"),"stroke-width":"1.5","stroke-dasharray":"5 4"}));
+        txt(X1+6,py(tb)+4,"bivalence "+fr(tb,1)+" °C","s-pet","start","chaud");
+      }
+      /* les jours avec appoint, en fond */
+      for (var j=0;j<S_.tr.length;j++) if (S_.jourApp[j])
+        svg.appendChild(S("rect",{x:px(j),y:Y0,width:Math.max(0.6,px(j+1)-px(j)),height:Y1-Y0,fill:V("chaud"),opacity:"0.12"}));
+      if (S_.tr.length>1){
+        var pts=[];
+        for (var j2=0;j2<S_.tr.length;j2++) pts.push(px(j2).toFixed(1)+","+py(S_.tr[j2]).toFixed(1));
+        svg.appendChild(S("polyline",{points:pts.join(" "),fill:"none",stroke:V("froid"),"stroke-width":"1.8","stroke-linejoin":"round"}));
+      }
+      txt(X0,Y0-8,"extérieur, jour par jour · en rose, les jours où l'appoint a marché","s-pet","start");
+      /* les mois : chaleur PAC et appoint empilees, COP du mois en chiffre */
+      var mx=1; for (var i2=0;i2<7;i2++) mx=Math.max(mx,S_.mB[i2]);
+      var lb=(X1-XB)/7;
+      for (var i3=0;i3<7;i3++){
+        var hP=(HB-18)*S_.mP[i3]/mx, hA=(HB-18)*S_.mA[i3]/mx, x0=XB+i3*lb+8, w=lb-16;   /* 18 px de marge pour le COP du mois */
+        svg.appendChild(S("rect",{x:x0,y:YB+HB-hP,width:w,height:hP,fill:V("froid"),opacity:"0.85"}));
+        svg.appendChild(S("rect",{x:x0,y:YB+HB-hP-hA,width:w,height:hA,fill:V("chaud"),opacity:"0.85"}));
+        txt(x0+w/2,YB+HB+14,MOIS_SAISON[i3]);
+        if (S_.mE[i3]>0) txt(x0+w/2,YB+HB-hP-hA-6,"COP "+fr(S_.mP[i3]/S_.mE[i3],1),"s-pet","middle","encre");
+      }
+      txt(XB,YB-8,"chaleur du mois : PAC en bleu, appoint en rouge, et le COP du mois","s-pet","start");
+      /* le compte rendu */
+      var fini=S_.j>=NJ, jd=Math.max(0,S_.j-1), m=mois(jd), jm=jd-[0,31,61,92,123,151,182][m];
+      var scop=S_.elP>0?S_.chP/S_.elP:0, couv=S_.besoin>0?100*S_.chP/S_.besoin:0;
+      var cout=(S_.elP+S_.elA)*P.pe/100+S_.gazA*P.pg/100;
+      var coutSansPac=P.appoint==="gaz"?S_.besoin/0.95*P.pg/100:S_.besoin*P.pe/100;
+      var c=climat();
+      res.innerHTML="<div class='gros'>"+
+        "<span><b>Date</b><span>"+(fini?"30 avril":(S_.j?(jm+1)+" "+MOIS_SAISON[m]:"1 oct."))+"</span></span>"+
+        "<span><b>PAC nominale (+7/35)</b><span>"+fr(pn(),1)+" kW</span></span>"+
+        "<span><b>Puissance de base</b><span>"+fr(P.G*(TINT-c.base),0)+" kW à "+c.base+" °C</span></span>"+
+        "<span><b>Point de bivalence</b><span>"+fr(tbiv(),1)+" °C</span></span>"+
+        "</div><div class='gros' style='margin-top:8px'>"+
+        "<span><b>Besoin cumulé</b><span>"+fr(S_.besoin/1000,1)+" MWh</span></span>"+
+        "<span><b>Fourni par la PAC</b><span>"+fr(couv,0)+" %</span></span>"+
+        "<span><b>Jours avec appoint</b><span>"+S_.jApp+"</span></span>"+
+        "<span><b>COP le plus bas</b><span>"+(S_.copMin<9?fr(S_.copMin,1):"—")+"</span></span>"+
+        "</div><div class='gros' style='margin-top:8px'>"+
+        "<span><b>SCOP à ce jour</b><span>"+(scop?fr(scop,2):"—")+"</span></span>"+
+        "<span><b>Électricité PAC</b><span>"+fr(S_.elP/1000,2)+" MWh</span></span>"+
+        "<span><b>Appoint</b><span>"+fr((S_.elA+S_.gazA)/1000,2)+" MWh "+(P.appoint==="gaz"?"de gaz":"électriques")+"</span></span>"+
+        "<span><b>Coût</b><span>"+fr(cout,0)+" €</span></span>"+
+        "<span><b>Sans PAC, "+(P.appoint==="gaz"?"chaudière seule":"tout électrique")+"</b><span>"+fr(coutSansPac,0)+" €</span></span>"+
+        "</div><p>"+(!S_.j
+          ? "Appuyez sur <b>Lire</b>, ou avancez d'un mois. Le point de bivalence est la température extérieure sous laquelle la PAC ne suffit plus."
+          : fini
+          ? "<b>Saison finie.</b> La PAC a fourni "+fr(couv,0)+" % de la chaleur avec un SCOP de "+fr(scop,2)+
+            ", l'appoint a marché "+S_.jApp+" jour"+(S_.jApp>1?"s":"")+"."+
+            (scop<3?" <b>Un SCOP sous 3</b> : les émetteurs demandent une eau trop chaude, ou le climat est trop froid pour cette machine.":"")+
+            (couv<80?" <b>Moins de 80 % par la PAC</b> : elle est trop petite pour ce climat, l'appoint fait le travail aux pires jours, au prix fort.":"")+
+            (P.part>=100?" <b>Une PAC à 100 % de la base</b> ne gagne presque rien sur la couverture et coûte le double : la base n'arrive que quelques jours.":"")
+          : "Le COP suit l'écart entre le départ d'eau et l'extérieur : il descend quand il fait froid, et plus encore quand les émetteurs veulent de l'eau chaude.")+"</p>";
+    }
+    function boucle(ts){
+      if (!dernier) dernier=ts;
+      acc+=(ts-dernier)*0.012; dernier=ts;
+      var n=Math.floor(acc); acc-=n;
+      for (var i=0;i<n;i++) pas();
+      dessine();
+      if (S_.j<NJ) anim=requestAnimationFrame(boucle);
+      else { anim=null; bLire.textContent="Lire"; }
+    }
+    bLire.addEventListener("click",function(){
+      if (anim){cancelAnimationFrame(anim);anim=null;bLire.textContent="Lire";return;}
+      if (S_.j>=NJ) reset();
+      dernier=0; bLire.textContent="Pause"; anim=requestAnimationFrame(boucle);
+    });
+    bMois.addEventListener("click",function(){
+      if (anim){cancelAnimationFrame(anim);anim=null;bLire.textContent="Lire";}
+      if (S_.j>=NJ) return;
+      var m=mois(S_.j), fin=[31,61,92,123,151,182,212][m];
+      while (S_.j<fin) pas();
+      dessine();
+    });
+    bRaz.addEventListener("click",reset);
+    reset();
+  }
+};
+
 OUTILS.ecs={
   titre:"Eau chaude sanitaire — puissance et stockage",
   intro:"Le profil de puisage d'un internat, heure par heure. Le stockage ne "+
