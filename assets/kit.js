@@ -108,6 +108,24 @@ function memeTexte(a,b){
   var x=aplat(a),y=aplat(b);
   return x===y||x.replace(/ /g,"")===y.replace(/ /g,"");
 }
+function aplatSignes(s){
+  /* Comme aplat(), mais on GARDE les symboles qui portent le sens :
+     + - * / ^ ( ) [ ] ; < > = et le point decimal. Sans eux, « 5x - 5 »
+     et « 5x + 5 » deviennent la meme reponse, et « [0 ; 10[ » vaut
+     « ]0 ; 10] ». Les variantes typographiques sont ramenees a la touche
+     du clavier : moins, fois, divise, virgule decimale. */
+  return (s.normalize?s.normalize("NFD").replace(/[\u0300-\u036f]/g,""):s)
+         .toLowerCase()
+         .replace(/[\u2212\u2013\u2014]/g,"-")
+         .replace(/[\u00d7\u22c5\u2217]/g,"*")
+         .replace(/[\u00f7\u2215]/g,"/")
+         .replace(/,/g,".")
+         .replace(/[^a-z0-9+\-*\/^()\[\];<>=.]+/g," ").trim();
+}
+function memeSignes(a,b){
+  var x=aplatSignes(a),y=aplatSignes(b);
+  return x===y||x.replace(/ /g,"")===y.replace(/ /g,"");
+}
 function nombre(s){
   /* « 1 376 » et « 1,38 » et « 1.38e3 » : l'eleve tape comme il veut */
   var t=s.replace(/\s/g,"").replace(",",".");   /* \s couvre U+00A0 et U+202F */
@@ -247,7 +265,8 @@ function nombre(s){
       if(isNaN(v))return false;
       return Math.abs(v-d.v)<=Math.abs(d.v)*(sec.tol/100)+1e-9;
     }
-    return !!txt.trim()&&(d.a||[]).some(function(a){return memeTexte(a,txt);});
+    var cmp=(sec.m==="signes")?memeSignes:memeTexte;
+    return !!txt.trim()&&(d.a||[]).some(function(a){return cmp(a,txt);});
   }
 
   var verdict=E("p",{"class":"verdict"},"");
@@ -6198,6 +6217,470 @@ SCHEMAS["cta-embleme"]=function(el){
 };
 
 
+/* ═══════════════════════════════════════════ LA CHAUFFERIE EN MOUVEMENT
+   Le batiment du fil rouge : une aile de college, 1 500 m², 75 kW de
+   radiateurs en 80/60 a la base, une chaudiere a condensation de 90 kW qui
+   module, un ballon d'ECS de 1 500 L avec sa boucle, une loi d'eau, un reduit
+   de nuit. Une journee en une minute.
+
+   Le batiment est un seul noeud thermique. Les radiateurs emettent en
+   puissance 1,3 de l'ecart moyen eau-air ; le retour se deduit du debit,
+   constant. Le rendement de la chaudiere depend de la temperature de l'eau
+   qui LUI revient — et un bipasse peut la rechauffer, ce qui tue la
+   condensation. L'ECS a priorite sur le chauffage. */
+
+OUTILS["journee-chaufferie"] = {
+  titre:"Une journée de chaufferie, en une minute",
+  intro:"Appuyez sur Lire. À cinq heures la relance, à sept heures les douches "+
+        "de l'internat, à huit heures les élèves, la nuit le réduit. Regardez le "+
+        "départ suivre la loi d'eau, et le retour décider si la chaudière condense.",
+  monte:function(d){
+    var DEF={tm:0, amp:6, sol:8, pente:2.5, para:0, reduit:3, relance:5, bipasse:0,
+             pch:90, pers:150, ecs:1600, occ:"Collège en semaine"};
+    var P={}; for (var k0 in DEF) P[k0]=DEF[k0];
+    var SCEN=[
+      ["Libre", null],
+      ["1 · Nuit d'hiver, sans réduit", {reduit:0}],
+      ["2 · Journée d'hiver, réduit de nuit", {}],
+      ["3 · Loi d'eau trop haute", {para:8}],
+      ["4 · La vanne qui tue la condensation", {bipasse:50}],
+      ["5 · Le matin de l'internat", {ecs:3200}],
+      ["6 · Mi-saison : la chaudière court-cycle", {tm:12, amp:6, sol:12}]
+    ];
+    var maj=[], reg={}, enScen=false;
+    var g=E("div",{"class":"g2"}), c1=E("div"), c2=E("div");
+    var chS=E("div",{"class":"champ"});
+    chS.appendChild(E("label",{},"Scénario du cours"));
+    var vS=E("span",{"class":"v"},""); chS.appendChild(vS);
+    var selS=E("select",{},SCEN.map(function(s,i){
+      return '<option value="'+i+'"'+(i===2?" selected":"")+'>'+s[0]+"</option>";}).join(""));
+    chS.appendChild(selS); c1.appendChild(chS);
+    function touche(){ if(!enScen){selS.value="0";} reset(); }
+    curseur(c1,maj,P,"Température extérieure moyenne","tm",-10,18,1,0," °C",touche,reg);
+    curseur(c1,maj,P,"Amplitude jour-nuit","amp",0,12,1,0," K",touche,reg);
+    curseur(c1,maj,P,"Ensoleillement maximal","sol",0,30,1,0," kW",touche,reg);
+    curseur(c1,maj,P,"Pente de la loi d'eau","pente",0.6,3,0.1,1,"",touche,reg);
+    curseur(c1,maj,P,"Parallèle","para",-10,10,1,0," K",touche,reg);
+    curseur(c1,maj,P,"Réduit de nuit","reduit",0,8,0.5,1," K",touche,reg);
+    curseur(c2,maj,P,"Heure de relance","relance",3,8,0.5,1," h",touche,reg);
+    curseur(c2,maj,P,"Bipasse vers le retour chaudière","bipasse",0,80,10,0," %",touche,reg);
+    curseur(c2,maj,P,"Puissance de la chaudière","pch",40,160,10,0," kW",touche,reg);
+    curseur(c2,maj,P,"Élèves présents","pers",0,300,25,0,"",touche,reg);
+    curseur(c2,maj,P,"ECS puisée par jour","ecs",0,4000,200,0," L",touche,reg);
+    maj.push(choixListe(c2,P,"occ",["Collège en semaine","Bâtiment vide"],"Occupation",touche,null,reg));
+    g.appendChild(c1); g.appendChild(c2); d.appendChild(g);
+    selS.addEventListener("change",function(){
+      var s=SCEN[+this.value]; if(!s[1]) return;
+      enScen=true;
+      for (var k in DEF) P[k]=DEF[k];
+      for (var k2 in s[1]) P[k2]=s[1][k2];
+      for (var k3 in reg) reg[k3].value=P[k3];
+      enScen=false; reset();
+    });
+    maj.push(function(){vS.textContent=selS.value==="0"?"réglages à la main":"chargé";});
+
+    var cmd=E("div",{style:"display:flex;gap:8px;margin:10px 0 6px;flex-wrap:wrap"});
+    var bLire=E("button",{"class":"bt p",type:"button"},"Lire");
+    var bHeure=E("button",{"class":"bt",type:"button"},"+ 1 h");
+    var bRaz=E("button",{"class":"bt",type:"button"},"Recommencer");
+    cmd.appendChild(bLire); cmd.appendChild(bHeure); cmd.appendChild(bRaz); d.appendChild(cmd);
+
+    var W=680,H=350, X0=44,X1=420,Y0=28,Y1=224, XB=488,XB1=664;
+    var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+      "aria-label":"Températures de départ, de retour, du bâtiment et du ballon sur vingt-quatre heures"});
+    d.appendChild(svg);
+    var res=E("div",{"class":"res",style:"margin-top:12px"}); d.appendChild(res);
+
+    var CZ=60000, UA=3.0, PHIN=75, QM=0.896, VB=1500, BOUCLE=1.4, PECS=40, POMPES=0.31, CONS=19;
+    var S_={}, anim=null, acc=0, dernier=0;
+    var POSTES=["Gaz PCI","Chauffage","ECS","Boucle ECS","Fumées","Pompes"];
+
+    function text(h){return P.tm+(P.amp/2)*Math.cos(2*Math.PI*(h-15)/24);}
+    function occ(h){return (P.occ==="Collège en semaine"&&((h>=8&&h<12)||(h>=14&&h<17)))?P.pers:0;}
+    function puisage(m){                       /* litres a 40 °C, par minute */
+      var h=m/60;
+      if (h>=7&&h<7.5)  return P.ecs*0.50/30;
+      if (h>=12&&h<13)  return P.ecs*0.15/60;
+      if (h>=19&&h<19.5)return P.ecs*0.35/30;
+      return 0;
+    }
+    function consigne(h){ return (h>=P.relance&&h<22)?CONS:CONS-P.reduit; }
+    function rendement(tret){ return 0.90+0.19*Math.max(0,Math.min(1,(57-tret)/32)); }
+
+    function reset(){
+      maj.forEach(function(x){x();});
+      if (anim){cancelAnimationFrame(anim);anim=null;bLire.textContent="Lire";}
+      S_={m:0, Tz:CONS-P.reduit*0.6, Tret:40, Tb:60, ecsOn:false, ch:true, cyc:0,
+          E:{}, trZ:[], trX:[], trD:[], trR:[], trB:[], cond:[], hors:0, occmin:0,
+          eau:0, q:null, tmax:90, tmin:Math.min(-8,text(0)-2), dernierEtat:false};
+      POSTES.forEach(function(p){S_.E[p]=0;});
+      dessine(); acc=0;
+    }
+
+    function pas(){
+      var m=S_.m; if (m>=1440) return;
+      var h=m/60, n=occ(h), Te=text(h), cs=consigne(h);
+      var sol=(h>7&&h<18)?P.sol*Math.sin(Math.PI*(h-7)/11):0;
+      /* l'ECS d'abord : puisage, boucle, et le ballon qui demande */
+      var L=puisage(m), Leq=L*(40-10)/(S_.Tb-10);
+      S_.Tb-=Leq*(S_.Tb-10)/VB;
+      S_.Tb-=BOUCLE*60/(VB*4.185);
+      S_.eau+=L;
+      if (!S_.ecsOn && S_.Tb<55) S_.ecsOn=true;
+      if (S_.ecsOn && S_.Tb>=60) S_.ecsOn=false;
+      var qEcs=S_.ecsOn?PECS:0;
+      /* la loi d'eau, et l'emission des radiateurs (implicite sur le retour) */
+      var Tdc=Math.max(25,Math.min(85,cs+P.pente*(cs-Te)+P.para));
+      var Tret=S_.Tret, Tdep=Tdc, em=0;
+      for (var it=0;it<4;it++){
+        var Tm=(Tdep+Tret)/2;
+        em=PHIN*Math.pow(Math.max(0,(Tm-S_.Tz)/50),1.3);
+        Tret=Tdep-em/(QM*4.185);
+      }
+      var qCh=Math.max(0,QM*4.185*(Tdep-Tret));
+      /* la chaudiere : priorite ECS, modulation de 20 a 100 %, tout ou rien en dessous */
+      var dispo=P.pch-qEcs, qChReel=Math.min(qCh,Math.max(0,dispo));
+      var Tdep2=Tret+qChReel/(QM*4.185);
+      if (qChReel<qCh){                        /* le chauffage n'a pas tout : le depart baisse */
+        Tdep=Tdep2;
+        for (var it2=0;it2<3;it2++){
+          var Tm2=(Tdep+Tret)/2;
+          em=PHIN*Math.pow(Math.max(0,(Tm2-S_.Tz)/50),1.3);
+          Tret=Tdep-em/(QM*4.185);
+        }
+      }
+      var qTot=qChReel+qEcs, seuil=0.2*P.pch, marche;
+      if (qTot<=0) marche=false;
+      else if (qTot>=seuil) marche=true;
+      else {
+        /* sous 20 % : la chaudiere ne module plus, elle bat au rythme de ses seuils */
+        var cycleMin=Math.max(3,Math.round(60*seuil/Math.max(qTot,1)/4));
+        marche=(m%cycleMin)<Math.max(1,Math.round(cycleMin*qTot/seuil));
+      }
+      if (marche&&!S_.dernierEtat) S_.cyc++;
+      S_.dernierEtat=marche;
+      var qBoiler=marche?Math.max(qTot,seuil):0;
+      if (qTot>0&&qTot<seuil) qBoiler=marche?seuil:0;
+      var TretCh=Tret+(P.bipasse/100)*(Tdep-Tret);
+      var eta=rendement(TretCh);
+      var condense=marche&&TretCh<57;
+      /* le ballon se recharge */
+      if (S_.ecsOn&&marche) S_.Tb+=PECS*60/(VB*4.185);
+      /* le batiment */
+      var gains=n*0.07+sol+UA*(Te-S_.Tz)+em;
+      S_.Tz+=gains*60/CZ;
+      S_.Tret=Tret;
+      /* les comptes */
+      var q={"Gaz PCI":qBoiler/eta,"Chauffage":marche?qChReel:0,"ECS":(S_.ecsOn&&marche)?PECS:0,
+             "Boucle ECS":BOUCLE,"Fumées":qBoiler/eta-qBoiler,"Pompes":POMPES};
+      for (var k in q) S_.E[k]+=q[k]/60;
+      S_.q=q; S_.Tdep=Tdep; S_.Te=Te; S_.eta=eta; S_.marche=marche; S_.qBoiler=qBoiler;
+      S_.cs=cs; S_.TretCh=TretCh;
+      if (n>0){ S_.occmin++; if (S_.Tz<CONS-1.5) S_.hors++; }
+      S_.trZ.push(S_.Tz); S_.trX.push(Te); S_.trD.push(marche?Tdep:(qChReel>0?(Tdep+Tret)/2:S_.Tz));
+      S_.trR.push(Tret); S_.trB.push(S_.Tb); S_.cond.push(marche?(condense?2:1):0);
+      S_.tmin=Math.min(S_.tmin,Te-2); S_.tmax=Math.max(S_.tmax,Tdep+4);
+      S_.m++;
+    }
+
+    function px(m){return X0+(X1-X0)*m/1440;}
+    function py(t){return Y1-(Y1-Y0)*(t-S_.tmin)/(S_.tmax-S_.tmin);}
+    function txt(x,y,t,cls,anc,coul){
+      svg.appendChild(S("text",{x:x,y:y,"text-anchor":anc||"middle",
+        "class":cls||"s-pet",fill:V(coul||"encre2")},t));
+    }
+    function dessine(){
+      while (svg.firstChild) svg.removeChild(svg.firstChild);
+      for (var i=0;i<1440;i+=10) if (occ(i/60)>0)
+        svg.appendChild(S("rect",{x:px(i),y:Y0,width:px(i+10)-px(i)+0.5,height:Y1-Y0,
+          fill:V("tiede"),opacity:"0.10"}));
+      [0,6,12,18,24].forEach(function(hh){
+        svg.appendChild(S("line",{x1:px(hh*60),y1:Y0,x2:px(hh*60),y2:Y1,
+          stroke:V("trait2"),"stroke-width":"1",opacity:"0.6"}));
+        txt(px(hh*60),Y1+34,hh+" h");
+      });
+      [0,20,40,60,80].forEach(function(t){
+        if (t<S_.tmin||t>S_.tmax) return;
+        svg.appendChild(S("line",{x1:X0,y1:py(t),x2:X1,y2:py(t),stroke:V("trait2"),
+          "stroke-width":"1",opacity:"0.4"}));
+        txt(X0-8,py(t)+4,t+" °C","s-pet","end");
+      });
+      /* les puisages d'ECS, en tirets sur le haut */
+      for (var i=0;i<1440;i+=3) if (puisage(i)>0)
+        svg.appendChild(S("line",{x1:px(i),y1:Y0-8,x2:px(i),y2:Y0-2,stroke:V("violet"),"stroke-width":"1.2"}));
+      txt(X0,Y0-12,"douches","s-pet","start","violet");
+      function trace(arr,coul,ep,dash){
+        if (arr.length<2) return;
+        var pts=[];
+        for (var i=0;i<arr.length;i++) pts.push(px(i).toFixed(1)+","+py(arr[i]).toFixed(1));
+        var a={points:pts.join(" "),fill:"none",stroke:V(coul),"stroke-width":ep,"stroke-linejoin":"round"};
+        if (dash) a["stroke-dasharray"]=dash;
+        svg.appendChild(S("polyline",a));
+      }
+      trace(S_.trX,"encre2",1.4,"5 4");
+      trace(S_.trB,"violet",1.8);
+      trace(S_.trR,"tiede",2);
+      trace(S_.trD,"chaud",2.4);
+      trace(S_.trZ,"froid",2.6);
+      /* la chaudiere : rouge quand elle brule sans condenser, vert quand elle condense */
+      var yb=Y1+8;
+      for (var i=0;i<S_.cond.length;i++){
+        if (!S_.cond[i]) continue;
+        svg.appendChild(S("rect",{x:px(i),y:yb,width:Math.max(0.5,px(i+1)-px(i)),height:10,
+          fill:V(S_.cond[i]===2?"vert":"chaud")}));
+      }
+      txt(X1+6,yb+9,"chaudière","s-pet","start");
+      if (S_.m>0&&S_.m<1440)
+        svg.appendChild(S("line",{x1:px(S_.m),y1:Y0,x2:px(S_.m),y2:Y1+18,stroke:V("encre"),"stroke-width":"1.6"}));
+      var yl=Y1+50;
+      [["froid","bâtiment"],["chaud","départ"],["tiede","retour"],["violet","ballon"]].forEach(function(l,i){
+        var x=X0+i*94;
+        svg.appendChild(S("line",{x1:x,y1:yl,x2:x+20,y2:yl,stroke:V(l[0]),"stroke-width":"3"}));
+        txt(x+26,yl+4,l[1],"s-pet","start");
+      });
+      [["chaud","brûle sans condenser"],["vert","condense"]].forEach(function(l,i){
+        var x=X0+i*188;
+        svg.appendChild(S("rect",{x:x,y:yl+14,width:20,height:8,fill:V(l[0])}));
+        txt(x+26,yl+22,l[1],"s-pet","start");
+      });
+      /* les postes */
+      txt(XB,Y0-12,"LA JOURNÉE, EN kWh","s-tit","start");
+      var mx=Math.max(3,S_.E["Gaz PCI"]);
+      POSTES.forEach(function(p,i){
+        var y=Y0+6+i*27, w=(XB1-XB-132)*S_.E[p]/mx;
+        txt(XB,y+12,p,"s-pet","start");
+        svg.appendChild(S("rect",{x:XB+86,y:y+2,width:Math.max(1,w),height:13,rx:"2",
+          fill:V(i===0?"encre2":(i>=3?"chaud":"vert")),opacity:"0.8"}));
+        txt(XB+90+w,y+13,frs(S_.E[p],1),"s-pet","start");
+      });
+      /* le compte rendu */
+      var fini=S_.m>=1440, hh=Math.floor(S_.m/60), mm=S_.m%60;
+      var utile=S_.E["Chauffage"]+S_.E["ECS"], gaz=S_.E["Gaz PCI"];
+      var rj=gaz>0?100*utile/gaz:0;
+      var partCond=S_.cond.length?100*S_.cond.filter(function(c){return c===2;}).length/
+                   Math.max(1,S_.cond.filter(function(c){return c>0;}).length):0;
+      res.innerHTML="<div class='gros'>"+
+        "<span><b>Heure</b><span>"+hh+" h "+(mm<10?"0":"")+mm+"</span></span>"+
+        "<span><b>Bâtiment</b><span>"+frs(S_.Tz,1)+" °C</span></span>"+
+        "<span><b>Consigne</b><span>"+frs(S_.cs!==undefined?S_.cs:consigne(0),1)+" °C</span></span>"+
+        "<span><b>Extérieur</b><span>"+frs(S_.Te!==undefined?S_.Te:text(0),1)+" °C</span></span>"+
+        "</div><div class='gros' style='margin-top:8px'>"+
+        "<span><b>Départ · retour</b><span>"+(S_.Tdep!==undefined?fr(S_.Tdep,0)+" · "+fr(S_.Tret,0)+" °C":"—")+"</span></span>"+
+        "<span><b>Retour chaudière</b><span>"+(S_.TretCh!==undefined?fr(S_.TretCh,0)+" °C":"—")+"</span></span>"+
+        "<span><b>Chaudière</b><span>"+(S_.marche?fr(100*S_.qBoiler/P.pch,0)+" %, "+(S_.TretCh<57?"condense":"ne condense pas"):"à l'arrêt")+"</span></span>"+
+        "<span><b>Ballon</b><span>"+frs(S_.Tb,1)+" °C</span></span>"+
+        "</div><div class='gros' style='margin-top:8px'>"+
+        "<span><b>Gaz</b><span>"+frs(gaz,1)+" kWh</span></span>"+
+        "<span><b>Rendement du jour</b><span>"+(gaz>0?fr(rj,0)+" %":"—")+"</span></span>"+
+        "<span><b>Temps en condensation</b><span>"+fr(partCond,0)+" %</span></span>"+
+        "<span><b>Démarrages</b><span>"+S_.cyc+"</span></span>"+
+        "<span><b>Hors confort, occupé</b><span>"+fr(S_.hors/60,1)+" h</span></span>"+
+        "</div><p>"+(!S_.m
+          ? "Appuyez sur <b>Lire</b>, ou avancez d'une heure. Le départ suit la loi d'eau ; "+
+            "le retour dit si la chaudière condense."
+          : fini
+          ? "<b>Journée finie.</b> "+frs(gaz,0)+" kWh de gaz pour "+frs(utile,0)+
+            " kWh utiles, rendement "+fr(rj,0)+" % sur PCI. La chaudière a condensé "+
+            fr(partCond,0)+" % de son temps de marche"+
+            (partCond<40?" : <b>regardez la température qui lui revient.</b>":".")+
+            (S_.cyc>40?" <b>"+S_.cyc+" démarrages</b> : elle court-cycle, elle est trop grosse pour cette journée.":"")+
+            (S_.hors>60?" Le bâtiment est resté <b>"+fr(S_.hors/60,1)+" h sous la consigne</b> en présence.":"")
+          : "Le retour décide de tout : sous 57 °C la barre passe au vert et le gaz "+
+            "rend plus que son PCI ; au-dessus, la chaudière brûle comme une "+
+            "chaudière ordinaire.")+"</p>";
+    }
+    function boucle(ts){
+      if (!dernier) dernier=ts;
+      acc+=(ts-dernier)*0.024; dernier=ts;
+      var n=Math.floor(acc); acc-=n;
+      for (var i=0;i<n;i++) pas();
+      dessine();
+      if (S_.m<1440) anim=requestAnimationFrame(boucle);
+      else { anim=null; bLire.textContent="Lire"; }
+    }
+    bLire.addEventListener("click",function(){
+      if (anim){cancelAnimationFrame(anim);anim=null;bLire.textContent="Lire";return;}
+      if (S_.m>=1440) reset();
+      dernier=0; bLire.textContent="Pause"; anim=requestAnimationFrame(boucle);
+    });
+    bHeure.addEventListener("click",function(){
+      if (anim){cancelAnimationFrame(anim);anim=null;bLire.textContent="Lire";}
+      if (S_.m>=1440) return;
+      for (var i=0;i<60&&S_.m<1440;i++) pas();
+      dessine();
+    });
+    bRaz.addEventListener("click",reset);
+    reset();
+  }
+};
+
+/* ─────────── lire la chaufferie : six cadrans, une panne ─────────── */
+var PANNES_CH=[
+  {n:"Chaufferie saine", r:[0,66,48,19.5,1.6,58],
+   lire:"Départ à la loi d'eau, retour 18 K plus bas, bâtiment à la consigne, pression "+
+        "à froid dans la plage, ballon chaud. Rien à signaler."},
+  {n:"Circulateur de chauffage arrêté", r:[0,68,66,15,1.6,58],
+   lire:"Le départ et le retour se rejoignent : rien ne circule. L'eau stagne chaude "+
+        "dans la chaudière et le bâtiment refroidit, alors que tout paraît chaud en "+
+        "chaufferie."},
+  {n:"Vanne trois voies bloquée côté retour", r:[0,34,31,14,1.6,58],
+   lire:"Le départ est à peine plus chaud que le retour : la vanne ne prend plus d'eau "+
+        "chaude. Le bâtiment refroidit, la chaudière chauffe pour rien."},
+  {n:"Sonde extérieure au soleil", r:[8,46,36,17.5,1.6,58],
+   lire:"La sonde lit 8 °C par 0 °C réel : la loi d'eau baisse le départ de 20 K, et "+
+        "le bâtiment reste 1,5 K sous la consigne tout l'après-midi. Tout fonctionne, "+
+        "sur une mesure fausse."},
+  {n:"Circuit emboué", r:[0,66,30,16.5,1.6,58],
+   lire:"Le débit s'effondre : l'eau met longtemps à traverser les radiateurs et revient "+
+        "très froide. Grand écart et bâtiment froid, c'est le contraire d'une bonne "+
+        "nouvelle."},
+  {n:"Thermostatiques tous fermés", r:[0,66,33,21.5,1.6,58],
+   lire:"Même grand écart, mais le bâtiment est chaud : les robinets ont fermé parce "+
+        "qu'il y a des apports. Ce n'est pas une panne, c'est la loi d'eau qui est "+
+        "trop haute."},
+  {n:"Manque d'eau, chaudière en sécurité", r:[0,45,44,16,0.4,58],
+   lire:"La pression est tombée sous le bar : le pressostat a coupé le brûleur. Départ "+
+        "et retour se refroidissent ensemble, et le bâtiment suit."},
+  {n:"Échangeur d'ECS entartré", r:[0,66,48,19.5,1.6,31],
+   lire:"Le chauffage est parfait, mais le ballon ne remonte plus : l'échangeur ne passe "+
+        "plus la puissance. Les douches du matin finissent froides."}
+];
+
+OUTILS["diagnostic-chaufferie"] = {
+  titre:"Lire la chaufferie : six cadrans, une panne",
+  intro:"Il fait 0 °C dehors. La sonde extérieure, le départ, le retour, l'ambiance, le "+
+        "manomètre, le ballon : six lectures, et la panne est presque toujours dedans. "+
+        "Choisissez-en une et regardez les aiguilles. Puis tirez-en une à l'aveugle, et trouvez.",
+  monte:function(d){
+    var P={panne:0, cache:-1, essais:0};
+    var g=E("div",{"class":"g2"}), c1=E("div"), c2=E("div");
+    var ch=E("div",{"class":"champ"});
+    ch.appendChild(E("label",{},"Panne à observer"));
+    var v=E("span",{"class":"v"},""); ch.appendChild(v);
+    var sel=E("select",{},PANNES_CH.map(function(p,i){
+      return '<option value="'+i+'"'+(i===0?" selected":"")+'>'+p.n+"</option>";}).join(""));
+    sel.addEventListener("change",function(){P.panne=+this.value;calc();});
+    ch.appendChild(sel); c1.appendChild(ch);
+    var cmd=E("div",{style:"display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"});
+    var bTirer=E("button",{"class":"bt p",type:"button"},"Tirer une panne à l'aveugle");
+    cmd.appendChild(bTirer); c2.appendChild(cmd);
+    g.appendChild(c1); g.appendChild(c2); d.appendChild(g);
+
+    var W=680,H=330;
+    var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+      "aria-label":"Six cadrans : sonde extérieure, départ, retour, ambiance, pression, ballon"});
+    d.appendChild(svg);
+    var choix=E("div",{"class":"qq",style:"display:none;border:0;padding:0"});
+    choix.appendChild(E("p",{},"Quelle est la panne ?"));
+    var choixL=E("div",{"class":"choix"}); choix.appendChild(choixL); d.appendChild(choix);
+    var res=E("div",{"class":"res",style:"margin-top:12px"}); d.appendChild(res);
+
+    var CAD=[{n:"Sonde extérieure",u:"°C",lo:-10,hi:20,nlo:-2,nhi:2,dec:0},
+             {n:"Départ",u:"°C",lo:20,hi:90,nlo:60,nhi:72,dec:0},
+             {n:"Retour",u:"°C",lo:20,hi:90,nlo:42,nhi:54,dec:0},
+             {n:"Ambiance",u:"°C",lo:12,hi:24,nlo:18.5,nhi:20.5,dec:1},
+             {n:"Pression",u:"bar",lo:0,hi:3,nlo:1.2,nhi:2.2,dec:1},
+             {n:"Ballon ECS",u:"°C",lo:20,hi:70,nlo:55,nhi:63,dec:0}];
+    function cadran(cx,cy,r,c,val){
+      function ang(x){var f=Math.min(1,Math.max(0,(x-c.lo)/(c.hi-c.lo)));return (-210+240*f)*Math.PI/180;}
+      function pt(a,rr){return [cx+rr*Math.cos(a),cy+rr*Math.sin(a)];}
+      function arc(a1,a2,rr,coul,ep,op){
+        var p1=pt(a1,rr),p2=pt(a2,rr),gr=(a2-a1)>Math.PI?1:0;
+        svg.appendChild(S("path",{d:"M "+p1[0].toFixed(1)+" "+p1[1].toFixed(1)+" A "+rr+" "+rr+
+          " 0 "+gr+" 1 "+p2[0].toFixed(1)+" "+p2[1].toFixed(1),fill:"none",stroke:V(coul),
+          "stroke-width":ep,"stroke-linecap":"round",opacity:op||1}));
+      }
+      arc(ang(c.lo),ang(c.hi),r,"trait2",6,0.7);
+      arc(ang(c.nlo),ang(c.nhi),r,"vert",6,0.55);
+      var a=ang(val), p=pt(a,r-5), hors=val<c.nlo||val>c.nhi;
+      svg.appendChild(S("line",{x1:cx,y1:cy,x2:p[0].toFixed(1),y2:p[1].toFixed(1),
+        stroke:V(hors?"chaud":"encre"),"stroke-width":"2.4","stroke-linecap":"round"}));
+      svg.appendChild(S("circle",{cx:cx,cy:cy,r:"3.5",fill:V(hors?"chaud":"encre")}));
+      svg.appendChild(S("text",{x:cx,y:cy+r-2,"text-anchor":"middle","class":"s-lab",
+        fill:V(hors?"chaud":"encre")},frs(val,c.dec)+" "+c.u));
+      svg.appendChild(S("text",{x:cx,y:cy+r+16,"text-anchor":"middle","class":"s-pet"},c.n));
+    }
+    function dessine(r){
+      while (svg.firstChild) svg.removeChild(svg.firstChild);
+      CAD.forEach(function(c,i){cadran(120+(i%3)*220,80+Math.floor(i/3)*160,52,c,r[i]);});
+      var dt=r[1]-r[2];
+      svg.appendChild(S("text",{x:W-14,y:16,"text-anchor":"end","class":"s-lab",
+        fill:V(dt<8||dt>26?"chaud":"encre")},"écart départ-retour : "+fr(dt,0)+" K"));
+    }
+    function calc(){
+      choix.style.display="none";
+      v.textContent=P.panne===0?"référence":"observée";
+      dessine(PANNES_CH[P.panne].r);
+      res.innerHTML="<p><b>"+PANNES_CH[P.panne].n+".</b> "+PANNES_CH[P.panne].lire+"</p>";
+    }
+    function aveugle(){
+      P.essais=0;
+      P.cache=Math.random()<0.14?0:1+Math.floor(Math.random()*(PANNES_CH.length-1));
+      sel.value="0"; v.textContent="à trouver";
+      dessine(PANNES_CH[P.cache].r);
+      choixL.innerHTML="";
+      PANNES_CH.forEach(function(p,i){
+        var b=E("button",{type:"button"},p.n);
+        b.addEventListener("click",function(){juger(i,b);});
+        choixL.appendChild(b);
+      });
+      choix.style.display="block";
+      res.innerHTML="<p>Lisez l'<b>écart départ-retour</b> d'abord : nul, rien ne circule ; "+
+        "énorme, le débit manque. Puis l'ambiance dit si le bâtiment s'en plaint, et le "+
+        "manomètre ou le ballon désignent ce qui n'est pas le chauffage.</p>";
+    }
+    function juger(i,b){
+      P.essais++;
+      var L=PANNES_CH[P.cache].r, G=PANNES_CH[i].r;
+      if (i===P.cache){
+        b.className="juste";
+        [].slice.call(choixL.children).forEach(function(x){x.disabled=true;});
+        res.innerHTML="<p><b>Juste</b>, en "+P.essais+" essai"+(P.essais>1?"s":"")+". "+PANNES_CH[i].lire+"</p>";
+        return;
+      }
+      b.className="faux"; b.disabled=true;
+      var k=-1, ecart=0;
+      for (var j=0;j<6;j++){ var e=Math.abs(L[j]-G[j])/(CAD[j].hi-CAD[j].lo); if (e>ecart){ecart=e;k=j;} }
+      res.innerHTML="<p><b>Non.</b> Avec cette panne, le cadran « "+CAD[k].n+" » serait "+
+        (L[k]>G[k]?"plus bas":"plus haut")+" que ce que vous lisez. Reprenez par l'écart "+
+        "départ-retour, puis par l'aiguille qui sort le plus de sa zone verte.</p>";
+    }
+    bTirer.addEventListener("click",aveugle);
+    calc();
+  }
+};
+
+/* ─────────── l'embleme d'en-tete : la journee de la chaufferie ─────────── */
+SCHEMAS["chaufferie-embleme"]=function(el){
+  var W=300,H=250, cx=150, cy=128, R=92;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Un cadran de vingt-quatre heures : la relance, la journée d'école, le réduit de nuit, et le départ qui suit"});
+  el.appendChild(svg);
+  function pt(h,r){var a=(h/24*360-90)*Math.PI/180;return [cx+r*Math.cos(a),cy+r*Math.sin(a)];}
+  svg.appendChild(S("circle",{cx:cx,cy:cy,r:R,fill:"none",stroke:V("encre"),"stroke-width":"2.2"}));
+  for (var h=0;h<24;h++){
+    var a=pt(h,R), b=pt(h,R-(h%6?6:12));
+    svg.appendChild(S("line",{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:V("encre"),"stroke-width":h%6?"1.2":"2.2"}));
+  }
+  [[8,12],[14,17]].forEach(function(o){
+    var p1=pt(o[0],R+9), p2=pt(o[1],R+9);
+    svg.appendChild(S("path",{d:"M "+p1[0].toFixed(1)+" "+p1[1].toFixed(1)+" A "+(R+9)+" "+(R+9)+
+      " 0 0 1 "+p2[0].toFixed(1)+" "+p2[1].toFixed(1),fill:"none",stroke:V("tiede"),
+      "stroke-width":"6","stroke-linecap":"round"}));
+  });
+  function courbe(f,coul,ep){
+    var pts=[];
+    for (var i=0;i<=96;i++){var t=i/4,q=pt(t,f(t));pts.push(q[0].toFixed(1)+","+q[1].toFixed(1));}
+    svg.appendChild(S("polyline",{points:pts.join(" "),fill:"none",stroke:V(coul),"stroke-width":ep,"stroke-linejoin":"round"}));
+  }
+  /* le depart, haut le jour, bas la nuit ; le batiment, qui suit en plus doux */
+  courbe(function(t){return R-30+((t>5&&t<22)?12:0)*Math.min(1,(t>5?(t-5):0)/1.5)-3*Math.sin(t*2);},"chaud",2.4);
+  courbe(function(t){return R-62+((t>6&&t<23)?7:0)*Math.min(1,(t>6?(t-6):0)/2.5);},"froid",2.4);
+  svg.appendChild(S("text",{x:cx,y:cy+6,"text-anchor":"middle","class":"s-tit",fill:V("encre2")},"24 h"));
+  svg.appendChild(S("text",{x:cx,y:cy-R-16,"text-anchor":"middle","class":"s-pet"},"0 h"));
+  svg.appendChild(S("text",{x:cx,y:cy+R+26,"text-anchor":"middle","class":"s-pet"},"12 h"));
+};
+
 OUTILS.ecs={
   titre:"Eau chaude sanitaire — puissance et stockage",
   intro:"Le profil de puisage d'un internat, heure par heure. Le stockage ne "+
@@ -7062,6 +7545,214 @@ SCHEMAS["sous-station"]=function(el){
     "doigt</b>, d'un bout à l'autre, en nommant chaque organe rencontré : si vous "+
     "y arrivez, vous savez lire le schéma."));
 };
+
+/* ═══════ Quatre schemas pour les fiches d'automatismes de la 2de ═══════
+   Ajoutes le 9 septembre 2026. Comme les vingt et un precedents, ils ne
+   parlent d'aucun metier : c'est ce qui les rend reutilisables ailleurs. */
+
+/* ─────────── un repere orthogonal, et quatre points a lire ─────────── */
+SCHEMAS["repere-points"]=function(el){
+  var W=724,H=380,X0=60,X1=680,Y0=30,Y1=340;
+  var xmin=-4,xmax=6,ymin=-3,ymax=4;
+  function x(v){return X0+(v-xmin)/(xmax-xmin)*(X1-X0);}
+  function y(v){return Y1-(v-ymin)/(ymax-ymin)*(Y1-Y0);}
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Repère orthogonal et quatre points repérés par leurs coordonnées"});
+  var i;
+  for(i=xmin;i<=xmax;i++)svg.appendChild(S("line",{x1:x(i),y1:Y0,x2:x(i),y2:Y1,
+    stroke:V("trait2"),"stroke-width":"1"}));
+  for(i=ymin;i<=ymax;i++)svg.appendChild(S("line",{x1:X0,y1:y(i),x2:X1,y2:y(i),
+    stroke:V("trait2"),"stroke-width":"1"}));
+  svg.appendChild(S("line",{x1:X0,y1:y(0),x2:X1,y2:y(0),stroke:V("encre2"),
+    "stroke-width":"2.2"}));
+  svg.appendChild(S("line",{x1:x(0),y1:Y0,x2:x(0),y2:Y1,stroke:V("encre2"),
+    "stroke-width":"2.2"}));
+  for(i=xmin;i<=xmax;i++)if(i!==0)svg.appendChild(S("text",{x:x(i),y:y(0)+20,
+    "text-anchor":"middle","class":"s-pet"},String(i)));
+  for(i=ymin;i<=ymax;i++)if(i!==0)svg.appendChild(S("text",{x:x(0)-10,y:y(i)+5,
+    "text-anchor":"end","class":"s-pet"},String(i)));
+  svg.appendChild(S("text",{x:x(0)-10,y:y(0)+20,"text-anchor":"end",
+    "class":"s-pet"},"0"));
+  svg.appendChild(S("text",{x:X1,y:y(0)-12,"text-anchor":"end","class":"s-lab",
+    fill:V("encre2")},"x"));
+  svg.appendChild(S("text",{x:x(0)+14,y:Y0+16,"class":"s-lab",
+    fill:V("encre2")},"y"));
+
+  /* Le point A porte la lecture dessinee : on part de l'axe des x, on monte. */
+  svg.appendChild(S("line",{x1:x(3),y1:y(0),x2:x(3),y2:y(2),stroke:V("chaud"),
+    "stroke-width":"1.6","stroke-dasharray":"5 4"}));
+  svg.appendChild(S("line",{x1:x(0),y1:y(2),x2:x(3),y2:y(2),stroke:V("chaud"),
+    "stroke-width":"1.6","stroke-dasharray":"5 4"}));
+
+  [[3,2,"A","chaud"],[-2,1,"B","encre2"],[0,-2,"C","encre2"],[5,0,"D","encre2"]]
+  .forEach(function(p){
+    svg.appendChild(S("circle",{cx:x(p[0]),cy:y(p[1]),r:"7",fill:V(p[3])}));
+    svg.appendChild(S("text",{x:x(p[0])+13,y:y(p[1])-11,"class":"s-lab",
+      fill:V(p[3]),style:"font-size:20px"},p[2]));
+  });
+  svg.appendChild(S("text",{x:x(3)+13,y:y(2)+22,"class":"s-pet",
+    fill:V("chaud")},"( 3 ; 2 )"));
+  svg.appendChild(S("text",{x:X1,y:Y0+18,"text-anchor":"end","class":"s-tit",
+    fill:V("chaud")},"L'ABSCISSE D'ABORD, L'ORDONNÉE ENSUITE"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "On lit <b>toujours dans cet ordre</b> : on avance sur l'axe horizontal, "+
+    "puis on monte. A se note ( 3 ; 2 ) et jamais ( 2 ; 3 ) — ce serait un "+
+    "autre point."));
+};
+
+/* ─────────── lire une image, puis un antecedent, sur la meme courbe ─────────── */
+SCHEMAS["lire-courbe"]=function(el){
+  var W=724,H=380,X0=70,X1=680,Y0=30,Y1=330;
+  var xmin=0,xmax=8,ymin=0,ymax=10;
+  function x(v){return X0+(v-xmin)/(xmax-xmin)*(X1-X0);}
+  function y(v){return Y1-(v-ymin)/(ymax-ymin)*(Y1-Y0);}
+  function f(v){return v+1;}                /* une droite, et qui tombe juste */
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Courbe, lecture d'une image et lecture d'un antécédent"});
+  var i;
+  for(i=xmin;i<=xmax;i++)svg.appendChild(S("line",{x1:x(i),y1:Y0,x2:x(i),y2:Y1,
+    stroke:V("trait2"),"stroke-width":"1"}));
+  for(i=ymin;i<=ymax;i+=1)svg.appendChild(S("line",{x1:X0,y1:y(i),x2:X1,y2:y(i),
+    stroke:V("trait2"),"stroke-width":"1"}));
+  svg.appendChild(S("line",{x1:X0,y1:Y1,x2:X1,y2:Y1,stroke:V("encre2"),
+    "stroke-width":"2.2"}));
+  svg.appendChild(S("line",{x1:X0,y1:Y0,x2:X0,y2:Y1,stroke:V("encre2"),
+    "stroke-width":"2.2"}));
+  for(i=xmin;i<=xmax;i++)svg.appendChild(S("text",{x:x(i),y:Y1+20,
+    "text-anchor":"middle","class":"s-pet"},String(i)));
+  for(i=ymin;i<=ymax;i+=2)svg.appendChild(S("text",{x:X0-10,y:y(i)+5,
+    "text-anchor":"end","class":"s-pet"},String(i)));
+  svg.appendChild(S("line",{x1:x(0),y1:y(f(0)),x2:x(8),y2:y(f(8)),
+    stroke:V("encre"),"stroke-width":"3"}));
+  svg.appendChild(S("text",{x:x(7.4),y:y(f(7.4))-14,"text-anchor":"end",
+    "class":"s-lab",fill:V("encre")},"ƒ"));
+
+  /* image de 3 : on part de l'axe des x */
+  svg.appendChild(S("line",{x1:x(3),y1:Y1,x2:x(3),y2:y(f(3)),stroke:V("chaud"),
+    "stroke-width":"2","stroke-dasharray":"6 4"}));
+  svg.appendChild(S("line",{x1:x(3),y1:y(f(3)),x2:X0,y2:y(f(3)),stroke:V("chaud"),
+    "stroke-width":"2","stroke-dasharray":"6 4"}));
+  svg.appendChild(S("circle",{cx:x(3),cy:y(f(3)),r:"6",fill:V("chaud")}));
+  svg.appendChild(S("text",{x:x(3),y:Y1+38,"text-anchor":"middle","class":"s-lab",
+    fill:V("chaud")},"je pars de 3"));
+  svg.appendChild(S("text",{x:X0+10,y:y(f(3))-10,"class":"s-lab",
+    fill:V("chaud")},"ƒ(3) se lit ici"));
+
+  /* antecedent de 8 : on part de l'axe des y */
+  svg.appendChild(S("line",{x1:X0,y1:y(8),x2:x(7),y2:y(8),
+    stroke:V("froid"),"stroke-width":"2","stroke-dasharray":"6 4"}));
+  svg.appendChild(S("line",{x1:x(7),y1:y(8),x2:x(7),y2:Y1,
+    stroke:V("froid"),"stroke-width":"2","stroke-dasharray":"6 4"}));
+  svg.appendChild(S("circle",{cx:x(7),cy:y(8),r:"6",fill:V("froid")}));
+  svg.appendChild(S("text",{x:X0+10,y:y(8)-10,"class":"s-lab",
+    fill:V("froid")},"je pars de 8"));
+  svg.appendChild(S("text",{x:x(7),y:Y1+38,"text-anchor":"middle",
+    "class":"s-lab",fill:V("froid")},"l'antécédent est là"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>Une image se lit de bas en haut</b> : je pars de l'axe horizontal, je "+
+    "monte jusqu'à la courbe, je vais lire à gauche. <b>Un antécédent se lit "+
+    "dans l'autre sens</b> : je pars de l'axe vertical, je vais jusqu'à la "+
+    "courbe, je descends. Le geste dit lequel des deux on cherche."));
+};
+
+/* ─────────── les quatre crochets, sur la meme portion de droite ─────────── */
+SCHEMAS["intervalles"]=function(el){
+  var W=724,H=380,X0=124,X1=700,LIG=[70,146,222,298];
+  var vmin=1,vmax=9;
+  function x(v){return X0+(v-vmin)/(vmax-vmin)*(X1-X0);}
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Les quatre types d'intervalles entre 3 et 7, bornes comprises ou exclues"});
+  var cas=[["[3 ; 7]",true,true],["]3 ; 7[",false,false],
+           ["[3 ; 7[",true,false],["]3 ; 7]",false,true]];
+  cas.forEach(function(c,k){
+    var Y=LIG[k];
+    svg.appendChild(S("text",{x:X0-24,y:Y+7,"text-anchor":"end","class":"s-lab",
+      fill:V("encre"),style:"font-size:21px"},c[0]));
+    svg.appendChild(S("line",{x1:X0,y1:Y,x2:X1,y2:Y,stroke:V("trait"),
+      "stroke-width":"1.6"}));
+    var i;
+    for(i=vmin;i<=vmax;i++){
+      svg.appendChild(S("line",{x1:x(i),y1:Y-6,x2:x(i),y2:Y+6,stroke:V("trait"),
+        "stroke-width":"1.2"}));
+      if(k===3)svg.appendChild(S("text",{x:x(i),y:Y+28,"text-anchor":"middle",
+        "class":"s-pet"},String(i)));
+    }
+    svg.appendChild(S("line",{x1:x(3),y1:Y,x2:x(7),y2:Y,stroke:V("chaud"),
+      "stroke-width":"7","stroke-linecap":"butt"}));
+    [[3,c[1]],[7,c[2]]].forEach(function(b){
+      svg.appendChild(S("circle",{cx:x(b[0]),cy:Y,r:"9",
+        fill:b[1]?V("chaud"):V("carte"),stroke:V("chaud"),"stroke-width":"3"}));
+    });
+  });
+  svg.appendChild(S("text",{x:X0-24,y:352,"class":"s-tit",fill:V("chaud")},
+    "DISQUE PLEIN : LA BORNE EST DANS L'INTERVALLE"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "Le crochet <b>tourné vers l'intérieur</b> prend la borne ; tourné vers "+
+    "l'extérieur, il la laisse dehors. Les quatre intervalles couvrent la même "+
+    "portion de droite et ne contiennent pourtant pas les mêmes nombres."));
+};
+
+/* ─────────── reconnaitre Pythagore, reconnaitre Thales ─────────── */
+SCHEMAS["pythagore-thales"]=function(el){
+  var W=724,H=340;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Un triangle rectangle et une configuration de Thalès, côte à côte"});
+  /* ── Pythagore : triangle rectangle en A ── */
+  var Ax=70,Ay=250,Bx=270,By=250,Cx=70,Cy=90;
+  svg.appendChild(S("polygon",{points:Ax+","+Ay+" "+Bx+","+By+" "+Cx+","+Cy,
+    fill:"none",stroke:V("encre"),"stroke-width":"3"}));
+  svg.appendChild(S("path",{d:"M "+(Ax+22)+" "+Ay+" L "+(Ax+22)+" "+(Ay-22)+
+    " L "+Ax+" "+(Ay-22),fill:"none",stroke:V("chaud"),"stroke-width":"2.4"}));
+  svg.appendChild(S("line",{x1:Bx,y1:By,x2:Cx,y2:Cy,stroke:V("chaud"),
+    "stroke-width":"5"}));
+  svg.appendChild(S("text",{x:Ax-10,y:Ay+8,"text-anchor":"end","class":"s-lab"},"A"));
+  svg.appendChild(S("text",{x:Bx+12,y:By+8,"class":"s-lab"},"B"));
+  svg.appendChild(S("text",{x:Cx-10,y:Cy-4,"text-anchor":"end","class":"s-lab"},"C"));
+  svg.appendChild(S("text",{x:186,y:154,"class":"s-lab",fill:V("chaud")},"hypoténuse"));
+  svg.appendChild(S("text",{x:Ax,y:48,"class":"s-tit",fill:V("chaud")},
+    "UN ANGLE DROIT → PYTHAGORE"));
+  svg.appendChild(S("text",{x:Ax,y:300,"class":"s-pet",fill:V("encre2")},
+    "BC² = AB² + AC²"));
+
+  /* ── Thales : le point S, deux directions, et DEUX parametres ──
+     Les deux paralleles sont construites avec le MEME couple de directions et
+     deux coefficients : elles sont donc paralleles par construction, et non
+     parce qu'on a estime des coordonnees a l'oeil. */
+  var Sx=470,Sy=75, ux=-38,uy=70, vx=90,vy=55;
+  function P(k,dx,dy){return [Sx+k*dx, Sy+k*dy];}
+  var M=P(1.3,ux,uy), N=P(1.3,vx,vy), B=P(2.4,ux,uy), C=P(2.4,vx,vy);
+  var U=P(2.65,ux,uy), Vv=P(2.65,vx,vy);
+  svg.appendChild(S("line",{x1:Sx,y1:Sy,x2:U[0],y2:U[1],stroke:V("encre"),
+    "stroke-width":"3"}));
+  svg.appendChild(S("line",{x1:Sx,y1:Sy,x2:Vv[0],y2:Vv[1],stroke:V("encre"),
+    "stroke-width":"3"}));
+  svg.appendChild(S("line",{x1:M[0],y1:M[1],x2:N[0],y2:N[1],stroke:V("froid"),
+    "stroke-width":"4"}));
+  svg.appendChild(S("line",{x1:B[0],y1:B[1],x2:C[0],y2:C[1],stroke:V("froid"),
+    "stroke-width":"4"}));
+  svg.appendChild(S("text",{x:Sx,y:Sy-12,"text-anchor":"middle","class":"s-lab"},"S"));
+  svg.appendChild(S("text",{x:M[0]-12,y:M[1]+4,"text-anchor":"end","class":"s-lab",
+    fill:V("froid")},"M"));
+  svg.appendChild(S("text",{x:N[0]+12,y:N[1]+4,"class":"s-lab",fill:V("froid")},"N"));
+  svg.appendChild(S("text",{x:B[0]-12,y:B[1]+4,"text-anchor":"end","class":"s-lab",
+    fill:V("froid")},"B"));
+  svg.appendChild(S("text",{x:C[0]+12,y:C[1]+4,"class":"s-lab",fill:V("froid")},"C"));
+  svg.appendChild(S("text",{x:352,y:48,"class":"s-tit",fill:V("froid")},
+    "DEUX PARALLÈLES → THALÈS"));
+  svg.appendChild(S("text",{x:352,y:300,"class":"s-pet",fill:V("encre2")},
+    "SM / SB = SN / SC = MN / BC"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>On reconnaît la configuration avant de chercher la formule.</b> Un "+
+    "angle droit marqué appelle Pythagore, et l'hypoténuse est toujours le côté "+
+    "en face de cet angle. Deux droites parallèles coupant deux sécantes "+
+    "appellent Thalès, et les trois rapports sont égaux. Sans l'un ou l'autre, "+
+    "aucune des deux ne s'applique."));
+};
+
 
 
 /* --------- dispersion d'une serie de releves ---------

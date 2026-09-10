@@ -100,6 +100,28 @@ h1 span{display:block;color:var(--froid)}
 .tag.n3{border-color:var(--chaud);color:var(--chaud);font-weight:600}
 .tag.n3::before{content:"● ";font-size:8px;vertical-align:middle}
 
+/* ─────────────────────────────────────────────── prerequis
+   « prerequis: » liste ce qu'il faut tenir avant d'entrer dans la page — le
+   savoir, la raison, et la page qui l'enseigne quand elle existe. Il se lit
+   entre l'en-tete et le sommaire, pas dans le corps. */
+.prerequis{margin:22px 0 8px;padding:16px 20px 14px;background:var(--carte);
+  border:1px solid var(--trait);border-radius:var(--r)}
+.chapeau-p{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--encre2);margin:0 0 10px;opacity:.85}
+.prerequis ul{list-style:none;margin:0;padding:0;display:grid;gap:11px 24px;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.prerequis li{margin:0;font-size:15.5px;line-height:1.45}
+.prerequis b{font-family:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;
+  font-weight:700;font-size:16px;color:var(--encre)}
+.prerequis a{color:var(--encre);text-decoration:none;
+  border-bottom:1.5px solid var(--teinte,var(--froid))}
+.prerequis a:hover{color:var(--teinte,var(--froid))}
+.prerequis .ou{display:inline-block;margin-left:8px;font-family:"IBM Plex Mono",monospace;
+  font-size:11px;letter-spacing:.06em;color:var(--encre2);vertical-align:1px}
+.prerequis .ou::before{content:"→ "}
+.prerequis .car{display:block;color:var(--encre2);margin-top:2px}
+@media print{.prerequis{break-inside:avoid}}
+
 /* ─────────────────────────────────────────────── navigation */
 nav.somm{position:sticky;top:0;z-index:20;background:var(--fond);
   border-bottom:1px solid var(--trait);margin-bottom:6px}
