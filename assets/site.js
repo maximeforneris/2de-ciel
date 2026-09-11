@@ -1,11 +1,11 @@
 /* ═══════════════════════════════════════════════════════════════════════
    SITE — navigation, recherche, et suivi de lecture cote eleve.
 
-   TOUT CE QUI EST ENREGISTRE RESTE DANS LE NAVIGATEUR DE L'ELEVE.
+   CE FICHIER N'ENREGISTRE RIEN AILLEURS QUE DANS LE NAVIGATEUR.
    localStorage, rien d'autre : pas de compte, pas de requete, pas de cookie.
-   C'est ce qui permet au site de ne traiter aucune donnee personnelle et de
-   n'appeler aucune demarche RGPD. Le suivi nominatif vit dans l'ENT.
-   Voir GUIDE-SITE.md.
+   Un site sans l'option « comptes: » ne traite donc aucune donnee
+   personnelle. Avec l'option, c'est comptes.js — et lui seul — qui recopie
+   dans la base ce que ce fichier annonce. Voir GUIDE-SITE.md et GUIDE-COMPTES.md.
 
    Charge APRES kit.js, qui a deja monte les outils, les quiz et les schemas.
    ═══════════════════════════════════════════════════════════════════════ */
@@ -36,6 +36,8 @@ if (bouton) {
     var e = lues();
     if (e[id]) { delete e[id]; } else { e[id] = Date.now(); }
     noter(e); peint();
+    /* annonce pour comptes.js ; sans lui, personne n'ecoute */
+    document.dispatchEvent(new CustomEvent("lu", { detail: { id: id, on: !!e[id] } }));
   });
   peint();
 }

@@ -95,9 +95,13 @@ var socleExo=document.querySelector("[data-site]");
 var CLE_EXO="fed."+(socleExo?socleExo.getAttribute("data-site"):"autonome")+".exo";
 function exoLu(){try{return JSON.parse(localStorage.getItem(CLE_EXO)||"{}")||{};}
                  catch(e){return {};}}
-function exoNote(id,etat){var t=exoLu();t[id]=etat;
+/* L'evenement annonce aussi CE QUI A ETE TAPE et le genre du bloc. Le kit
+   n'en fait rien ; comptes.js, charge sur un site a comptes, l'ecoute pour
+   le recopier dans la base. Sans lui, ces deux champs ne vont nulle part. */
+function exoNote(id,etat,valeur,genre){var t=exoLu();t[id]=etat;
   try{localStorage.setItem(CLE_EXO,JSON.stringify(t));}catch(e){}
-  document.dispatchEvent(new CustomEvent("exo",{detail:{id:id,etat:etat}}));}
+  document.dispatchEvent(new CustomEvent("exo",{detail:{id:id,etat:etat,
+    valeur:valeur===undefined?null:valeur,genre:genre||"exercice"}}));}
 function aplat(s){
   return (s.normalize?s.normalize("NFD").replace(/[\u0300-\u036f]/g,""):s)
          .toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
@@ -200,7 +204,7 @@ function nombre(s){
     verdict.textContent=ok?"C’est juste."
       :(typ==="calcul"?"Ce n’est pas la valeur attendue. Reprenez la méthode."
                       :"Ce n’est pas la réponse attendue.");
-    exoNote(id,ok?"juste":"faux");
+    exoNote(id,ok?"juste":"faux",champ.value,"exercice");
     if(!ok&&indice)indice.hidden=false;
   }
   function compte(){
@@ -209,7 +213,7 @@ function nombre(s){
     verdict.className="verdict "+(n===b.length&&b.length?"juste":"");
     verdict.textContent=n+" point"+(n>1?"s":"")+" sur "+b.length+
       (n===b.length&&b.length?" — votre réponse est complète.":" à vérifier dans votre réponse.");
-    exoNote(id,n===b.length&&b.length?"juste":"vu");
+    exoNote(id,n===b.length&&b.length?"juste":"vu",champ.value,"justification");
   }
   valider.addEventListener("click",juge);
   champ.addEventListener("keydown",function(e){
@@ -302,7 +306,9 @@ function nombre(s){
       ?"La série entière est juste."
       :bons+" sur "+cases.length+(reste.length?" — "+reste.join(", "):"")+".";
     if(tout)se.classList.add("fait");else se.classList.remove("fait");
-    exoNote(id,tout?"juste":"vu");
+    exoNote(id,tout?"juste":(faux?"faux":"vu"),
+      bons+"/"+cases.length+" : "+cases.map(function(c){return c.e.value.trim()||"·";}).join(" | "),
+      "serie");
     if(faux&&indice)indice.hidden=false;
   }
   valider.addEventListener("click",juger);
@@ -6883,12 +6889,17 @@ OUTILS["lecture-dossier"] = {
       for (var i=ordre.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=ordre[i];ordre[i]=ordre[j];ordre[j]=t;}
       ordre.forEach(function(qi,k){
         var q=D.questions[qi];
-        var bloc=E("div",{"class":"champ",style:"margin:10px 0;padding:10px 12px;border:1px solid var(--trait);border-radius:8px"});
-        bloc.appendChild(E("p",{style:"margin:0 0 8px"},"<b>"+(k+1)+".</b> "+q[0]));
+        /* PAS la classe « champ » : c'est la grille « etiquette | reglage » des
+           calculateurs, deux colonnes dont la seconde prend sa largeur. La
+           consigne tombait dans la premiere, reduite a quelques mots par ligne,
+           et les deux menus prenaient tout le reste. Ici : la consigne sur
+           toute la largeur, les deux choix cote a cote en dessous. */
+        var bloc=E("div",{"class":"q-lecture",style:"margin:10px 0;padding:12px 14px;border:1px solid var(--trait);border-radius:8px"});
+        bloc.appendChild(E("p",{style:"margin:0 0 10px;max-width:none"},"<b>"+(k+1)+".</b> "+q[0]));
         var g=E("div",{style:"display:flex;gap:10px;flex-wrap:wrap"});
-        var s1=E("select",{},"<option value=''>Où chercher ?</option>"+D.docs.map(function(x,i){
+        var s1=E("select",{style:"flex:1 1 260px;min-width:0"},"<option value=''>Où chercher ?</option>"+D.docs.map(function(x,i){
           return "<option value='"+i+"'>"+x[0]+" · "+x[1]+"</option>";}).join(""));
-        var s2=E("select",{},"<option value=''>Quelle forme de réponse ?</option>"+D.formes.map(function(x,i){
+        var s2=E("select",{style:"flex:1 1 220px;min-width:0"},"<option value=''>Quelle forme de réponse ?</option>"+D.formes.map(function(x,i){
           return "<option value='"+i+"'>"+x+"</option>";}).join(""));
         g.appendChild(s1); g.appendChild(s2); bloc.appendChild(g);
         var retour=E("p",{style:"margin:8px 0 0;display:none"}); bloc.appendChild(retour);
@@ -7280,6 +7291,123 @@ OUTILS["saison-pac"] = {
     });
     bRaz.addEventListener("click",reset);
     reset();
+  }
+};
+
+/* ═══════════════════════════════════════════ CE QUE CONTIENT UN KILO D'AIR
+   Fiche enthalpie. Deux airs, A et B, chacun par sa temperature et son
+   humidite relative. Pour chacun, h en trois morceaux : l'air sec (1,006 θ),
+   la vaporisation de son eau (2 501 r), et la vapeur rechauffee (1,83 θ r).
+   Puis la difference, ce qu'elle vaut en puissance pour un debit, et ce que
+   le thermometre seul en aurait dit : c'est tout l'argument de la fiche. */
+OUTILS["enthalpie-air"] = {
+  titre:"Ce que contient un kilogramme d'air",
+  intro:"Deux airs, et pour chacun son enthalpie en morceaux : ce que porte "+
+        "l'air sec, ce que porte son eau. Puis la différence, ce qu'elle vaut "+
+        "pour un débit, et ce que le thermomètre seul en aurait dit.",
+  monte:function(d){
+    var DEF={t1:30, p1:60, t2:14, p2:95, qm:1.5};
+    var P={}; for (var k0 in DEF) P[k0]=DEF[k0];
+    var SCEN=[
+      ["Libre", null],
+      ["1 · Deux airs à 20 °C, l'un sec, l'autre humide", {t1:20,p1:30,t2:20,p2:80,qm:1}],
+      ["2 · L'air neuf d'hiver, chauffé à 19 °C", {t1:-7,p1:90,t2:19,p2:15,qm:1}],
+      ["3 · La batterie froide d'été", {}],
+      ["4 · L'humidificateur à vapeur", {t1:19,p1:15,t2:19,p2:40,qm:1}],
+      ["5 · La salle de bains et le séjour", {t1:24,p1:90,t2:19,p2:40,qm:1}]
+    ];
+    var maj=[], reg={}, enScen=false;
+    var g=E("div",{"class":"g2"}), c1=E("div"), c2=E("div");
+    var chS=E("div",{"class":"champ"});
+    chS.appendChild(E("label",{},"Deux airs à comparer"));
+    var vS=E("span",{"class":"v"},""); chS.appendChild(vS);
+    var selS=E("select",{},SCEN.map(function(s,i){
+      return '<option value="'+i+'"'+(i===3?" selected":"")+'>'+s[0]+"</option>";}).join(""));
+    chS.appendChild(selS); c1.appendChild(chS);
+    function touche(){ if(!enScen){selS.value="0";} calc(); }
+    curseur(c1,maj,P,"Air A · température","t1",-15,40,0.5,1," °C",touche,reg);
+    curseur(c1,maj,P,"Air A · humidité relative","p1",5,100,1,0," %",touche,reg);
+    curseur(c2,maj,P,"Air B · température","t2",-15,40,0.5,1," °C",touche,reg);
+    curseur(c2,maj,P,"Air B · humidité relative","p2",5,100,1,0," %",touche,reg);
+    curseur(c2,maj,P,"Débit d'air sec","qm",0.1,5,0.1,1," kg/s",touche,reg);
+    g.appendChild(c1); g.appendChild(c2); d.appendChild(g);
+    selS.addEventListener("change",function(){
+      var s=SCEN[+this.value]; if(!s[1]) return;
+      enScen=true;
+      for (var k in DEF) P[k]=DEF[k];
+      for (var k2 in s[1]) P[k2]=s[1][k2];
+      for (var k3 in reg) reg[k3].value=P[k3];
+      enScen=false; calc();
+    });
+
+    var W=680,H=236, XZ=230, XM=640;
+    var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+      "aria-label":"L'enthalpie des deux airs, en trois morceaux : l'air sec, la vaporisation de l'eau, la vapeur réchauffée"});
+    d.appendChild(svg);
+    var res=E("div",{"class":"res",style:"margin-top:12px"}); d.appendChild(res);
+
+    function morceaux(t,p){
+      var r=rAir(t,p/100);
+      return {r:r, sec:1.006*t, lat:r/1000*2501, vap:r/1000*1.83*t, h:hAirR(t,r)};
+    }
+    function txt(x,y,t,cls,anc,coul){
+      svg.appendChild(S("text",{x:x,y:y,"text-anchor":anc||"start","class":cls||"s-pet",fill:V(coul||"encre2")},t));
+    }
+    function calc(){
+      maj.forEach(function(x){x();});
+      vS.textContent=selS.value==="0"?"réglages à la main":"chargé";
+      var A=morceaux(P.t1,P.p1), B=morceaux(P.t2,P.p2);
+      while (svg.firstChild) svg.removeChild(svg.firstChild);
+      /* l'echelle : de la plus petite valeur negative a la plus grande enthalpie */
+      var lo=Math.min(0,A.sec,B.sec), hi=Math.max(20,A.h,B.h,A.sec+A.lat,B.sec+B.lat)*1.08;
+      function px(v){ return XZ+(XM-XZ)*(v-lo)/(hi-lo); }
+      txt(24,20,"CE QUE CONTIENT 1 kg D'AIR SEC, ET SON EAU","s-tit","start","encre");
+      /* le zero de reference */
+      svg.appendChild(S("line",{x1:px(0),y1:34,x2:px(0),y2:176,stroke:V("encre"),"stroke-width":"1.5","stroke-dasharray":"3 3"}));
+      txt(px(0),192,"0 : air sec et eau liquide à 0 °C","s-pet","middle");
+      function barre(y,m,nom,det){
+        txt(XZ-12,y+15,nom,"s-nom","end","encre");
+        txt(XZ-12,y+32,det,"s-pet","end");
+        /* l'air sec, a partir de zero, vers la gauche s'il fait moins de 0 °C */
+        var x0=px(Math.min(0,m.sec)), x1=px(Math.max(0,m.sec));
+        svg.appendChild(S("rect",{x:x0,y:y,width:Math.max(1,x1-x0),height:24,fill:V("chaud"),opacity:"0.8"}));
+        /* l'eau : la vaporisation, puis la vapeur rechauffee, empilees apres l'air sec */
+        var base=m.sec, xa=px(base), xb=px(base+m.lat), xc=px(base+m.lat+m.vap);
+        svg.appendChild(S("rect",{x:Math.min(xa,xb),y:y,width:Math.max(1,Math.abs(xb-xa)),height:24,fill:V("froid"),opacity:"0.8"}));
+        if (Math.abs(xc-xb)>0.5)
+          svg.appendChild(S("rect",{x:Math.min(xb,xc),y:y,width:Math.abs(xc-xb),height:24,fill:V("violet"),opacity:"0.8"}));
+        var xh=px(m.h);
+        svg.appendChild(S("line",{x1:xh,y1:y-4,x2:xh,y2:y+28,stroke:V("encre"),"stroke-width":"2.5"}));
+        txt(Math.min(xh+6,XM-4),y+17,"h = "+fr(m.h,1),"s-lab",xh+80>W?"end":"start","encre");
+      }
+      barre(44,A,"Air A",fr(P.t1,1)+" °C · "+fr(P.p1,0)+" % · r = "+fr(A.r,1)+" g/kg");
+      barre(112,B,"Air B",fr(P.t2,1)+" °C · "+fr(P.p2,0)+" % · r = "+fr(B.r,1)+" g/kg");
+      /* la legende */
+      [["chaud","air sec : 1,006 θ"],["froid","vaporiser l'eau : 2 501 r"],["violet","vapeur réchauffée : 1,83 θ r"]].forEach(function(l,i){
+        var x=24+i*206;
+        svg.appendChild(S("rect",{x:x,y:210,width:18,height:12,fill:V(l[0]),opacity:"0.8"}));
+        txt(x+24,220,l[1],"s-pet","start");
+      });
+      var dh=B.h-A.h, dsens=1.006*(P.t2-P.t1), dlat=dh-dsens;
+      var phi=P.qm*dh, phiT=P.qm*1.006*(P.t2-P.t1), deau=P.qm*(B.r-A.r)/1000*3600;
+      var parts=Math.abs(dh)>0.3?100*Math.abs(dlat)/Math.abs(dh):0;
+      res.innerHTML="<div class='gros'>"+
+        "<span><b>h de A</b><span>"+fr(A.h,1)+" kJ/kg</span></span>"+
+        "<span><b>h de B</b><span>"+fr(B.h,1)+" kJ/kg</span></span>"+
+        "<span><b>Δh = hB − hA</b><span>"+(dh>=0?"+ ":"− ")+fr(Math.abs(dh),1)+" kJ/kg</span></span>"+
+        "<span><b>Dont l'eau</b><span>"+fr(parts,0)+" %</span></span>"+
+        "</div><div class='gros' style='margin-top:8px'>"+
+        "<span><b>Puissance, qm × Δh</b><span>"+fr(Math.abs(phi),1)+" kW "+(phi>=0?"à fournir":"à retirer")+"</span></span>"+
+        "<span><b>Ce que dirait le thermomètre, qm × 1,006 × Δθ</b><span>"+fr(Math.abs(phiT),1)+" kW</span></span>"+
+        "<span><b>Eau</b><span>"+(Math.abs(deau)<0.5?"aucune":fr(Math.abs(deau),1)+" kg/h "+(deau>0?"ajoutés":"retirés"))+"</span></span>"+
+        "</div><p>"+(Math.abs(P.t2-P.t1)<0.3&&Math.abs(dh)>1
+          ? "<b>Même température, et pourtant "+fr(Math.abs(dh),1)+" kJ/kg d'écart :</b> le thermomètre ne voit rien, l'enthalpie voit l'eau. Passer de l'un à l'autre coûte "+fr(Math.abs(phi),1)+" kW."
+          : parts>35
+          ? "<b>"+fr(parts,0)+" % de l'écart est de l'eau</b> qui s'est vaporisée ou condensée. Le calcul par la température seule donnerait "+fr(Math.abs(phiT),1)+" kW au lieu de "+fr(Math.abs(phi),1)+" : c'est la raison de lire h, et pas θ."
+          : "Ici l'eau ne bouge presque pas : la différence d'enthalpie et le calcul par la température disent la même chose, à quelques pour cent près. Ce n'est vrai que tant que r ne change pas.")+
+        (A.h<0||B.h<0?" Une enthalpie <b>négative</b> n'est pas une erreur : l'air est sous le zéro de référence, 0 °C, et seules les différences comptent.":"")+"</p>";
+    }
+    calc();
   }
 };
 

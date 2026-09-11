@@ -624,3 +624,8 @@ nav.somm::after{
 .mot > p,
 .mot > h2, .mot > h3, .mot > ul, .mot > ol, .mot > blockquote{max-width:660px}
 .mot > .enveloppe-tbl, .mot table{max-width:760px}
+
+/* ─── les mentions légales (11 septembre 2026) : une page de texte suivi,
+   ramenée à la mesure — sur toute la largeur, la ligne fait 180 caractères. */
+.espace.mentions p{max-width:72ch}
+.espace.mentions code{font-size:.92em;overflow-wrap:anywhere}
