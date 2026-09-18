@@ -1,0 +1,108 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta name="robots" content="noindex, nofollow">
+<title>Séquence 1 — grandeurs du numérique</title>
+<link rel="stylesheet" href="../assets/kit.css?v=2a75a503">
+<link rel="stylesheet" href="../assets/site.css?v=2a75a503">
+<link rel="stylesheet" href="../assets/cablage.css?v=2a75a503">
+<link rel="stylesheet" href="../assets/vivant.css?v=2a75a503">
+
+<div class="page" data-site="ciel2" data-page="cours/S1">
+<div class="jauge-lecture" id="jauge-lecture"><i></i></div><div class="barre-site"><a class="accueil" href="../index.html">Maths et physique-chimie — 2de Bac Pro CIEL</a><span class="fleches"><a class="fleche" href="S0.html" rel="prev" title="Où j'en suis" aria-label="Où j'en suis">&lsaquo;</a><a class="fleche" href="S2.html" rel="next" title="Séquence 2 — sécurité et mesures" aria-label="Séquence 2 — sécurité et mesures">&rsaquo;</a></span><button type="button" class="lu" data-lu="cours/S1">Marquer comme lu</button></div>
+<header class="tete">
+  
+  <div class="titraille">
+    <p class="sur">2de Bac Pro CIEL</p>
+    <h1>Les grandeurs<span>du numérique</span></h1>
+  </div>
+  <p class="accroche">Un client trouve sa fibre lente. Il a téléchargé 8 Go en 3 minutes sur une ligne annoncée à 1 Gbit/s. Pour lui répondre, il faut un facteur 8 et une division — et savoir lequel des deux nombres est un débit.</p>
+  <p class="contenu">3 exercices · 36 items d'entraînement · 1 repli · 2 figures</p>
+  <p class="k-savoirs">Savoirs travaillés</p><div class="savoirs"><span class="tag">AU Automatismes</span></div>
+</header>
+<aside class="prerequis"><p class="chapeau-p">Avant de commencer</p><ul><li><b><a href="../aide/AUTO-01-puissances-de-dix.html">Les puissances de 10 et les préfixes k, M, G, T</a></b><span class="ou">Auto 01 — puissances de 10</span><span class="car">un débit et une taille ne se lisent qu'avec eux.</span></li><li><b>Multiplier et diviser par 8</b><span class="car">c'est tout ce qui sépare un bit d'un octet, et c'est le seul facteur de la séquence qui ne soit pas une puissance de dix.</span></li></ul></aside>
+<nav class="somm"><div class="in"><a href="#la-situation">La situation</a><a href="#ce-qui-circule-ce-qui-se-stocke">Ce qui circule, ce qui se stocke</a><a href="#les-prefixes-et-l-ecriture-scientifique">Les préfixes, et l’écriture scientifique</a><a href="#du-debit-a-la-duree">Du débit à la durée</a><a href="#vous-verifier">Vous vérifier</a><a href="#je-m-entraine">Je m’entraîne</a><a href="#pour-aller-plus-loin">Pour aller plus loin</a></div></nav>
+<h2 id="la-situation">La situation</h2>
+<p>Un client appelle. Son abonnement fibre est annoncé à <strong>1 Gbit/s</strong>. Il vient de télécharger un fichier de <strong>8 Go en 3 minutes</strong>, et il estime s’être fait avoir.</p>
+<div class="cle">
+<p><strong>La question n’est pas de savoir s’il a raison, mais de le prouver avec un chiffre.</strong> Tout tient en deux gestes : ramener les deux grandeurs à la même unité, puis diviser.</p>
+</div>
+<h2 id="ce-qui-circule-ce-qui-se-stocke">Ce qui circule, ce qui se stocke</h2>
+<figure><img src="img/S1/fig1-bit-octet.png" alt="" /></figure>
+<div class="formule">
+<p><strong>1 octet = 8 bits</strong></p>
+<ul>
+<li>le <strong>bit</strong>, symbole <strong>b</strong>, est ce qui <strong>circule</strong> : un débit se compte en bits par seconde</li>
+<li>l’<strong>octet</strong>, symbole <strong>o</strong>, est ce qui se <strong>stocke</strong> : une taille de fichier se compte en octets</li>
+</ul>
+</div>
+<div class="piege">
+<p><strong>Un débit s’annonce en bits, une taille en octets</strong>, et le facteur 8 se cache entre les deux. Une ligne à 1 Gbit/s ne transfère pas 1 Go par seconde, mais <strong>125 Mo</strong>. C’est l’erreur de toute la séquence, et elle passe inaperçue tant qu’on ne regarde pas l’unité.</p>
+</div>
+<h2 id="les-prefixes-et-l-ecriture-scientifique">Les préfixes, et l’écriture scientifique</h2>
+<figure><img src="img/S1/fig2-prefixes.png" alt="" /></figure>
+<div class="formule">
+<p><strong>k</strong> = 10³ · <strong>M</strong> = 10⁶ · <strong>G</strong> = 10⁹ · <strong>T</strong> = 10¹²</p>
+<p>D’un préfixe au suivant, on multiplie par <strong>1 000</strong>.</p>
+</div>
+<div class="cle">
+<p>L’<strong>écriture scientifique</strong> s’écrit <strong>a × 10ⁿ</strong>, avec <strong>1 ≤ a &lt; 10</strong>. Elle sert à comparer d’un coup d’œil : 4,7 × 10⁹ et 470 × 10⁷ sont le même nombre, mais un seul des deux le dit.</p>
+</div>
+<h2 id="du-debit-a-la-duree">Du débit à la durée</h2>
+<div class="etapes">
+<ol type="1">
+<li>Je mets la <strong>taille en mégaoctets</strong>.</li>
+<li>Je mets le <strong>débit en mégaoctets par seconde</strong> — donc je divise par 8 s’il est donné en bits.</li>
+<li><strong>Durée = taille ÷ débit</strong>, et j’obtiens des secondes.</li>
+<li>Je compare au débit <strong>annoncé</strong>, pour dire s’il est tenu.</li>
+</ol>
+</div>
+<div class="piege">
+<p>On ne divise jamais une taille en <strong>octets</strong> par un débit en <strong>bits</strong>. Le résultat sort huit fois trop grand, il a l’air plausible, et rien ne signale l’erreur.</p>
+</div>
+<h2 id="vous-verifier">Vous vérifier</h2>
+<section class="exo" id="S1-e1" data-exo="S1-e1" data-type="calcul" data-savoir="AU" data-a="IXgueGB4OTs2OS82eHZ4LHhgbm50bnZ4LjU2eGBodGp2eC94YHgXNXUpeCc="><p class="k">Exercice · AU</p><h4>Le débit réellement obtenu</h4><div class="enonce">
+
+<p>Le client a transféré <strong>8 Go en 3 minutes</strong>. Quel débit cela fait-il, en mégaoctets par seconde ?</p>
+</div><div class="indice" hidden>La taille en mégaoctets, la durée en secondes, puis la division. Le facteur 8 n’intervient pas encore : les deux sont déjà en octets.</div></section>
+<section class="exo" id="S1-e2" data-exo="S1-e2" data-type="calcul" data-savoir="AU" data-a="IXgueGB4OTs2OS82eHZ4LHhgbnRqdnguNTZ4YGh0anZ4L3hgeDczNHgn"><p class="k">Exercice · AU</p><h4>Une durée de transfert</h4><div class="enonce">
+
+<p>Une mise à jour de <strong>1,5 Go</strong> est poussée sur une ligne à <strong>50 Mbit/s</strong>. Combien de <strong>minutes</strong> faut-il ?</p>
+</div><div class="indice" hidden>Le débit est en bits, la taille en octets. Ramenez le débit en mégaoctets par seconde avant de diviser, puis passez des secondes aux minutes.</div></section>
+<section class="exo" id="S1-e3" data-exo="S1-e3" data-type="justification" data-savoir="AU" data-a="IXgueGB4MC8pLjM8Mzk7LjM1NHgn"><p class="k">Exercice · AU</p><h4>La réponse au client</h4><div class="enonce">
+
+<p>Répondez au client : sa ligne tient-elle ce qui est annoncé ?</p>
+</div><div class="indice" hidden>Il faut deux nombres dans la même unité. Le pourcentage du débit annoncé est ce qui parle le plus à un client.</div><ul class="verifier" hidden><li>J’ai donné le débit réellement obtenu, avec son unité</li><li>J’ai comparé ce débit aux 1 Gbit/s annoncés, avec un chiffre ou un pourcentage</li><li>J’ai dit que le débit annoncé est un maximum, jamais une garantie</li><li>J’ai évité de confondre les 8 Go du fichier avec un débit</li></ul></section>
+<h2 id="je-m-entraine">Je m’entraîne</h2>
+<p><em>Les mêmes séries que sur la feuille. On remplit chaque case, puis on vérifie la série entière d’un coup.</em></p>
+<section class="serie" id="S1-s1" data-serie="S1-s1" data-savoir="AU" data-a="IXgveGB4eHZ4LjU2eGBrdGp2eDN4YAEheCx4YGJ0aid2IXgseGBidGondiF4LHhgaHRqJ3YheCx4YG9qdGondiF4LHhgaGpqamp0aid2IXgseGBrdGonByc="><p class="k">Série · AU</p><h4>Série 1 — le facteur 8</h4><div class="enonce">
+
+</div><ol class="items"><li><span class="q">1 Go en Gbit</span></li><li><span class="q">1 Mo en Mbit</span></li><li><span class="q">16 Gbit en Go</span></li><li><span class="q">400 Mbit en Mo</span></li><li><span class="q">2,5 Mo en kbit</span></li><li><span class="q">8 Gbit en Go</span></li></ol><div class="indice" hidden>Des octets vers les bits, on multiplie par 8. Dans l’autre sens, on divise.</div></section>
+<section class="serie" id="S1-s2" data-serie="S1-s2" data-savoir="AU" data-a="IXgveGB4eHZ4LjU2eGBrdGp2eDN4YAEheCx4YGlqamp0aid2IXgseGBqdG1vJ3YheCx4YGhvanRqJ3YheCx4YG9qampqanRqJ3YheCx4YGh0byd2IXgseGBrdGonByc="><p class="k">Série · AU</p><h4>Série 2 — les préfixes</h4><div class="enonce">
+
+</div><ol class="items"><li><span class="q">3 To en Go</span></li><li><span class="q">750 Mo en Go</span></li><li><span class="q">0,25 Go en Mo</span></li><li><span class="q">0,5 To en Mo</span></li><li><span class="q">2 500 000 ko en Go</span></li><li><span class="q">8 000 Mbit en Go</span></li></ol><div class="indice" hidden>Un facteur 1 000 par étage. La dernière ligne en demande deux, plus le facteur 8.</div></section>
+<section class="serie" id="S1-s3" data-serie="S1-s3" data-savoir="AU" data-a="IXgveGB4eHZ4LjU2eGBrdGp2eDN4YAEheCx4YG90aCd2IXgseGBjdGondiF4LHhgaHRvJ3YheCx4YHdudGondiF4LHhgY3RsJ3YheCx4YG50aicHJw=="><p class="k">Série · AU</p><h4>Série 3 — écriture scientifique, les deux morceaux</h4><div class="enonce">
+
+</div><ol class="items"><li><span class="q">5 200 000 000, le nombre a</span></li><li><span class="q">5 200 000 000, l’exposant n</span></li><li><span class="q">0,000 25, le nombre a</span></li><li><span class="q">0,000 25, l’exposant n</span></li><li><span class="q">96 000, le nombre a</span></li><li><span class="q">96 000, l’exposant n</span></li></ol><div class="indice" hidden>a se lit en plaçant la virgule après le premier chiffre. n compte les rangs franchis, et son signe dit de quel côté.</div></section>
+<section class="serie" id="S1-s4" data-serie="S1-s4" data-savoir="AU" data-a="IXgveGB4KXh2eC41Nnhga3RqdngzeGABIXgseGBoanRqJ3YheCx4YGtvanRqJ3YheCx4YGhudGondiF4LHhgaGpqdGondiF4LHhgaGp0aid2IXgseGBsanRqJwcn"><p class="k">Série · AU</p><h4>Série 4 — durée de téléchargement</h4><div class="enonce">
+
+</div><ol class="items"><li><span class="q">400 Mo à 20 Mo/s</span></li><li><span class="q">1,2 Go à 8 Mo/s</span></li><li><span class="q">60 Mo à 2,5 Mo/s</span></li><li><span class="q">2 Go à 10 Mo/s</span></li><li><span class="q">500 Mo à 25 Mo/s</span></li><li><span class="q">900 Mo à 15 Mo/s</span></li></ol><div class="indice" hidden>Taille divisée par débit. Ici tout est déjà en octets : aucun facteur 8.</div></section>
+<section class="serie" id="S1-s5" data-serie="S1-s5" data-savoir="AU" data-a="IXgveGB4eHZ4LjU2eGBrdGp2eDN4YAEheDt4YAF4bnoXNXgHJ3YheDt4YAF4b3odNXgHJ3YheDt4YAF4aGpqejV4Byd2IXg7eGABeG56FzV4Byd2IXg7eGABeGt6DjV4Byd2IXg7eGABeGh6FzV4BycHJw=="><p class="k">Série · AU</p><h4>Série 5 — l’ordre de grandeur</h4><div class="enonce">
+
+</div><ol class="items larges"><li><span class="q">une photo de téléphone, 4 Mo ou 4 Go</span></li><li><span class="q">un film en haute définition, 5 Mo ou 5 Go</span></li><li><span class="q">un SMS, 200 o ou 200 Mo</span></li><li><span class="q">une chanson en MP3, 4 Mo ou 4 Go</span></li><li><span class="q">un disque dur d’ordinateur, 1 To ou 1 Go</span></li><li><span class="q">une page web, 2 Mo ou 2 Go</span></li></ol><div class="indice" hidden>Sans calculer. Recopiez la valeur qui vous paraît juste, avec son unité.</div></section>
+<section class="serie" id="S1-s6" data-serie="S1-s6" data-savoir="AU" data-a="IXgveGB4eHZ4LjU2eGBodGp2eDN4YAEheCx4YG50aid2IXgseGBudGondiF4LHhga2hqdGondiF4LHhgaHRtYid2IXgseGBsbnRqJ3YheCx4YGtqanRqJwcn"><p class="k">Série · AU</p><h4>Série 6 — deux étapes d’un coup</h4><div class="enonce">
+
+</div><ol class="items larges"><li><span class="q">une vidéo de 3 Go à 100 Mbit/s, en minutes</span></li><li><span class="q">1,8 Go à 60 Mbit/s, en minutes</span></li><li><span class="q">600 Mo à 40 Mbit/s, en secondes</span></li><li><span class="q">un disque de 1 To à 100 Mo/s, en heures</span></li><li><span class="q">8 Go à 1 Gbit/s, en secondes</span></li><li><span class="q">250 Mo à 20 Mbit/s, en secondes</span></li></ol><div class="indice" hidden>Le débit en bits se divise par 8 avant tout. Ensuite seulement, taille divisée par débit.</div></section>
+<h2 id="pour-aller-plus-loin">Pour aller plus loin</h2>
+<div class="replis"><p class="chapeau">Pour aller plus loin</p><details class="appro"><summary><span class="niv"></span><span class="titre-appro">Pourquoi les débits s&#39;annoncent en bits, et les tailles en octets</span><span class="etiq">Pour aller plus loin</span><span class="chev">&rsaquo;</span></summary><div class="corps"><p>Ce n’est pas un hasard de vocabulaire, et personne ne l’a choisi pour vous embrouiller — mais <strong>cela arrange le vendeur</strong>.</p>
+<p>Un débit en bits par seconde donne un nombre <strong>huit fois plus grand</strong> que le même débit en octets. « 1 Gbit/s » se vend mieux que « 125 Mo/s », qui est pourtant la même ligne.</p>
+<div class="cle">
+<p>La règle pratique : <strong>dès qu’une publicité annonce un débit, divisez par 8</strong> pour savoir ce que vous téléchargerez vraiment. Vous obtenez alors un nombre comparable à la taille de vos fichiers.</p>
+</div>
+<p><strong>Le même genre d’écart existe sur les disques.</strong> Un disque vendu « 500 Go » s’affiche à 465 Go dans l’ordinateur. Le fabricant compte en milliers, le système en paquets de 1 024 : les deux disent vrai, et l’écart est de 7 %. Ce n’est pas un disque abîmé, et ce n’est pas une arnaque.</p></div></details>
+</div><nav class="suite"><p class="chapeau-s">La suite</p><div class="pas-a-pas"><a class="av" href="S0.html" rel="prev"><span class="k">&lsaquo; Précédent</span><span class="t">Où j'en suis</span></a><a class="ap" href="S2.html" rel="next"><span class="k">Suivant &rsaquo;</span><span class="t">Séquence 2 — sécurité et mesures</span></a></div></nav>
+<p class="pied">Cette page rappelle la séquence. Elle ne remplace pas les documents distribués et ne donne aucun corrigé. Tous les calculs se font dans votre tablette ; rien n'est enregistré.</p><p class="pied-site"><a class="mentions" href="../mentions-legales.html">Mentions légales</a></p>
+</div>
+<script src="../assets/kit.js?v=2a75a503"></script>
+<script src="../assets/site.js?v=2a75a503"></script>
+<script src="../assets/vivant.js?v=2a75a503"></script>
