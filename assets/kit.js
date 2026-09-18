@@ -8673,6 +8673,138 @@ SCHEMAS["pythagore-thales"]=function(el){
     "aucune des deux ne s'applique."));
 };
 
+/* ─────────── la pile zinc-cuivre, et le chemin des electrons ───────────
+   Ajoute le 18 septembre 2026 pour la Tle CTRM, sequence 2. Il sert aussi
+   en sequence 9 : la corrosion est la meme reaction, sans le fil. */
+SCHEMAS["pile-electrons"]=function(el){
+  var W=724,H=412;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Pile zinc-cuivre : les électrons quittent le zinc, passent par le fil, "+
+                 "et sont captés par les ions cuivre"});
+  var BX0=176,BX1=548,BY0=146,BY1=326, LIQ=176;
+  var ZX=246,CX=470,PW=26,PY0=112,PY1=300, FIL=64, MX=(ZX+CX)/2;
+
+  /* ── le becher et la solution ── */
+  svg.appendChild(S("path",{d:"M "+BX0+" "+BY0+" L "+BX0+" "+(BY1-16)+
+    " Q "+BX0+" "+BY1+" "+(BX0+16)+" "+BY1+" L "+(BX1-16)+" "+BY1+
+    " Q "+BX1+" "+BY1+" "+BX1+" "+(BY1-16)+" L "+BX1+" "+BY0,
+    fill:V("carte2"),stroke:V("encre2"),"stroke-width":"2.4"}));
+  svg.appendChild(S("line",{x1:BX0,y1:LIQ,x2:BX1,y2:LIQ,stroke:V("encre2"),
+    "stroke-width":"1.6","stroke-dasharray":"7 5"}));
+  /* la legende du liquide se pose ENTRE les deux lames : ailleurs elle passe
+     derriere l'une des deux, et le mot devient illisible. */
+  svg.appendChild(S("text",{x:MX,y:LIQ+20,"text-anchor":"middle","class":"s-pet",
+    fill:V("encre2")},"solution conductrice"));
+
+  /* ── les deux lames ── */
+  /* Le nom se pose A COTE de la lame, pas au-dessus : le fil monte du milieu
+     de la lame et barrait le mot en son centre. */
+  [[ZX,"chaud","ZINC",-10,"end"],[CX,"froid","CUIVRE",10,"start"]]
+  .forEach(function(p){
+    svg.appendChild(S("rect",{x:p[0]-PW/2,y:PY0,width:PW,height:PY1-PY0,rx:"3",
+      fill:V("carte"),stroke:V(p[1]),"stroke-width":"3"}));
+    svg.appendChild(S("text",{x:p[0]+p[3],y:PY0-12,"text-anchor":p[4],
+      "class":"s-lab",fill:V(p[1])},p[2]));
+  });
+
+  /* ── le fil exterieur, et le voltmetre ── */
+  svg.appendChild(S("path",{d:"M "+ZX+" "+PY0+" L "+ZX+" "+FIL+" L "+CX+" "+FIL+
+    " L "+CX+" "+PY0,fill:"none",stroke:V("encre"),"stroke-width":"3"}));
+  svg.appendChild(S("circle",{cx:MX,cy:FIL,r:"21",fill:V("carte"),stroke:V("encre"),
+    "stroke-width":"3"}));
+  svg.appendChild(S("text",{x:MX,y:FIL+7,"text-anchor":"middle","class":"s-lab",
+    fill:V("encre")},"V"));
+
+  /* ── une pointe de fleche, apex en (x,y), dirigee vers la DROITE ── */
+  function pointe(x,y,coul){
+    svg.appendChild(S("path",{d:"M "+x+" "+y+" l -13 -6 l 0 12 z",fill:V(coul)}));
+  }
+  /* Les electrons QUITTENT le zinc et VONT au cuivre : de gauche a droite.
+     Une premiere version les faisait pointer vers le zinc — le schema disait
+     alors exactement le contraire de sa legende. */
+  [ZX+62,CX-40].forEach(function(x){ pointe(x,FIL,"chaud"); });
+  [ZX+50,CX-52].forEach(function(x){
+    svg.appendChild(S("text",{x:x,y:FIL-14,"text-anchor":"middle","class":"s-pet",
+      fill:V("chaud"),style:"font-size:15px"},"e⁻"));
+  });
+  svg.appendChild(S("text",{x:MX,y:26,"text-anchor":"middle","class":"s-tit",
+    fill:V("chaud")},"DEUX CHEMINS POUR LES MÊMES ÉLECTRONS"));
+
+  /* ── les ions, dans la solution : les deux cations vont vers la CATHODE,
+        donc vers la droite. Zn²⁺ quitte sa lame, Cu²⁺ rejoint la sienne. ── */
+  [[ZX+22,"Zn²⁺","chaud"],[CX-92,"Cu²⁺","froid"]].forEach(function(p){
+    svg.appendChild(S("path",{d:"M "+p[0]+" 248 l 44 0",stroke:V(p[2]),
+      "stroke-width":"1.8"}));
+    pointe(p[0]+44,248,p[2]);
+    svg.appendChild(S("text",{x:p[0]+22,y:234,"text-anchor":"middle","class":"s-pet",
+      fill:V(p[2])},p[1]));
+  });
+
+  /* ── le raccourci, en gris et en pointille : il existe, il ne sert a rien,
+        et c'est lui qui depose du cuivre sur le zinc. ── */
+  svg.appendChild(S("path",{d:"M 344 292 L 272 292",stroke:V("encre2"),
+    "stroke-width":"1.8","stroke-dasharray":"6 4"}));
+  svg.appendChild(S("path",{d:"M 266 292 l 13 -6 l 0 12 z",fill:V("encre2")}));
+  svg.appendChild(S("rect",{x:ZX+PW/2,y:280,width:8,height:24,
+    fill:V("froid")}));
+  svg.appendChild(S("text",{x:352,y:296,"class":"s-pet",fill:V("encre2")},
+    "le raccourci"));
+
+  /* ── les deux demi-equations, sur deux lignes courtes chacune ── */
+  svg.appendChild(S("text",{x:110,y:364,"class":"s-lab",fill:V("chaud"),
+    style:"font-size:19px"},"Zn → Zn²⁺ + 2 e⁻"));
+  svg.appendChild(S("text",{x:110,y:388,"class":"s-pet",fill:V("encre2")},
+    "OXYDATION · il perd · borne −"));
+  svg.appendChild(S("text",{x:614,y:364,"text-anchor":"end","class":"s-lab",
+    fill:V("froid"),style:"font-size:19px"},"Cu²⁺ + 2 e⁻ → Cu"));
+  svg.appendChild(S("text",{x:614,y:388,"text-anchor":"end","class":"s-pet",
+    fill:V("encre2")},"RÉDUCTION · il gagne · borne +"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "Le zinc <b>perd</b> deux électrons ; les ions cuivre les <b>prennent</b>. Entre les "+
+    "deux, il y a <b>deux chemins</b>. Par <b>le fil</b>, le déplacement des électrons "+
+    "<b>est</b> le courant : c'est celui qu'on veut. <b>Au contact</b> du zinc, un ion "+
+    "cuivre peut se servir directement — rien ne sort dans le fil, et le cuivre se "+
+    "dépose sur la lame. <b>La couche rouge qui apparaît sur le zinc, c'est ce "+
+    "raccourci-là</b>, et c'est de l'énergie perdue en chaleur."));
+};
+
+/* ─────────── ce que pese l'energie, pour un meme besoin ───────────
+   Une seule mesure, donc une seule teinte, plus l'accent sur la ligne qui
+   porte le message. Les barres sont A L'ECHELLE : celle du gazole est
+   presque invisible, et c'est exactement ce qu'il faut voir. */
+SCHEMAS["energie-par-kg"]=function(el){
+  var W=724,H=330,X0=206,LMAX=438,Y=[96,166,236],HB=38;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Masse nécessaire pour stocker 240 kilowattheures : plomb 6857 kg, "+
+                 "lithium 1500 kg, gazole 20 kg"});
+  svg.appendChild(S("text",{x:20,y:42,"class":"s-tit",
+    fill:V("chaud")},"POUR STOCKER LES MÊMES 240 kW·h"));
+  var MAX=6857;
+  [["Plomb",6857,"6 857 kg","chaud"],
+   ["Lithium-ion",1500,"1 500 kg","encre2"],
+   ["Gazole",20,"20 kg","encre2"]].forEach(function(b,i){
+    var w=Math.max(3, b[1]/MAX*LMAX);
+    svg.appendChild(S("text",{x:X0-14,y:Y[i]+HB/2+6,"text-anchor":"end",
+      "class":"s-lab",fill:V("encre")},b[0]));
+    svg.appendChild(S("rect",{x:X0,y:Y[i],width:w,height:HB,rx:"2",fill:V(b[3])}));
+    svg.appendChild(S("text",{x:X0+w+12,y:Y[i]+HB/2+6,"class":"s-lab",
+      fill:V(b[3])},b[2]));
+  });
+  svg.appendChild(S("line",{x1:X0,y1:Y[0]-14,x2:X0,y2:Y[2]+HB+14,stroke:V("encre2"),
+    "stroke-width":"2"}));
+  svg.appendChild(S("text",{x:X0,y:Y[2]+HB+34,"class":"s-pet",fill:V("chaud")},
+    "le plomb, c'est 27 % de la charge utile du tracteur"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "Les trois barres sont <b>à la même échelle</b>. Celle du gazole tient dans un trait, "+
+    "et c'est la raison pour laquelle les camions ont roulé au gazole pendant un siècle. "+
+    "<b>Attention pourtant :</b> ces 240 kW·h de gazole ne sont pas de l'énergie utile — "+
+    "un moteur thermique n'en convertit qu'environ <b>40 %</b> en mouvement, contre plus "+
+    "de <b>90 %</b> pour un moteur électrique. La comparaison n'est pas honnête telle quelle."));
+};
+
+
 
 
 /* --------- dispersion d'une serie de releves ---------
