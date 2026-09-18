@@ -269,6 +269,8 @@ body.en-recherche .compteur{display:none}
 .porte.outils{--teinte:var(--vert)}
 .porte.exos{--teinte:var(--tiede)}
 .porte.annales{--teinte:var(--froid)}
+.porte.cours{--teinte:var(--bleu,var(--froid))}
+.porte.bilan{--teinte:var(--vert)}
 
 .porte .ico{
   width:28px;height:28px;fill:none;stroke:var(--teinte);stroke-width:1.6;
