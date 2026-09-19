@@ -8804,6 +8804,841 @@ SCHEMAS["energie-par-kg"]=function(el){
     "de <b>90 %</b> pour un moteur électrique. La comparaison n'est pas honnête telle quelle."));
 };
 
+/* ─────────── le banc de l'activite 2, dans les deux sens ───────────
+   L'accumulateur est A LA MEME PLACE dans les deux panneaux — montant de
+   droite. Seule la fleche change, et c'est tout le propos de la seance.
+   Les valeurs sont celles d'un NiMH format AA : 1,2 V nominal, 2 000 mA·h. */
+SCHEMAS["banc-charge-decharge"]=function(el){
+  var W=724,H=516;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Banc de charge et de décharge d'un accumulateur, puis les deux "+
+                 "courbes de tension relevées toutes les deux minutes"});
+  svg.appendChild(S("text",{x:W/2,y:30,"text-anchor":"middle","class":"s-tit",
+    fill:V("chaud")},"LE MÊME ACCUMULATEUR, DANS LES DEUX SENS"));
+
+  /* pointe de fleche : dir = +1 vers la droite, -1 vers la gauche */
+  function pointe(x,y,coul,dir){
+    svg.appendChild(S("path",{d:"M "+x+" "+y+" l "+(-13*dir)+" -6 l 0 12 z",
+      fill:V(coul)}));
+  }
+
+  function panneau(ox,num,titre,coul,charge,l1,l2){
+    var XL=ox+62,XR=ox+250,YT=104,YB=196,MID=(XL+XR)/2,MY=(YT+YB)/2;
+    svg.appendChild(S("text",{x:ox+160,y:66,"text-anchor":"middle","class":"s-lab",
+      fill:V(coul)},num+"  "+titre));
+    /* la boucle, puis les organes par-dessus : leur fond masque le fil */
+    svg.appendChild(S("path",{d:"M "+XL+" "+YT+" L "+XR+" "+YT+" L "+XR+" "+YB+
+      " L "+XL+" "+YB+" Z",fill:"none",stroke:V("encre"),"stroke-width":"3"}));
+    svg.appendChild(S("circle",{cx:MID,cy:YT,r:"20",fill:V("carte"),stroke:V("encre"),
+      "stroke-width":"3"}));
+    svg.appendChild(S("text",{x:MID,y:YT+7,"text-anchor":"middle","class":"s-lab",
+      fill:V("encre")},"A"));
+    /* a gauche : l'alimentation en charge, la lampe en decharge */
+    if(charge){
+      svg.appendChild(S("rect",{x:XL-48,y:MY-32,width:96,height:64,rx:"5",
+        fill:V("carte"),stroke:V("encre"),"stroke-width":"2.4"}));
+      svg.appendChild(S("text",{x:XL,y:MY-4,"text-anchor":"middle","class":"s-lab",
+        fill:V("encre")},"ALIM."));
+      svg.appendChild(S("text",{x:XL,y:MY+18,"text-anchor":"middle","class":"s-pet",
+        fill:V("encre2")},"0,20 A"));
+    }else{
+      svg.appendChild(S("circle",{cx:XL,cy:MY,r:"22",fill:V("carte"),stroke:V("chaud"),
+        "stroke-width":"2.8"}));
+      svg.appendChild(S("path",{d:"M "+(XL-15)+" "+(MY-15)+" L "+(XL+15)+" "+(MY+15)+
+        " M "+(XL+15)+" "+(MY-15)+" L "+(XL-15)+" "+(MY+15),stroke:V("chaud"),
+        "stroke-width":"2.2"}));
+      svg.appendChild(S("text",{x:XL,y:YB+22,"text-anchor":"middle","class":"s-pet",
+        fill:V("encre2")},"lampe 2,5 V"));
+    }
+    /* a droite : l'accumulateur, borne + en haut DANS LES DEUX CAS */
+    svg.appendChild(S("rect",{x:XR-24,y:MY-20,width:48,height:40,fill:V("carte")}));
+    svg.appendChild(S("rect",{x:XR-20,y:MY-14,width:40,height:"3.5",fill:V("encre")}));
+    svg.appendChild(S("rect",{x:XR-10,y:MY+2,width:20,height:"5",fill:V("encre")}));
+    svg.appendChild(S("text",{x:XR+26,y:MY-8,"class":"s-lab",fill:V("encre2")},"+"));
+    svg.appendChild(S("text",{x:XR+26,y:MY+16,"class":"s-lab",fill:V("encre2")},"−"));
+    svg.appendChild(S("text",{x:XR,y:YB+22,"text-anchor":"middle","class":"s-pet",
+      fill:V("encre2")},"accumulateur"));
+    /* le sens du courant : deux pointes sur le fil du haut */
+    var dir=charge?1:-1;
+    /* les deux pointes se placent EN MIROIR : cote a cote dans le panneau
+       decharge, elles se chevauchaient et faisaient une seule tache. */
+    [charge?MID+58:MID-58, charge?XL+46:XR-46].forEach(function(x){
+      pointe(x,YT,coul,dir);
+    });
+    svg.appendChild(S("text",{x:MID,y:YT+30,"text-anchor":"middle","class":"s-pet",
+      fill:V(coul)},charge?"le courant ENTRE":"le courant SORT"));
+    /* le releve du poste */
+    svg.appendChild(S("rect",{x:ox+6,y:240,width:308,height:56,rx:"6",
+      fill:V("carte2")}));
+    svg.appendChild(S("text",{x:ox+160,y:262,"text-anchor":"middle","class":"s-lab",
+      fill:V(coul)},l1));
+    svg.appendChild(S("text",{x:ox+160,y:284,"text-anchor":"middle","class":"s-pet",
+      fill:V("encre2")},l2));
+  }
+  panneau(30,"①","EN CHARGE","chaud",true,
+          "I = 0,20 A constant","U : 1,30 V → 1,45 V en 10 min");
+  panneau(374,"②","EN DÉCHARGE","froid",false,
+          "I ≈ 0,15 A","U : 1,25 V → 1,10 V en 10 min");
+
+  /* ── les deux courbes : c'est le tableau g) du polycopie, rempli ── */
+  var X0=150,X1=620,YB2=482,HT=136;
+  function xT(t){return X0+t/10*(X1-X0);}
+  function yU(u){return YB2-(u-1.0)/0.5*HT;}
+  svg.appendChild(S("text",{x:W/2,y:320,"text-anchor":"middle","class":"s-pet",
+    fill:V("encre2")},"ce que donne le relevé de tension, toutes les deux minutes"));
+  [1.0,1.1,1.2,1.3,1.4,1.5].forEach(function(u){
+    svg.appendChild(S("line",{x1:X0,y1:yU(u),x2:X1,y2:yU(u),stroke:V("trait"),
+      "stroke-width":"1"}));
+    svg.appendChild(S("text",{x:X0-12,y:yU(u)+5,"text-anchor":"end","class":"s-pet",
+      fill:V("encre2")},u.toFixed(1).replace(".",",")+" V"));
+  });
+  svg.appendChild(S("line",{x1:X0,y1:yU(1.5),x2:X0,y2:YB2,stroke:V("encre2"),
+    "stroke-width":"2"}));
+  svg.appendChild(S("line",{x1:X0,y1:YB2,x2:X1,y2:YB2,stroke:V("encre2"),
+    "stroke-width":"2"}));
+  [0,2,4,6,8,10].forEach(function(t){
+    svg.appendChild(S("text",{x:xT(t),y:500,"text-anchor":"middle","class":"s-pet",
+      fill:V("encre2")},""+t));
+  });
+  svg.appendChild(S("text",{x:636,y:500,"class":"s-pet",fill:V("encre2")},"min"));
+  function trace(vals,coul,nom,dy){
+    var d="";
+    vals.forEach(function(u,i){
+      d+=(i?" L ":"M ")+xT(i*2)+" "+yU(u);
+      svg.appendChild(S("circle",{cx:xT(i*2),cy:yU(u),r:"4",fill:V(coul)}));
+    });
+    svg.appendChild(S("path",{d:d,fill:"none",stroke:V(coul),"stroke-width":"2.6"}));
+    svg.appendChild(S("text",{x:X1+10,y:yU(vals[5])+dy,"class":"s-pet",fill:V(coul)},nom));
+  }
+  trace([1.30,1.35,1.38,1.41,1.43,1.45],"chaud","charge",-6);
+  trace([1.25,1.22,1.20,1.18,1.15,1.10],"froid","décharge",14);
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "Le montage est le même des deux côtés, et l'accumulateur est à la même place : "+
+    "<b>seule la flèche du courant change de sens</b>. En charge, on <b>force</b> le courant "+
+    "à entrer et la tension <b>monte</b> ; en décharge, l'accumulateur <b>fournit</b> le "+
+    "courant et la tension <b>descend</b>. Les valeurs portées ici sont celles d'un NiMH "+
+    "format AA — <b>les vôtres seront voisines, pas identiques</b>, et c'est normal : ce "+
+    "qu'il faut retrouver, c'est le <b>sens</b> des deux courbes, pas le centième de volt."));
+};
+
+/* ─────────── la decharge complete, d'ou sortent Q et E ───────────
+   Le prolongement du banc de la seance 2, a courant constant. Les nombres
+   sont ceux de l'accumulateur AA, JAMAIS ceux des tableaux i) et j) du
+   polycopie : la fiche montre comment on lit, elle ne rend pas la copie. */
+SCHEMAS["releve-decharge"]=function(el){
+  var W=724,H=540;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Courbe de décharge à courant constant : le plateau à 1,2 volt, "+
+                 "la chute à 10 heures, et le calcul de la capacité et de l'énergie"});
+  var X0=120,X1=610,YB=380,HT=280;
+  function xT(t){return X0+t/12*(X1-X0);}
+  function yU(u){return YB-(u-0.8)/0.8*HT;}
+  svg.appendChild(S("text",{x:20,y:32,"class":"s-tit",fill:V("chaud")},
+    "UN ACCUMULATEUR QU'ON VIDE À COURANT CONSTANT"));
+  svg.appendChild(S("text",{x:20,y:56,"class":"s-pet",fill:V("encre2")},
+    "le même AA que sur le banc, déchargé sous 0,20 A sans jamais varier"));
+  [0.8,0.9,1.0,1.1,1.2,1.3,1.4,1.5,1.6].forEach(function(u){
+    svg.appendChild(S("line",{x1:X0,y1:yU(u),x2:X1,y2:yU(u),stroke:V("trait"),
+      "stroke-width":"1"}));
+    svg.appendChild(S("text",{x:X0-12,y:yU(u)+5,"text-anchor":"end","class":"s-pet",
+      fill:V("encre2")},u.toFixed(1).replace(".",",")+" V"));
+  });
+  svg.appendChild(S("line",{x1:X0,y1:yU(1.6),x2:X0,y2:YB,stroke:V("encre2"),
+    "stroke-width":"2"}));
+  svg.appendChild(S("line",{x1:X0,y1:YB,x2:X1,y2:YB,stroke:V("encre2"),
+    "stroke-width":"2"}));
+  [0,2,4,6,8,12].forEach(function(t){
+    svg.appendChild(S("text",{x:xT(t),y:402,"text-anchor":"middle","class":"s-pet",
+      fill:V("encre2")},""+t));
+  });
+  svg.appendChild(S("text",{x:(X0+X1)/2,y:426,"text-anchor":"middle","class":"s-pet",
+    fill:V("encre2")},"temps de décharge, en heures"));
+  /* le seuil d'arret : en dessous, on abime la cellule */
+  svg.appendChild(S("line",{x1:X0,y1:yU(1.0),x2:X1,y2:yU(1.0),stroke:V("chaud"),
+    "stroke-width":"1.8","stroke-dasharray":"7 5"}));
+  /* calee sur X1, l etiquette passait sous le point du genou : elle s arrete
+     avant lui. */
+  svg.appendChild(S("text",{x:xT(9.4),y:yU(1.0)-17,"text-anchor":"end","class":"s-pet",
+    fill:V("chaud")},"seuil d'arrêt : 1,0 V"));
+  /* la courbe : long plateau, puis le genou */
+  var PTS=[[0,1.38],[0.5,1.32],[1,1.30],[2,1.28],[4,1.26],[6,1.24],[8,1.22],
+           [9,1.20],[9.5,1.17],[10,1.10],[10.3,0.95],[10.5,0.85]];
+  var d="";
+  PTS.forEach(function(q,i){ d+=(i?" L ":"M ")+xT(q[0])+" "+yU(q[1]); });
+  svg.appendChild(S("path",{d:d,fill:"none",stroke:V("froid"),"stroke-width":"3"}));
+  /* la lecture du temps d'arret */
+  svg.appendChild(S("line",{x1:xT(10),y1:yU(1.0),x2:xT(10),y2:YB,stroke:V("chaud"),
+    "stroke-width":"1.8","stroke-dasharray":"7 5"}));
+  svg.appendChild(S("circle",{cx:xT(10),cy:yU(1.10),r:"5",fill:V("chaud")}));
+  svg.appendChild(S("text",{x:xT(10),y:YB+22,"text-anchor":"middle","class":"s-lab",
+    fill:V("chaud")},"t = 10 h"));
+  svg.appendChild(S("text",{x:xT(4.6),y:yU(1.26)+38,"text-anchor":"middle","class":"s-pet",
+    fill:V("froid")},"le plateau : U ≈ 1,2 V presque tout le temps"));
+  /* les deux calculs, dans le coin libre en haut a droite */
+  /* Les deux encadres sont SOUS le graphique, cote a cote. Poses dans le coin
+     haut-droit, ils recouvraient le plateau de la courbe et son etiquette. */
+  [["Q = I × t = 0,20 × 10","soit 2,0 A·h — la capacité",20],
+   ["E = Q × U = 2,0 × 1,2","soit 2,4 W·h — l'énergie",374]]
+  .forEach(function(b){
+    svg.appendChild(S("rect",{x:b[2],y:448,width:330,height:66,rx:"6",
+      fill:V("carte2"),stroke:V("chaud"),"stroke-width":"1.6"}));
+    svg.appendChild(S("text",{x:b[2]+18,y:476,"class":"s-lab",fill:V("encre")},b[0]));
+    svg.appendChild(S("text",{x:b[2]+18,y:499,"class":"s-pet",fill:V("chaud")},b[1]));
+  });
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "Tout se lit sur la courbe. <b>Le courant est connu</b> parce qu'on l'a imposé : 0,20 A. "+
+    "<b>Le temps se lit</b> là où la tension tombe sous le seuil : 10 h. Leur produit est la "+
+    "<b>capacité</b>, 2,0 A·h — et c'est bien la valeur inscrite sur l'accumulateur. La "+
+    "multiplier par la tension donne l'<b>énergie</b>, 2,4 W·h. <b>Le plateau explique "+
+    "pourquoi on a le droit de multiplier par une seule tension :</b> elle ne bouge presque "+
+    "pas de toute la décharge. Une batterie de camion fait exactement cela, avec des nombres "+
+    "trois cents fois plus grands."));
+};
+
+/* ─────────── peser l'accumulateur, puis remonter au camion ───────────
+   Une manip de trente secondes qui ancre la table de l'activite 4 : le
+   W·h/kg cesse d'etre un nombre lu quelque part. */
+SCHEMAS["peser-l-energie"]=function(el){
+  var W=724,H=360;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Peser un accumulateur AA pour en tirer une énergie par kilogramme, "+
+                 "et la comparer au plomb et au lithium"});
+  svg.appendChild(S("text",{x:20,y:32,"class":"s-tit",fill:V("chaud")},
+    "CE QUE PÈSE L'ÉNERGIE — ON COMMENCE PAR PESER"));
+  /* la balance et sa cellule */
+  svg.appendChild(S("text",{x:145,y:72,"text-anchor":"middle","class":"s-pet",
+    fill:V("encre2")},"1 accumulateur AA"));
+  svg.appendChild(S("rect",{x:132,y:88,width:26,height:46,rx:"4",fill:V("carte"),
+    stroke:V("froid"),"stroke-width":"2.6"}));
+  svg.appendChild(S("rect",{x:140,y:82,width:10,height:7,rx:"2",fill:V("froid")}));
+  svg.appendChild(S("rect",{x:56,y:136,width:178,height:11,rx:"4",fill:V("encre2")}));
+  svg.appendChild(S("rect",{x:70,y:150,width:150,height:50,rx:"6",fill:V("carte"),
+    stroke:V("encre"),"stroke-width":"2.4"}));
+  svg.appendChild(S("rect",{x:92,y:162,width:106,height:26,rx:"3",fill:V("carte2")}));
+  svg.appendChild(S("text",{x:145,y:181,"text-anchor":"middle","class":"s-lab",
+    fill:V("chaud")},"0,026 kg"));
+  /* les deux grandeurs, puis le quotient */
+  [["ÉNERGIE","2,4 W·h","mesurée en séance 3",300,"froid"],
+   ["MASSE","0,026 kg","pesée ici",502,"encre2"]].forEach(function(b){
+    svg.appendChild(S("rect",{x:b[3],y:82,width:170,height:64,rx:"6",fill:V("carte2"),
+      stroke:V(b[4]),"stroke-width":"1.6"}));
+    svg.appendChild(S("text",{x:b[3]+85,y:104,"text-anchor":"middle","class":"s-pet",
+      fill:V("encre2")},b[0]));
+    svg.appendChild(S("text",{x:b[3]+85,y:127,"text-anchor":"middle","class":"s-lab",
+      fill:V(b[4])},b[1]));
+    svg.appendChild(S("text",{x:b[3]+85,y:162,"text-anchor":"middle","class":"s-pet",
+      fill:V("encre2")},b[2]));
+  });
+  svg.appendChild(S("text",{x:486,y:124,"text-anchor":"middle","class":"s-lab",
+    fill:V("encre")},"÷"));
+  svg.appendChild(S("text",{x:486,y:202,"text-anchor":"middle","class":"s-lab",
+    fill:V("chaud"),style:"font-size:21px"},"= 92 W·h par kilogramme"));
+  /* le situer entre les deux technologies de la table */
+  /* LMAX=400 poussait l etiquette du lithium hors du viewBox : 340 la ramene */
+  var SX=250,LMAX=340,MAX=160;
+  [["Plomb",35,"35","encre2",238],
+   ["NiMH — le vôtre",92,"92","chaud",276],
+   ["Lithium-ion",160,"160","encre2",314]].forEach(function(b){
+    svg.appendChild(S("text",{x:SX-14,y:b[4]+20,"text-anchor":"end","class":"s-pet",
+      fill:V("encre")},b[0]));
+    svg.appendChild(S("rect",{x:SX,y:b[4],width:b[1]/MAX*LMAX,height:28,rx:"2",
+      fill:V(b[3])}));
+    svg.appendChild(S("text",{x:SX+b[1]/MAX*LMAX+12,y:b[4]+20,"class":"s-pet",
+      fill:V(b[3])},b[2]+" W·h/kg"));
+  });
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "Le <b>W·h par kilogramme</b> de la table de l'activité 4 n'est pas un nombre tombé du "+
+    "ciel : c'est <b>l'énergie divisée par la masse</b>, et on peut le mesurer soi-même sur "+
+    "une pile qu'on tient dans la main. Le NiMH se place <b>entre le plomb et le lithium</b>, "+
+    "ce qui est bien sa place. Et le calcul remonte au camion sans rien changer : pour les "+
+    "<b>240 kW·h</b> du besoin, il faudrait <b>240 000 ÷ 92 ≈ 2 610 kg</b> de NiMH — "+
+    "environ <b>cent mille piles</b> comme celle-là."));
+};
+
+/* ══════════════════════════════════ SCHEMAS — Tle CTRM, sequence 3
+   Vecteurs dans l'espace. La convention d'axes est celle de la figure du
+   polycopie, fig3-espace : x longueur vers la DROITE, y largeur en fuyante
+   vers le haut-droit, z hauteur vers le HAUT. Un schema web qui inverserait
+   deux axes ferait douter de la feuille, pas de lui-meme. */
+
+/* ─────────── la caisse, et trois nombres pour un point ─────────── */
+SCHEMAS["caisse-reperee"]=function(el){
+  var W=724,H=400;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Une caisse de 6 m sur 2 m sur 3 m vue en perspective, ses trois axes, "+
+                 "et les coordonnées de quatre points remarquables"});
+  var OX=150,OY=356,UX=62,UZ=54,DX=40,DY=26;
+  function P(x,y,z){ return [OX+x*UX+y*DX, OY-z*UZ-y*DY]; }
+  function L(a,b,coul,ep){
+    svg.appendChild(S("line",{x1:a[0],y1:a[1],x2:b[0],y2:b[1],
+      stroke:V(coul),"stroke-width":ep}));
+  }
+  svg.appendChild(S("text",{x:W/2,y:28,"text-anchor":"middle","class":"s-tit",
+    fill:V("chaud")},"TROIS NOMBRES POUR UN POINT"));
+  svg.appendChild(S("text",{x:W/2,y:50,"text-anchor":"middle","class":"s-pet",
+    fill:V("encre2")},"la caisse mobile : 6 m de long, 2 m de large, 3 m de haut"));
+
+  /* les douze aretes */
+  var LX=6,LY=2,LZ=3;
+  [[0,0,0,LX,0,0],[0,LY,0,LX,LY,0],[0,0,LZ,LX,0,LZ],[0,LY,LZ,LX,LY,LZ],
+   [0,0,0,0,LY,0],[LX,0,0,LX,LY,0],[0,0,LZ,0,LY,LZ],[LX,0,LZ,LX,LY,LZ],
+   [0,0,0,0,0,LZ],[LX,0,0,LX,0,LZ],[0,LY,0,0,LY,LZ],[LX,LY,0,LX,LY,LZ]]
+  .forEach(function(a){ L(P(a[0],a[1],a[2]),P(a[3],a[4],a[5]),"encre2","1.8"); });
+
+  /* les trois axes, par-dessus, avec leur pointe */
+  function axe(bx,by,txt,tx,ty,anc){
+    var o=P(0,0,0);
+    svg.appendChild(S("line",{x1:o[0],y1:o[1],x2:bx,y2:by,stroke:V("encre"),
+      "stroke-width":"3"}));
+    var dx=bx-o[0],dy=by-o[1],n=Math.sqrt(dx*dx+dy*dy);
+    dx/=n; dy/=n;
+    svg.appendChild(S("path",{d:"M "+bx+" "+by+" L "+(bx-13*dx+6*dy)+" "+(by-13*dy-6*dx)+
+      " L "+(bx-13*dx-6*dy)+" "+(by-13*dy+6*dx)+" z",fill:V("encre")}));
+    svg.appendChild(S("text",{x:tx,y:ty,"text-anchor":anc,"class":"s-lab",
+      fill:V("encre")},txt));
+  }
+  axe(578,356,"x longueur",586,362,"start");
+  axe(150,172,"z hauteur",160,166,"start");
+  axe(OX+2.7*DX,OY-2.7*DY,"y largeur",OX+2.7*DX+10,OY-2.7*DY-6,"start");
+
+  /* quatre gommettes, comme sur la boite du bureau */
+  [[0,0,0,"(0 ; 0 ; 0)",0,26,"middle"],
+   [6,0,0,"(6 ; 0 ; 0)",-12,22,"end"],
+   [0,2,0,"(0 ; 2 ; 0)",-12,4,"end"],
+   [6,2,3,"(6 ; 2 ; 3)",12,-8,"start"],
+   [3,1,0,"(3 ; 1 ; 0)",16,6,"start"]].forEach(function(g){
+    var p=P(g[0],g[1],g[2]);
+    svg.appendChild(S("circle",{cx:p[0],cy:p[1],r:"7",fill:V("chaud")}));
+    svg.appendChild(S("text",{x:p[0]+g[4],y:p[1]+g[5],"text-anchor":g[6],
+      "class":"s-pet",fill:V("chaud")},g[3]));
+  });
+  svg.appendChild(S("text",{x:136,y:352,"text-anchor":"end","class":"s-lab",
+    fill:V("encre")},"O"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "On lit les trois nombres <b>en marchant le long des arêtes</b> : d'abord vers le "+
+    "fond, puis vers la droite, puis vers le haut. Jamais dans un autre ordre, et jamais "+
+    "en diagonale. Le point marqué <b>(3 ; 1 ; 0)</b> est le centre du plancher : la "+
+    "moitié de 6, la moitié de 2, et <b>zéro en hauteur</b> puisqu'il est au sol. "+
+    "<b>Posez une vraie boîte devant vous</b> — celle-ci est un dessin, et c'est le "+
+    "dessin qui fait échouer, pas l'espace."));
+};
+
+/* ─────────── les deux sangles, et pourquoi 2 + 2 ne font pas 4 ───────────
+   A, B et S ont tous x = 4 : la figure est PLANE, et ce dessin en (y ; z)
+   n'est donc pas une projection, c'est la vraie forme. */
+SCHEMAS["deux-sangles-somme"]=function(el){
+  var W=724,H=420;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Les deux vecteurs sangles mis bout à bout : leur somme est verticale "+
+                 "et vaut 3,2 m, alors que chacun mesure 2 m"});
+  var OX=180,OY=350,U=80;
+  function P(y,z){ return [OX+y*U, OY-z*U]; }
+  var A=P(0,0), B=P(2.4,0), Sp=P(1.2,1.6), T=P(0,3.2);
+  function fl(a,b,coul,ep,dash){
+    var at={x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:V(coul),"stroke-width":ep};
+    if(dash)at["stroke-dasharray"]=dash;
+    svg.appendChild(S("line",at));
+    var dx=b[0]-a[0],dy=b[1]-a[1],n=Math.sqrt(dx*dx+dy*dy); dx/=n; dy/=n;
+    svg.appendChild(S("path",{d:"M "+b[0]+" "+b[1]+" L "+(b[0]-14*dx+6*dy)+" "+
+      (b[1]-14*dy-6*dx)+" L "+(b[0]-14*dx-6*dy)+" "+(b[1]-14*dy+6*dx)+" z",fill:V(coul)}));
+  }
+  svg.appendChild(S("text",{x:20,y:30,"class":"s-tit",fill:V("chaud")},
+    "DEUX SANGLES DE 2 m, UNE SOMME DE 3,2 m"));
+  /* le plancher */
+  svg.appendChild(S("line",{x1:130,y1:OY,x2:420,y2:OY,stroke:V("encre"),
+    "stroke-width":"4"}));
+  for(var x=140;x<420;x+=26){
+    svg.appendChild(S("line",{x1:x,y1:OY+4,x2:x-14,y2:OY+18,stroke:V("encre2"),
+      "stroke-width":"2"}));
+  }
+  /* la verticale qui passe par A : c'est sur elle que la somme retombe */
+  svg.appendChild(S("line",{x1:OX,y1:OY,x2:OX,y2:86,stroke:V("trait"),
+    "stroke-width":"1.6","stroke-dasharray":"6 5"}));
+  /* les deux sangles, puis BS reporte au bout de AS */
+  fl(A,Sp,"froid","3.2");
+  fl(B,Sp,"froid","3.2");
+  fl(Sp,T,"encre2","2.4","7 5");
+  fl(A,T,"chaud","4");
+  [[A,"A (4 ; 0 ; 0)",0,26,"middle"],[B,"B (4 ; 2,4 ; 0)",0,26,"middle"],
+   [Sp,"S (4 ; 1,2 ; 1,6)",14,-10,"start"]].forEach(function(g){
+    svg.appendChild(S("circle",{cx:g[0][0],cy:g[0][1],r:"6",fill:V("encre")}));
+    svg.appendChild(S("text",{x:g[0][0]+g[2],y:g[0][1]+g[3],"text-anchor":g[4],
+      "class":"s-pet",fill:V("encre")},g[1]));
+  });
+  svg.appendChild(S("text",{x:OX-12,y:100,"text-anchor":"end","class":"s-lab",
+    fill:V("chaud")},"3,2 m"));
+  /* cale sur S, cette etiquette passait sous le nom du point ; a droite de
+     la fleche en pointille, elle est seule. */
+  svg.appendChild(S("text",{x:300,y:150,"class":"s-pet",fill:V("encre2")},
+    "BS reporté ici"));
+  /* le compte, a droite */
+  svg.appendChild(S("rect",{x:436,y:112,width:268,height:158,rx:"6",
+    fill:V("carte2"),stroke:V("chaud"),"stroke-width":"1.6"}));
+  [["‖AS‖ = 2 m","froid",146],
+   ["‖BS‖ = 2 m","froid",176],
+   ["2 + 2 = 4","encre2",214],
+   ["‖AS + BS‖ = 3,2 m","chaud",248]].forEach(function(b){
+    svg.appendChild(S("text",{x:570,y:b[2],"text-anchor":"middle","class":"s-lab",
+      fill:V(b[1])},b[0]));
+  });
+  svg.appendChild(S("line",{x1:470,y1:192,x2:670,y2:192,stroke:V("encre2"),
+    "stroke-width":"1.4"}));
+  /* sur une seule ligne, cette phrase debordait du viewBox */
+  [["la norme de la somme",294],["n'est pas la somme des normes",314]]
+  .forEach(function(t){
+    svg.appendChild(S("text",{x:570,y:t[1],"text-anchor":"middle","class":"s-pet",
+      fill:V("chaud")},t[0]));
+  });
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "Le dessin est <b>à l'échelle</b>, et c'est lui qui fait la preuve. On part de A, on "+
+    "suit la première sangle jusqu'à S, puis on <b>reporte la seconde au bout de la "+
+    "première</b> : on retombe exactement <b>au-dessus de A</b>, à 3,2 m de haut. Les "+
+    "deux composantes en largeur, <b>+1,2 et −1,2</b>, se sont annulées — c'est ce qui "+
+    "rend la somme verticale. Et le chemin direct est <b>plus court</b> que les deux "+
+    "morceaux mis bout à bout : 3,2 m contre 4 m."));
+};
+
+/* ─────────── colineaires : la meme droite, pas le meme sens ─────────── */
+SCHEMAS["direction-et-sens"]=function(el){
+  var W=724,H=360;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Un vecteur et ses multiples sur une même droite : k positif garde le "+
+                 "sens, k négatif le retourne"});
+  var OX=330,OY=190,UXv=110,UYv=-44;
+  function P(k){ return [OX+k*UXv, OY+k*UYv]; }
+  function fl(b,coul,ep){
+    var a=[OX,OY];
+    svg.appendChild(S("line",{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:V(coul),
+      "stroke-width":ep}));
+    var dx=b[0]-a[0],dy=b[1]-a[1],n=Math.sqrt(dx*dx+dy*dy); dx/=n; dy/=n;
+    svg.appendChild(S("path",{d:"M "+b[0]+" "+b[1]+" L "+(b[0]-14*dx+6*dy)+" "+
+      (b[1]-14*dy-6*dx)+" L "+(b[0]-14*dx-6*dy)+" "+(b[1]-14*dy+6*dx)+" z",fill:V(coul)}));
+  }
+  svg.appendChild(S("text",{x:20,y:30,"class":"s-tit",fill:V("chaud")},
+    "LA MÊME DROITE, PAS FORCÉMENT LE MÊME SENS"));
+  /* la droite support : c'est elle, la direction */
+  svg.appendChild(S("line",{x1:0,y1:OY+OX*0.4,x2:W,y2:OY-(W-OX)*0.4,
+    stroke:V("trait"),"stroke-width":"1.6","stroke-dasharray":"7 5"}));
+  svg.appendChild(S("text",{x:20,y:340,"class":"s-pet",fill:V("encre2")},
+    "une seule droite : c'est la direction"));
+  /* les quatre multiples, du plus long au plus court pour que les traits
+     courts restent visibles par-dessus */
+  [[2,"chaud","4"],[1,"chaud","5"],[-1,"froid","5"],[-2,"froid","4"]]
+  .forEach(function(m){ fl(P(m[0]),m[1],m[2]); });
+  /* k = 2 posait son etiquette la ou passe le verdict du haut : elle passe
+     SOUS la pointe. */
+  [[2,"k = 2",8,22,"start"],[1,"u",6,-14,"start"],
+   [-1,"k = −1",-10,30,"end"],[-2,"k = −2",-10,18,"end"]]
+  .forEach(function(m){
+    var p=P(m[0]);
+    svg.appendChild(S("text",{x:p[0]+m[2],y:p[1]+m[3],"text-anchor":m[4],
+      "class":"s-lab",fill:m[0]>0?V("chaud"):V("froid")},m[1]));
+  });
+  svg.appendChild(S("circle",{cx:OX,cy:OY,r:"6",fill:V("encre")}));
+  /* les deux verdicts */
+  /* les deux verdicts vont dans les deux coins libres, loin des pointes
+     et de la droite support. */
+  [["k > 0 : même sens que u","chaud",700,208,"end"],
+   ["k < 0 : sens contraire","froid",60,130,"start"]].forEach(function(b){
+    svg.appendChild(S("text",{x:b[2],y:b[3],"text-anchor":b[4],"class":"s-lab",
+      fill:V(b[1])},b[0]));
+  });
+  svg.appendChild(S("text",{x:W-16,y:338,"text-anchor":"end","class":"s-pet",
+    fill:V("encre2")},"u(2 ; −1 ; 4)  →  2u(4 ; −2 ; 8)  →  −2u(−4 ; 2 ; −8)"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "Les quatre vecteurs sont <b>colinéaires</b> : chacun est le précédent multiplié par "+
+    "un nombre, et tous portent <b>la même droite</b>. C'est cela, la direction. Le "+
+    "<b>sens</b> est autre chose : il se retourne dès que <b>k est négatif</b>. Deux "+
+    "sangles colinéaires tirent donc sur la même ligne — mais si l'un des k est négatif, "+
+    "<b>elles tirent l'une contre l'autre</b>. La longueur, elle, est multipliée par "+
+    "<b>la valeur de k sans son signe</b>."));
+};
+
+/* ─────────── ce que dit la troisieme coordonnee ───────────
+   Les deux panneaux sont vus DE COTE, et c'est indispensable : une vue de
+   dessus ne peut pas montrer que z vaut zero, puisque tout y parait
+   horizontal. Le premier essai la prenait, et ne demontrait rien. */
+SCHEMAS["troisieme-coordonnee"]=function(el){
+  var W=724,H=360,FY=256,NIV=196;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Deux sangles restées à la même hauteur ne plaquent pas la charge ; "+
+                 "un ancrage au plancher donne une troisième coordonnée négative"});
+  svg.appendChild(S("text",{x:W/2,y:28,"text-anchor":"middle","class":"s-tit",
+    fill:V("chaud")},"CE QUE DIT LA TROISIÈME COORDONNÉE"));
+  function fl(a,b,coul,ep){
+    svg.appendChild(S("line",{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:V(coul),
+      "stroke-width":ep}));
+    var dx=b[0]-a[0],dy=b[1]-a[1],n=Math.sqrt(dx*dx+dy*dy); dx/=n; dy/=n;
+    svg.appendChild(S("path",{d:"M "+b[0]+" "+b[1]+" L "+(b[0]-14*dx+6*dy)+" "+
+      (b[1]-14*dy-6*dx)+" L "+(b[0]-14*dx-6*dy)+" "+(b[1]-14*dy+6*dx)+" z",fill:V(coul)}));
+  }
+  function plancher(ox){
+    svg.appendChild(S("line",{x1:ox+10,y1:FY,x2:ox+320,y2:FY,stroke:V("encre"),
+      "stroke-width":"4"}));
+    for(var x=ox+22;x<ox+320;x+=26){
+      svg.appendChild(S("line",{x1:x,y1:FY+4,x2:x-14,y2:FY+18,stroke:V("encre2"),
+        "stroke-width":"2"}));
+    }
+  }
+  function palette(x0,larg){
+    svg.appendChild(S("rect",{x:x0,y:NIV,width:larg,height:FY-NIV,rx:"3",
+      fill:V("carte2"),stroke:V("encre2"),"stroke-width":"2"}));
+  }
+  function nom(x,y,t){
+    svg.appendChild(S("text",{x:x,y:y,"text-anchor":"middle","class":"s-pet",
+      fill:V("encre")},t));
+  }
+  function note(cx,t){
+    svg.appendChild(S("text",{x:cx,y:166,"text-anchor":"middle","class":"s-pet",
+      fill:V("encre2")},t));
+  }
+  function verdict(cx,gros,coul,petit){
+    svg.appendChild(S("text",{x:cx,y:306,"text-anchor":"middle","class":"s-lab",
+      fill:V(coul)},gros));
+    svg.appendChild(S("text",{x:cx,y:328,"text-anchor":"middle","class":"s-pet",
+      fill:V("encre2")},petit));
+  }
+
+  /* ① les deux ancrages sont a la meme hauteur que le point d'attache */
+  var A=20;
+  svg.appendChild(S("text",{x:A+165,y:62,"text-anchor":"middle","class":"s-lab",
+    fill:V("froid")},"① TOUT À LA MÊME HAUTEUR"));
+  plancher(A);
+  svg.appendChild(S("line",{x1:A+16,y1:NIV,x2:A+314,y2:NIV,stroke:V("trait"),
+    "stroke-width":"1.6","stroke-dasharray":"6 5"}));
+  palette(A+16,48); palette(A+266,48); palette(A+130,70);
+  nom(A+40,230,"P₁"); nom(A+290,230,"P₃"); nom(A+165,230,"P₄");
+  fl([A+165,NIV],[A+72,NIV],"froid","3");
+  fl([A+165,NIV],[A+258,NIV],"froid","3");
+  note(A+165,"les trois points sont à 1,0 m de haut");
+  verdict(A+165,"z = 0","froid","rien ne tire vers le bas");
+
+  /* ② l'ancrage est au plancher : le vecteur descend */
+  var B=374;
+  svg.appendChild(S("text",{x:B+165,y:62,"text-anchor":"middle","class":"s-lab",
+    fill:V("chaud")},"② UN ANCRAGE AU PLANCHER"));
+  plancher(B);
+  palette(B+130,70);
+  nom(B+165,188,"P₄");
+  var T=[B+165,NIV], R=[B+93,FY];
+  svg.appendChild(S("circle",{cx:R[0],cy:R[1],r:"8",fill:V("encre")}));
+  svg.appendChild(S("text",{x:R[0]-14,y:FY+20,"text-anchor":"end","class":"s-pet",
+    fill:V("encre2")},"ancrage R"));
+  svg.appendChild(S("line",{x1:T[0],y1:NIV,x2:T[0],y2:FY,stroke:V("trait"),
+    "stroke-width":"1.6","stroke-dasharray":"6 4"}));
+  fl(T,R,"chaud","3.4");
+  svg.appendChild(S("text",{x:T[0]+12,y:232,"class":"s-pet",fill:V("chaud")},"−1,0"));
+  svg.appendChild(S("text",{x:B+112,y:212,"text-anchor":"end","class":"s-pet",
+    fill:V("chaud")},"P₄R"));
+  note(B+165,"l'ancrage est 1,0 m plus bas");
+  verdict(B+165,"z = −1,0","chaud","la sangle plaque la charge");
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "À gauche, les trois points sont <b>à la même hauteur</b> — c'est le cas du problème 1, "+
+    "où les quatre palettes sont identiques. Les deux sangles restent à plat, et leur somme "+
+    "aussi : <b>la troisième coordonnée vaut 0</b>. La charge est tenue sur les côtés, "+
+    "<b>rien ne l'empêche de décoller</b> au premier dos-d'âne. À droite, l'ancrage est "+
+    "<b>au plancher</b> : le vecteur descend, sa troisième coordonnée est <b>négative</b>, "+
+    "et c'est ce signe-là qui dit que la sangle plaque. C'est la raison d'être de "+
+    "l'arrimage par-dessus, dit <b>frictionnel</b>."));
+};
+
+/* ══════════════════════════════ SCHEMAS — Tle CTRM, sequence 1
+   Ajustement d'un nuage. Ce sont des GRAPHIQUES, pas des dessins, et deux
+   regles les tiennent :
+
+   — deux teintes de serie au maximum par graphique, « chaud » et « froid ».
+     Eprouve au validateur : ecart 24,3 en vision normale et 18,7 en
+     protanopie. « encre2 » est un GRIS — chroma 0,007, ecart 12,8 de
+     « froid » — il ne peut donc pas porter une troisieme courbe. C'est la
+     raison pour laquelle le comparatif a quatre modeles est fait en petits
+     multiples : un seul trace par panneau, et le probleme disparait.
+
+   — l'identite ne repose jamais sur la seule couleur : chaque courbe porte
+     son nom en bout de trace, et le modele retenu porte le mot RETENU. */
+
+/* nuage + courbe : helpers communs aux quatre */
+function _pts(svg,X,Y,fx,fy,r){
+  X.forEach(function(x,i){
+    svg.appendChild(S("circle",{cx:fx(x),cy:fy(Y[i]),r:r||"3.6",fill:V("encre")}));
+  });
+}
+function _courbe(svg,f,x0,x1,fx,fy,coul,ep,ymin,ymax,tirets){
+  var d="",n=90,dessus=false;
+  for(var k=0;k<=n;k++){
+    var x=x0+(x1-x0)*k/n, y=f(x);
+    if(y<ymin||y>ymax){ dessus=false; continue; }
+    d+=(dessus?" L ":" M ")+fx(x).toFixed(1)+" "+fy(y).toFixed(1);
+    dessus=true;
+  }
+  var at={d:d,fill:"none",stroke:V(coul),"stroke-width":ep,"stroke-linecap":"round"};
+  if(tirets)at["stroke-dasharray"]=tirets;
+  svg.appendChild(S("path",at));
+}
+
+/* ─────────── le meme nuage, les quatre modeles ─────────── */
+SCHEMAS["quatre-modeles-un-nuage"]=function(el){
+  var W=724,H=456;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Le relevé vitesse-consommation ajusté par quatre modèles : affine, "+
+                 "quadratique, exponentiel et logarithmique, avec leurs quatre R carré"});
+  var X=[60,65,70,75,80,85,90,95,100], Y=[26,27,29,31,34,38,43,50,58];
+  svg.appendChild(S("text",{x:W/2,y:28,"text-anchor":"middle","class":"s-tit",
+    fill:V("chaud")},"LE MÊME NUAGE, QUATRE MODÈLES"));
+  svg.appendChild(S("text",{x:W/2,y:50,"text-anchor":"middle","class":"s-pet",
+    fill:V("encre2")},"relevé ② : la consommation selon la vitesse — "+
+                     "même échelle sur les quatre"));
+  var LARG=280,HAUT=118;
+  var MOD=[
+   ["① AFFINE","0,919",function(x){return 0.7733*x-24.5333;},44,96,false],
+   ["② QUADRATIQUE","0,998",function(x){return 0.020*x*x-2.4267*x+100.133;},398,96,true],
+   ["③ EXPONENTIEL","0,966",function(x){return 7.1742*Math.pow(1.02037,x);},44,296,false],
+   ["④ LOGARITHMIQUE","0,877",function(x){return 59.3217*Math.log(x)-221.8249;},398,296,false]];
+  MOD.forEach(function(m,idx){
+    var ox=m[3],oy=m[4],gagne=m[5],coul=gagne?"chaud":"froid";
+    function fx(x){ return ox+(x-58)/44*LARG; }
+    function fy(y){ return oy+HAUT-(y-22)/40*HAUT; }
+    svg.appendChild(S("text",{x:ox,y:oy-12,"class":"s-lab",fill:V(coul)},m[0]));
+    if(gagne){
+      svg.appendChild(S("text",{x:ox+LARG,y:oy-12,"text-anchor":"end","class":"s-pet",
+        fill:V("chaud")},"RETENU"));
+    }
+    /* la grille reste en retrait, l'encadre du retenu est en chaud */
+    [30,40,50,60].forEach(function(v){
+      svg.appendChild(S("line",{x1:ox,y1:fy(v),x2:ox+LARG,y2:fy(v),stroke:V("trait"),
+        "stroke-width":"1"}));
+    });
+    svg.appendChild(S("rect",{x:ox,y:oy,width:LARG,height:HAUT,fill:"none",
+      stroke:V(gagne?"chaud":"encre2"),"stroke-width":gagne?"2":"1.2"}));
+    _courbe(svg,m[2],58,102,fx,fy,coul,"2.6",22,62);
+    _pts(svg,X,Y,fx,fy,"3.4");
+    /* le R² est du TEXTE, pas une serie : encre, et un fond pour ne pas
+       s'asseoir sur la ligne de grille. L'identite du panneau est portee
+       par son titre, qui lui est colore. */
+    svg.appendChild(S("rect",{x:ox+6,y:oy+6,width:104,height:22,rx:"3",
+      fill:V("carte")}));
+    svg.appendChild(S("text",{x:ox+14,y:oy+22,"class":"s-lab",fill:V("encre")},
+      "R² = "+m[1]));
+    if(ox===44){
+      [30,50].forEach(function(v){
+        svg.appendChild(S("text",{x:ox-8,y:fy(v)+5,"text-anchor":"end","class":"s-pet",
+          fill:V("encre2")},""+v));
+      });
+    }
+    if(oy===296){
+      [60,100].forEach(function(v){
+        svg.appendChild(S("text",{x:fx(v),y:oy+HAUT+20,"text-anchor":"middle",
+          "class":"s-pet",fill:V("encre2")},""+v));
+      });
+    }
+  });
+  svg.appendChild(S("text",{x:44,y:448,"class":"s-pet",fill:V("encre2")},
+    "en abscisse la vitesse (km/h), en ordonnée la consommation (L/100 km)"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>Les neuf points sont les mêmes partout</b>, et l'échelle aussi : seule la courbe "+
+    "change. L'affine passe au-dessus des points du milieu et en dessous des deux bouts — "+
+    "c'est visible à l'œil, et le R² de 0,919 le chiffre. Le logarithmique fait l'inverse "+
+    "et fait pire. <b>Le quadratique épouse la courbure</b>, R² = 0,998. L'exponentiel n'est "+
+    "pas ridicule, 0,966, mais il monte trop tôt. <b>On regarde l'allure, puis on lit le "+
+    "R².</b> Jamais l'inverse."));
+};
+
+/* ─────────── deux modeles que le R2 ne separe pas ─────────── */
+SCHEMAS["deux-modeles-qui-se-valent"]=function(el){
+  var W=724,H=392;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Sur le relevé charge-consommation, le modèle affine et le modèle "+
+                 "quadratique ont le même R carré et se confondent"});
+  var X=[5,7,9,11,13,15,18,21,24,28], Y=[26,28,28,32,34,34,36,40,43,46];
+  var X0=80,X1=590,Y0=300,Y1=76;
+  function fx(x){ return X0+(x-3)/43*(X1-X0); }
+  function fy(y){ return Y0-(y-22)/42*(Y0-Y1); }
+  svg.appendChild(S("text",{x:20,y:28,"class":"s-tit",fill:V("chaud")},
+    "DEUX MODÈLES, LE MÊME R² : LEQUEL PRENDRE ?"));
+  /* la plage des releves, en fond */
+  svg.appendChild(S("rect",{x:fx(5),y:Y1,width:fx(28)-fx(5),height:Y0-Y1,
+    fill:V("carte2")}));
+  svg.appendChild(S("text",{x:(fx(5)+fx(28))/2,y:Y0+40,"text-anchor":"middle",
+    "class":"s-pet",fill:V("encre2")},"la plage des relevés : 5 à 28 t"));
+  [30,40,50,60].forEach(function(v){
+    svg.appendChild(S("line",{x1:X0,y1:fy(v),x2:X1,y2:fy(v),stroke:V("trait"),
+      "stroke-width":"1"}));
+    svg.appendChild(S("text",{x:X0-8,y:fy(v)+5,"text-anchor":"end","class":"s-pet",
+      fill:V("encre2")},""+v));
+  });
+  svg.appendChild(S("line",{x1:X0,y1:Y1,x2:X0,y2:Y0,stroke:V("encre2"),
+    "stroke-width":"1.6"}));
+  svg.appendChild(S("line",{x1:X0,y1:Y0,x2:X1,y2:Y0,stroke:V("encre2"),
+    "stroke-width":"1.6"}));
+  [10,20,30,40].forEach(function(v){
+    svg.appendChild(S("text",{x:fx(v),y:Y0+18,"text-anchor":"middle","class":"s-pet",
+      fill:V("encre2")},""+v));
+  });
+  _courbe(svg,function(x){return 0.002079*x*x+0.80685*x+21.9355;},3,45,fx,fy,
+          "froid","5.5",22,64);
+  _courbe(svg,function(x){return 0.8745*x+21.4945;},3,45,fx,fy,"chaud","2.4",22,64);
+  _pts(svg,X,Y,fx,fy);
+  /* nommees en bout de trace : l'identite ne tient pas a la couleur seule */
+  svg.appendChild(S("text",{x:X1+10,y:fy(60.85)+4,"class":"s-pet",fill:V("chaud")},
+    "affine"));
+  svg.appendChild(S("text",{x:X1+10,y:fy(62.45)-10,"class":"s-pet",fill:V("froid")},
+    "quadratique"));
+  svg.appendChild(S("rect",{x:100,y:88,width:240,height:62,rx:"6",fill:V("carte"),
+    stroke:V("encre2"),"stroke-width":"1.4"}));
+  svg.appendChild(S("text",{x:220,y:112,"text-anchor":"middle","class":"s-lab",
+    fill:V("encre")},"R² = 0,985  et  R² = 0,985"));
+  svg.appendChild(S("text",{x:220,y:136,"text-anchor":"middle","class":"s-pet",
+    fill:V("chaud")},"la machine ne tranche pas"));
+  svg.appendChild(S("text",{x:20,y:378,"class":"s-pet",fill:V("encre2")},
+    "charge (t) en abscisse, consommation (L/100 km) en ordonnée"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "Sur toute la plage des relevés, les deux courbes <b>se confondent</b> : l'écart le plus "+
+    "grand entre elles est de <b>0,18 L/100 km</b>, soit moins que l'épaisseur du trait. "+
+    "Les deux R² sont égaux parce que les deux modèles décrivent aussi bien. <b>Quand le R² "+
+    "ne tranche pas, on prend le plus simple</b>, donc l'affine : une droite s'explique à un "+
+    "exploitant, une parabole beaucoup moins. Et il n'y a rien à gagner à choisir le "+
+    "compliqué — ils donnent le même résultat là où l'on a des points."));
+};
+
+/* ─────────── jusqu'ou les modeles restent d'accord ─────────── */
+SCHEMAS["extrapoler-les-quatre"]=function(el){
+  var W=724,H=432;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Hors de la plage des relevés, les quatre modèles donnent de 62 à 97 "+
+                 "litres aux cent kilomètres pour 120 km/h"});
+  var X=[60,65,70,75,80,85,90,95,100], Y=[26,27,29,31,34,38,43,50,58];
+  var X0=70,X1=548,Y0=336,Y1=76;
+  function fx(x){ return X0+(x-55)/70*(X1-X0); }
+  function fy(y){ return Y0-(y-20)/85*(Y0-Y1); }
+  svg.appendChild(S("text",{x:20,y:28,"class":"s-tit",fill:V("chaud")},
+    "LE MÊME RELEVÉ, PROLONGÉ JUSQU'À 120 km/h"));
+  svg.appendChild(S("rect",{x:fx(60),y:Y1,width:fx(100)-fx(60),height:Y0-Y1,
+    fill:V("carte2")}));
+  [60,80,100,120].forEach(function(v){
+    svg.appendChild(S("text",{x:fx(v),y:Y0+18,"text-anchor":"middle","class":"s-pet",
+      fill:V("encre2")},""+v));
+  });
+  svg.appendChild(S("text",{x:(fx(60)+fx(100))/2,y:Y0+40,"text-anchor":"middle",
+    "class":"s-pet",fill:V("encre2")},"on a des points ici"));
+  svg.appendChild(S("text",{x:(fx(100)+fx(122))/2,y:Y0+40,"text-anchor":"middle",
+    "class":"s-pet",fill:V("chaud")},"et rien ici"));
+  [40,60,80,100].forEach(function(v){
+    svg.appendChild(S("line",{x1:X0,y1:fy(v),x2:X1,y2:fy(v),stroke:V("trait"),
+      "stroke-width":"1"}));
+    svg.appendChild(S("text",{x:X0-8,y:fy(v)+5,"text-anchor":"end","class":"s-pet",
+      fill:V("encre2")},""+v));
+  });
+  svg.appendChild(S("line",{x1:X0,y1:Y1,x2:X0,y2:Y0,stroke:V("encre2"),"stroke-width":"1.6"}));
+  svg.appendChild(S("line",{x1:X0,y1:Y0,x2:X1,y2:Y0,stroke:V("encre2"),"stroke-width":"1.6"}));
+  svg.appendChild(S("line",{x1:fx(100),y1:Y1,x2:fx(100),y2:Y0,stroke:V("encre2"),
+    "stroke-width":"1.6","stroke-dasharray":"6 5"}));
+  /* Quatre traces, deux teintes seulement : l'exponentiel et le
+     logarithmique passent sur l'encre avec DEUX MOTIFS de pointilles
+     distincts. Une troisieme teinte ne tiendrait pas l'ecart CVD ; un
+     motif, si, et il est lisible a l'impression comme en daltonisme. */
+  _courbe(svg,function(x){return 7.1742*Math.pow(1.02037,x);},58,122,fx,fy,
+          "encre","1.8",20,105,"8 5");
+  _courbe(svg,function(x){return 59.3217*Math.log(x)-221.8249;},58,122,fx,fy,
+          "encre","1.8",20,105,"2 5");
+  _courbe(svg,function(x){return 0.7733*x-24.5333;},58,122,fx,fy,"froid","2.8",20,105);
+  _courbe(svg,function(x){return 0.020*x*x-2.4267*x+100.133;},58,122,fx,fy,"chaud","2.8",20,105);
+  _pts(svg,X,Y,fx,fy,"3.4");
+  /* les quatre valeurs a 120, chacune nommee : pas de cinquieme couleur */
+  [["quadratique","96,9",96.9,"chaud",96],
+   ["exponentiel","80,7",80.7,"encre",150],
+   ["affine","68,3",68.3,"froid",190],
+   ["logarithmique","62,2",62.2,"encre",222]].forEach(function(b){
+    var y=fy(b[2]);
+    svg.appendChild(S("circle",{cx:fx(120),cy:y,r:"5.5",fill:V(b[3])}));
+    svg.appendChild(S("line",{x1:fx(120)+8,y1:y,x2:562,y2:b[4],stroke:V("trait"),
+      "stroke-width":"1.2"}));
+    svg.appendChild(S("text",{x:568,y:b[4]+4,"class":"s-pet",fill:V(b[3])},
+      b[0]+"  "+b[1]));
+  });
+  svg.appendChild(S("text",{x:20,y:400,"class":"s-lab",fill:V("chaud")},
+    "de 62 à 97 L/100 km selon le modèle : l'écart vaut 1,6 fois"));
+  svg.appendChild(S("text",{x:20,y:422,"class":"s-pet",fill:V("encre2")},
+    "vitesse (km/h) en abscisse, consommation (L/100 km) en ordonnée"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>Dans la plage, les quatre modèles sont d'accord</b> — ils passent tous dans le "+
+    "nuage, à peu de chose près. <b>Dès qu'on sort, ils divergent</b> : à 120 km/h le "+
+    "logarithmique annonce 62 L/100 km et le quadratique 97, soit <b>1,6 fois plus</b>. "+
+    "Aucun relevé ne permet de départager, puisqu'il n'y a pas de point là-bas. C'est "+
+    "toute la différence entre <b>interpoler</b>, où le modèle rend compte de mesures, et "+
+    "<b>extrapoler</b>, où il ne fait plus que prolonger une habitude."));
+};
+
+/* ─────────── le cafe : deux R2 excellents, une reponse absurde ─────────── */
+SCHEMAS["cafe-deux-modeles"]=function(el){
+  var W=724,H=416;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Le refroidissement d'un café ajusté de deux façons : le modèle brut "+
+                 "passe sous la température de la pièce, celui sur l'écart n'y descend pas"});
+  var X=[0,5,10,15,20,25,30], Y=[88,71,58.3,48.7,41.5,36.1,32.1];
+  var X0=76,X1=568,Y0=318,Y1=72;
+  function fx(t){ return X0+t/126*(X1-X0); }
+  function fy(v){ return Y0-v/96*(Y0-Y1); }
+  svg.appendChild(S("text",{x:20,y:28,"class":"s-tit",fill:V("chaud")},
+    "DEUX MODÈLES EXCELLENTS, UNE RÉPONSE IMPOSSIBLE"));
+  svg.appendChild(S("rect",{x:fx(0),y:Y1,width:fx(30)-fx(0),height:Y0-Y1,
+    fill:V("carte2")}));
+  svg.appendChild(S("text",{x:(fx(0)+fx(30))/2,y:Y0+40,"text-anchor":"middle",
+    "class":"s-pet",fill:V("encre2")},"le relevé : 0 à 30 min"));
+  [20,40,60,80].forEach(function(v){
+    svg.appendChild(S("line",{x1:X0,y1:fy(v),x2:X1,y2:fy(v),stroke:V("trait"),
+      "stroke-width":"1"}));
+    svg.appendChild(S("text",{x:X0-8,y:fy(v)+5,"text-anchor":"end","class":"s-pet",
+      fill:V("encre2")},v+"°"));
+  });
+  svg.appendChild(S("line",{x1:X0,y1:Y1,x2:X0,y2:Y0,stroke:V("encre2"),"stroke-width":"1.6"}));
+  svg.appendChild(S("line",{x1:X0,y1:Y0,x2:X1,y2:Y0,stroke:V("encre2"),"stroke-width":"1.6"}));
+  [0,30,60,90,120].forEach(function(t){
+    svg.appendChild(S("text",{x:fx(t),y:Y0+18,"text-anchor":"middle","class":"s-pet",
+      fill:V("encre2")},""+t));
+  });
+  /* la temperature de la piece : le plancher physique que le modele ignore */
+  svg.appendChild(S("line",{x1:X0,y1:fy(20),x2:X1,y2:fy(20),stroke:V("encre"),
+    "stroke-width":"2","stroke-dasharray":"8 5"}));
+  svg.appendChild(S("text",{x:X0+10,y:fy(20)-10,"class":"s-pet",
+    fill:V("encre")},"la pièce : 20 °C"));
+  _courbe(svg,function(t){return 83.94*Math.pow(0.96686,t);},0,126,fx,fy,"froid","2.8",0,96);
+  _courbe(svg,function(t){return 20+68.038*Math.pow(0.94404,t);},0,126,fx,fy,"chaud","2.8",0,96);
+  _pts(svg,X,Y,fx,fy,"3.6");
+  svg.appendChild(S("text",{x:576,y:fy(20.1)-6,"class":"s-pet",fill:V("chaud")},
+    "sur l'écart"));
+  svg.appendChild(S("text",{x:576,y:fy(20.1)+14,"class":"s-lab",fill:V("chaud")},
+    "20,1 °C"));
+  svg.appendChild(S("text",{x:576,y:fy(1.5)-16,"class":"s-pet",fill:V("froid")},
+    "brut"));
+  svg.appendChild(S("text",{x:576,y:fy(1.5)+2,"class":"s-lab",fill:V("froid")},
+    "1,5 °C"));
+  svg.appendChild(S("rect",{x:300,y:92,width:262,height:60,rx:"6",fill:V("carte"),
+    stroke:V("encre2"),"stroke-width":"1.4"}));
+  svg.appendChild(S("text",{x:431,y:114,"text-anchor":"middle","class":"s-pet",
+    fill:V("froid")},"brut : R² = 0,989"));
+  svg.appendChild(S("text",{x:431,y:136,"text-anchor":"middle","class":"s-pet",
+    fill:V("chaud")},"sur l'écart : R² = 1,000"));
+  svg.appendChild(S("text",{x:20,y:396,"class":"s-pet",fill:V("encre2")},
+    "temps (min) en abscisse, température (°C) en ordonnée"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>Les deux courbes passent par les mêmes points</b>, et les deux R² sont excellents. "+
+    "Sur les trente minutes relevées, rien ne les sépare. Puis le modèle brut <b>traverse la "+
+    "ligne des 20 °C</b> et continue à descendre : il annonce <b>1,5 °C</b> à deux heures, "+
+    "soit un café plus froid que la pièce. Le modèle posé sur <b>l'écart à la pièce</b> "+
+    "s'arrête à 20,1 °C, parce que l'écart, lui, tend vers zéro. <b>Le R² ne connaît pas la "+
+    "physique</b> : il compare une courbe à des points, et c'est tout."));
+};
+
 
 
 
