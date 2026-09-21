@@ -1,0 +1,200 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   LA COQUILLE DE DOCUMENTATION — option « nav: documentation » de SITE.md,
+   portee dans la chaine le 21 septembre 2026, apres essai sur le site du
+   professeur puis sur celui du CAP, en charte claire.
+   Trois colonnes : l'arborescence du site à gauche, le document au centre,
+   le sommaire de la page à droite ; une barre étroite au-dessus.
+   Elle ENVELOPPE `.page` sans la modifier : la feuille du calque garde son
+   cadre, les chartes gardent leurs décorations, et sous 1 000 px la page
+   redevient exactement ce qu'elle était, l'arborescence passant en tiroir.
+   Les couleurs viennent des jetons de la charte du site : rien n'est écrit
+   en dur ici, sauf le voile du tiroir.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+:root{
+  --doc-barre:56px;      /* hauteur de la barre haute */
+  --doc-plan:264px;      /* largeur de l'arborescence */
+  --doc-som:210px;       /* largeur du sommaire de droite */
+  --doc-texte:860px;     /* largeur maximale du document */
+}
+
+/* ─── la barre haute ─────────────────────────────────────────────────── */
+.doc-barre{
+  /* Collante A TOUTES LES LARGEURS : on doit pouvoir ouvrir le plan ou
+     revenir a l'accueil sans remonter en haut de la page. Le sommaire des
+     sections, lui aussi colle, se cale juste dessous. */
+  position:sticky;top:0;z-index:50;
+  display:flex;align-items:center;gap:12px;
+  height:var(--doc-barre);padding:0 16px;
+  background:var(--carte);border-bottom:1px solid var(--trait);
+  color:var(--encre);
+}
+.doc-barre .titre{
+  font-weight:700;font-size:15.5px;letter-spacing:-.01em;
+  color:var(--encre);text-decoration:none;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;
+}
+.doc-barre .droite{margin-left:auto;display:flex;align-items:center;gap:8px}
+.doc-barre button,.doc-barre .bouton{
+  font:inherit;font-size:13.5px;line-height:1;white-space:nowrap;flex:none;
+  color:var(--encre);background:var(--carte2);border:1px solid var(--trait);
+  border-radius:var(--r,3px);padding:8px 12px;cursor:pointer;text-decoration:none;
+}
+.doc-barre button:hover,.doc-barre .bouton:hover{border-color:var(--encre)}
+.doc-barre .lu[aria-pressed="true"]{border-color:var(--encre);font-weight:700}
+.doc-plier{display:none}
+
+/* ─── les trois colonnes ─────────────────────────────────────────────── */
+.doc-corps{display:block}
+.doc-page{min-width:0}
+.doc-page .page{margin-left:auto;margin-right:auto}
+
+/* ─── l'arborescence ─────────────────────────────────────────────────── */
+.doc-plan{
+  font-size:14px;line-height:1.4;color:var(--encre2);
+  padding:16px 12px 40px;
+}
+.doc-plan h2{font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--encre2);margin:0 0 10px;padding:0 6px;border:0}
+.doc-plan .vers-accueil{
+  display:block;margin:0 0 10px;padding:6px 8px;color:var(--encre);
+  font-weight:600;text-decoration:none;border-left:2px solid var(--trait);
+}
+.doc-plan .vers-accueil:hover{background:var(--carte2);border-left-color:var(--encre)}
+.doc-plan details{margin:0 0 4px}
+.doc-plan summary{
+  display:flex;align-items:baseline;gap:8px;cursor:pointer;list-style:none;
+  padding:6px;border-radius:var(--r,3px);color:var(--encre);font-weight:600;
+}
+.doc-plan summary::-webkit-details-marker{display:none}
+.doc-plan summary::before{
+  content:"›";display:inline-block;width:10px;flex:none;
+  transition:transform .15s ease;color:var(--encre2);
+}
+.doc-plan details[open]>summary::before{transform:rotate(90deg)}
+.doc-plan summary:hover{background:var(--carte2)}
+/* le compte ne se coupe pas : « 0 / 14 » passait a la ligne des qu'un nom
+   de rubrique tenait sur deux lignes */
+.doc-plan .compte{margin-left:auto;font-size:11.5px;color:var(--encre2);
+  font-variant-numeric:tabular-nums;font-weight:400;white-space:nowrap;flex:none}
+.doc-plan .groupe{margin:8px 0 4px 18px;font-size:11.5px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--encre2)}
+.doc-plan ul{list-style:none;margin:0 0 6px;padding:0 0 0 18px}
+.doc-plan li{margin:0}
+.doc-plan a,.doc-plan .tenue{
+  display:block;padding:5px 8px;border-left:2px solid transparent;
+  color:var(--encre2);text-decoration:none;border-radius:0 var(--r,3px) var(--r,3px) 0;
+}
+.doc-plan a:hover{background:var(--carte2);color:var(--encre)}
+.doc-plan .tenue{color:var(--trait);cursor:default}
+.doc-plan .tenue::after{content:" — à venir";font-size:11px}
+.doc-plan a[aria-current="page"]{
+  background:var(--carte2);color:var(--encre);font-weight:700;
+  border-left-color:var(--encre);
+}
+.doc-plan a.lu::after{content:"✓";float:right;font-size:12px;opacity:.75}
+
+/* ─── le sommaire de droite ──────────────────────────────────────────── */
+.doc-som{padding:22px 10px 40px;font-size:13.5px;line-height:1.35}
+.doc-som p{margin:0 0 8px;padding:0 8px;font-size:11.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--encre2)}
+.doc-som a{
+  display:block;padding:5px 8px;color:var(--encre2);text-decoration:none;
+  border-left:2px solid transparent;
+}
+.doc-som a:hover{color:var(--encre)}
+.doc-som a.on{color:var(--encre);border-left-color:var(--encre);font-weight:600}
+
+/* ─── le pied : précédent / suivant descendus ici ────────────────────── */
+.doc-fleches{display:flex;gap:10px;justify-content:space-between;
+  max-width:var(--doc-texte);margin:0 auto;padding:0 20px 40px}
+.doc-fleches a{
+  font-size:14px;color:var(--encre);text-decoration:none;
+  border:1px solid var(--trait);border-radius:var(--r,3px);padding:9px 14px;
+}
+.doc-fleches a:hover{border-color:var(--encre)}
+
+/* ─── ce que la coquille remplace ────────────────────────────────────── */
+.doc .barre-site{display:none}
+/* la jauge de lecture appartient au document : elle passe sous la barre */
+.doc .jauge-lecture{top:var(--doc-barre);z-index:45}
+
+/* ═══ SUR ORDINATEUR ════════════════════════════════════════════════════
+   La barre et l'arborescence se figent, chacune avec son ascenseur ; le
+   sommaire horizontal du kit s'efface au profit de celui de droite. */
+@media (min-width:1000px){
+  .doc-corps{
+    display:grid;grid-template-columns:var(--doc-plan) minmax(0,1fr);
+    align-items:start;
+  }
+  .doc-plan{
+    position:sticky;top:var(--doc-barre);
+    max-height:calc(100vh - var(--doc-barre));overflow:auto;
+    border-right:1px solid var(--trait2);
+  }
+  .doc-som{
+    position:sticky;top:var(--doc-barre);
+    max-height:calc(100vh - var(--doc-barre));overflow:auto;
+  }
+  .doc-page .page{max-width:var(--doc-texte)}
+  .doc nav.somm{display:none}
+  .doc h2{scroll-margin-top:calc(var(--doc-barre) + 16px)}
+  .doc-plier{display:none}
+}
+@media (min-width:1280px){
+  .doc-corps{grid-template-columns:var(--doc-plan) minmax(0,1fr) var(--doc-som)}
+}
+/* entre 1000 et 1279 px — la tablette en paysage — pas de sommaire à droite */
+@media (max-width:1279px){
+  .doc-som{display:none}
+}
+
+/* ═══ SUR TÉLÉPHONE ═════════════════════════════════════════════════════
+   L'arborescence devient un tiroir. La barre reste collante — on doit
+   pouvoir l'atteindre sans remonter —, un peu plus basse, et le sommaire
+   des sections se cale juste dessous plutôt que de lui passer dessus. */
+@media (max-width:999px){
+  :root{--doc-barre:48px}          /* plus basse : l'ecran est petit */
+  .doc-plier{display:inline-flex;align-items:center;gap:7px}
+  /* Le sommaire des sections redevient collant, cale SOUS la barre : sur
+     telephone il n'y a pas de colonne de droite, c'est la seule navigation
+     interne pendant la lecture. En mode site, site.css l'avait repasse en
+     relative ; on le remet en sticky ici, et sous la barre en z-index. */
+  .doc nav.somm{position:sticky;top:var(--doc-barre);z-index:40}
+  .doc h2{scroll-margin-top:calc(var(--doc-barre) + 56px)}
+  .doc-barre .titre{font-size:14.5px}
+  .doc-plan{
+    position:fixed;top:0;bottom:0;left:0;width:min(80%,340px);z-index:70;
+    background:var(--carte);border-right:1px solid var(--trait);
+    overflow:auto;transform:translateX(-102%);
+    transition:transform .22s ease;
+    box-shadow:0 0 40px rgba(0,0,0,.25);
+  }
+  .doc-ouvert .doc-plan{transform:none}
+  .doc-voile{
+    position:fixed;inset:0;z-index:65;background:rgba(0,0,0,.45);
+    opacity:0;pointer-events:none;transition:opacity .22s ease;
+  }
+  .doc-ouvert .doc-voile{opacity:1;pointer-events:auto}
+  .doc-plan .fermer{
+    position:sticky;top:0;display:block;width:100%;text-align:left;
+    background:var(--carte);border:0;border-bottom:1px solid var(--trait2);
+    padding:14px 10px;font:inherit;font-weight:700;color:var(--encre);cursor:pointer;
+  }
+}
+@media (min-width:1000px){
+  .doc-plan .fermer,.doc-voile{display:none}
+}
+
+/* Sous 560 px, « Marquer comme lu » ne tient plus a cote du titre : c'est
+   le titre qui s'efface — l'accueil reste atteignable par la premiere ligne
+   du plan, et le bouton du plan par son icone. */
+@media (max-width:560px){
+  .doc-barre{gap:8px;padding:0 10px}
+  .doc-barre .titre{display:none}
+  .doc-barre button,.doc-barre .bouton{font-size:12.5px;padding:8px 10px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .doc-plan,.doc-voile,.doc-plan summary::before{transition:none}
+}
