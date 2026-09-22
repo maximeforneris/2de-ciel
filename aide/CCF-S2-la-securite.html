@@ -1,0 +1,112 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta name="robots" content="noindex, nofollow">
+<title>CCF — séquence 2, la sécurité</title>
+<link rel="stylesheet" href="../assets/kit.css?v=5b4b026f">
+<link rel="stylesheet" href="../assets/site.css?v=5b4b026f">
+<link rel="stylesheet" href="../assets/cablage.css?v=5b4b026f">
+<link rel="stylesheet" href="../assets/vivant.css?v=5b4b026f">
+<link rel="stylesheet" href="../assets/doc.css?v=5b4b026f">
+
+<div class="page" data-site="ciel2" data-page="aide/CCF-S2-la-securite">
+<div class="jauge-lecture" id="jauge-lecture"><i></i></div><div class="barre-site"><a class="accueil" href="../index.html">Maths et physique-chimie — 2de Bac Pro CIEL</a><span class="fleches"><a class="fleche" href="CCF-S1-le-debit.html" rel="prev" title="CCF — séquence 1, le débit" aria-label="CCF — séquence 1, le débit">&lsaquo;</a><a class="fleche" href="CCF-S3-la-led.html" rel="next" title="CCF — séquence 3, la LED" aria-label="CCF — séquence 3, la LED">&rsaquo;</a></span><button type="button" class="lu" data-lu="aide/CCF-S2-la-securite">Marquer comme lu</button></div>
+<header class="tete">
+  
+  <div class="titraille">
+    <p class="sur">2de Bac Pro CIEL</p>
+    <h1>Au format du CCF<span>le corps, le seuil, la TBTS</span></h1>
+  </div>
+  <p class="accroche">Un coffret sous 230 V, un switch PoE sous 48 V, et le même corps entre les deux. Un sujet entier au format de l'épreuve, où tout se joue sur une division et un seuil.</p>
+  <p class="contenu">2 exercices · 4 items d'entraînement</p>
+  <p class="k-savoirs">Savoirs travaillés</p><div class="savoirs"><span class="tag">ELEC Électricité</span><span class="tag">AU Automatismes</span></div>
+</header>
+<aside class="prerequis"><p class="chapeau-p">Avant de commencer</p><ul><li><b><a href="CCF-S1-le-debit.html">Le format et son barème</a></b><span class="ou">CCF — séquence 1, le débit</span><span class="car">ils sont détaillés là-bas, et ne sont ici que rappelés.</span></li><li><b><a href="../cours/S2.html">Ce que fait le courant qui traverse le corps</a></b><span class="ou">S 2 · Travailler en sécurité sur un coffret</span><span class="car">le sujet compare deux intensités calculées au seuil de 30 mA.</span></li><li><b><a href="../cours/S2.html">La très basse tension de sécurité</a></b><span class="ou">S 2 · Travailler en sécurité sur un coffret</span><span class="car">la partie 4 demande pourquoi 48 V ne se traite pas comme 230 V.</span></li></ul></aside>
+<nav class="somm"><div class="in"><a href="#le-format-en-trois-lignes">Le format, en trois lignes</a><a href="#partie-1-app-s-approprier">Partie 1 · APP — s’approprier</a><a href="#partie-2-ana-analyser">Partie 2 · ANA — analyser</a><a href="#partie-3-rea-realiser">Partie 3 · REA — réaliser</a><a href="#partie-4-val-valider">Partie 4 · VAL — valider</a></div></nav>
+<h2 id="le-format-en-trois-lignes">Le format, en trois lignes</h2>
+<div class="enveloppe-tbl"><table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>APP <strong>2,5</strong> · ANA <strong>1,5</strong> · REA <strong>2</strong> · VAL <strong>1</strong> · <strong>COM 3</strong></th>
+<th>sur 10</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Les quatre parties se cotent <strong>séparément</strong></td>
+<td>rater l’une n’entame pas les autres</td>
+</tr>
+<tr>
+<td><strong>COM se joue aux appels</strong>, pas sur la copie</td>
+<td>c’est le plus gros bloc du barème</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>Le détail du barème et de l’intérêt du format est sur la fiche <a href="CCF-S1-le-debit.html">séquence 1</a>.</p>
+</blockquote>
+<h1 id="le-sujet-deux-tensions-dans-le-même-local">Le sujet — deux tensions dans le même local</h1>
+<p><strong>Dans le local technique, deux choses se touchent de la main.</strong> Le coffret d’alimentation, sous <strong>230 V</strong>, et le switch PoE qui alimente les bornes Wi-Fi, sous <strong>48 V continus</strong>.</p>
+<div class="enveloppe-tbl"><table>
+<tbody>
+<tr>
+<td>Résistance du corps, mains sèches</td>
+<td><strong>2 000 Ω</strong></td>
+</tr>
+<tr>
+<td>Seuil du différentiel</td>
+<td><strong>30 mA</strong></td>
+</tr>
+<tr>
+<td>Plafond de la TBTS, en continu</td>
+<td><strong>120 V</strong></td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p><strong>Problématique</strong> : « <em>Les deux se touchent-elles avec les mêmes précautions ?</em> »</p>
+</blockquote>
+<h2 id="partie-1-app-s-approprier">Partie 1 · APP — s’approprier</h2>
+<p><strong>1)</strong> Relever les deux tensions présentes dans le local.</p>
+<p><strong>2)</strong> Dire laquelle des deux relève de la <strong>TBTS</strong>, et sur quel critère.</p>
+<p><strong>3)</strong> Nommer la grandeur qui décide de la gravité pour la personne.</p>
+<h2 id="partie-2-ana-analyser">Partie 2 · ANA — analyser</h2>
+<p><strong>4)</strong> Proposer la relation qui donne le courant traversant le corps à partir de la tension et de sa résistance.</p>
+<p><strong>5)</strong> Avant tout calcul, dire laquelle des deux tensions vous paraît la plus dangereuse. Justifier.</p>
+<blockquote>
+<p><strong>APPEL 1</strong> — expliquer au professeur ce que vous allez calculer, et à quoi vous allez le comparer.</p>
+</blockquote>
+<h2 id="partie-3-rea-realiser">Partie 3 · REA — réaliser</h2>
+<p><strong>6)</strong> Calculer le courant qui traverserait le corps sous <strong>230 V</strong>, en ampères puis en milliampères.</p>
+<p><strong>7)</strong> Faire le même calcul sous <strong>48 V</strong>.</p>
+<p><strong>8)</strong> Comparer chacun des deux résultats au seuil de <strong>30 mA</strong>.</p>
+<blockquote>
+<p><strong>APPEL 2</strong> — présenter vos deux résultats au professeur.</p>
+</blockquote>
+<h2 id="partie-4-val-valider">Partie 4 · VAL — valider</h2>
+<p><strong>9)</strong> Dire lequel des deux dépasse le seuil, et de combien de fois.</p>
+<p><strong>10)</strong> Expliquer pourquoi « être en TBTS » ne veut pas dire « sans précaution ».</p>
+<p><strong>11)</strong> Répondre à la problématique par une phrase complète.</p>
+<section class="serie" id="CCF-S2-la-securite-s1" data-serie="CCF-S2-la-securite-s1" data-savoir="ELEC" data-a="IXgveGB4eHZ4LjU2eGBpdGp2eDN4YAEheCx4YGtrb3RqJ3YheCx4YGhudGondiF4LHhgaWp0aid2IXgseGBpdGInByc="><p class="k">Série · ELEC</p><h4>Les quatre nombres du sujet</h4><div class="enonce">
+
+</div><ol class="items larges"><li><span class="q">le courant sous 230 V, en milliampères</span></li><li><span class="q">le courant sous 48 V, en milliampères</span></li><li><span class="q">le seuil du différentiel, en milliampères</span></li><li><span class="q">combien de fois le seuil est dépassé sous 230 V</span></li></ol><div class="indice" hidden>I = U ÷ R, et le résultat sort en ampères. Il faut le convertir avant de le comparer à un seuil donné en milliampères.</div></section>
+<section class="exo" id="CCF-S2-la-securite-e1" data-exo="CCF-S2-la-securite-e1" data-type="justification" data-savoir="ELEC" data-a="IXgueGB4MC8pLjM8Mzk7LjM1NHgn"><p class="k">Exercice · ELEC</p><h4>Ce que la TBTS ne dispense pas de faire</h4><div class="enonce">
+
+<p>Expliquer en deux phrases pourquoi 48 V, bien qu’en dessous du plafond de la TBTS, ne se manipule pas n’importe comment.</p>
+</div><div class="indice" hidden>Le calcul a été fait avec 2 000 Ω. Refaites-le mentalement avec 1 000 Ω et regardez de quel côté du seuil vous tombez.</div><ul class="verifier" hidden><li>J’ai dit que 24 mA est juste en dessous de 30 mA</li><li>J’ai dit que la marge est faible</li><li>J’ai dit que la résistance du corps baisse si les mains sont humides</li></ul></section>
+<section class="exo" id="CCF-S2-la-securite-e2" data-exo="CCF-S2-la-securite-e2" data-type="justification" data-savoir="ELEC" data-a="IXgueGB4MC8pLjM8Mzk7LjM1NHgn"><p class="k">Exercice · ELEC</p><h4>La phrase de conclusion</h4><div class="enonce">
+
+<p>Répondre à la problématique en une phrase, <strong>avec les deux nombres</strong>.</p>
+</div><div class="indice" hidden>La question demande une comparaison. Une réponse qui ne parle que d’une des deux tensions ne compare rien.</div><ul class="verifier" hidden><li>J’ai donné les deux intensités, avec leur unité</li><li>J’ai dit que les précautions ne sont pas les mêmes</li><li>J’ai dit que 48 V reste à traiter avec prudence</li></ul></section>
+<nav class="suite"><p class="chapeau-s">La suite</p><div class="pas-a-pas"><a class="av" href="CCF-S1-le-debit.html" rel="prev"><span class="k">&lsaquo; Précédent</span><span class="t">CCF — séquence 1, le débit</span></a><a class="ap" href="CCF-S3-la-led.html" rel="next"><span class="k">Suivant &rsaquo;</span><span class="t">CCF — séquence 3, la LED</span></a></div></nav>
+<p class="pied">Cette page entraîne au format de l'épreuve. Elle ne remplace pas les documents distribués et ne donne aucun corrigé.</p><p class="pied-site"><a class="mentions" href="../mentions-legales.html">Mentions légales</a></p>
+</div>
+<script src="../assets/kit.js?v=5b4b026f"></script>
+<script src="../assets/site.js?v=5b4b026f"></script>
+<script src="../assets/vivant.js?v=5b4b026f"></script>
+<script src="../assets/plan.js?v=5b4b026f"></script>
+<script src="../assets/doc.js?v=5b4b026f"></script>
