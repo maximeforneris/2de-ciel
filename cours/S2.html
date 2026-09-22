@@ -3,11 +3,11 @@
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta name="robots" content="noindex, nofollow">
 <title>Séquence 2 — sécurité et mesures</title>
-<link rel="stylesheet" href="../assets/kit.css?v=a6b17ea9">
-<link rel="stylesheet" href="../assets/site.css?v=a6b17ea9">
-<link rel="stylesheet" href="../assets/cablage.css?v=a6b17ea9">
-<link rel="stylesheet" href="../assets/vivant.css?v=a6b17ea9">
-<link rel="stylesheet" href="../assets/doc.css?v=a6b17ea9">
+<link rel="stylesheet" href="../assets/kit.css?v=5b4b026f">
+<link rel="stylesheet" href="../assets/site.css?v=5b4b026f">
+<link rel="stylesheet" href="../assets/cablage.css?v=5b4b026f">
+<link rel="stylesheet" href="../assets/vivant.css?v=5b4b026f">
+<link rel="stylesheet" href="../assets/doc.css?v=5b4b026f">
 
 <div class="page" data-site="ciel2" data-page="cours/S2">
 <div class="jauge-lecture" id="jauge-lecture"><i></i></div><div class="barre-site"><a class="accueil" href="../index.html">Maths et physique-chimie — 2de Bac Pro CIEL</a><span class="fleches"><a class="fleche" href="S1.html" rel="prev" title="Séquence 1 — grandeurs du numérique" aria-label="Séquence 1 — grandeurs du numérique">&lsaquo;</a><a class="fleche" href="S3.html" rel="next" title="Séquence 3 — loi d'Ohm" aria-label="Séquence 3 — loi d'Ohm">&rsaquo;</a></span><button type="button" class="lu" data-lu="cours/S2">Marquer comme lu</button></div>
@@ -18,7 +18,7 @@
     <h1>Travailler en sécurité<span>sur un coffret</span></h1>
   </div>
   <p class="accroche">Votre tuteur vous arrête devant le coffret : montre-moi ce qui te protège, toi, et ce qui protège le matériel. Ce n'est pas la même chose, et un chiffre suffit à le prouver — trente milliampères.</p>
-  <p class="contenu">3 exercices · 34 items d'entraînement · 1 repli · 1 figure</p>
+  <p class="contenu">3 exercices · 34 items d'entraînement · 1 repli · 3 figures</p>
   <p class="k-savoirs">Savoirs travaillés</p><div class="savoirs"><span class="tag">ELEC Électricité — U, I, R, montages</span><span class="tag">AU Automatismes</span></div>
 </header>
 <aside class="prerequis"><p class="chapeau-p">Avant de commencer</p><ul><li><b><a href="../aide/AUTO-01-puissances-de-dix.html">Les préfixes milli et kilo</a></b><span class="ou">Auto 01 — puissances de 10</span><span class="car">tous les seuils de la séquence sont en milliampères, et les calibres en ampères.</span></li><li><b>Comparer deux nombres décimaux</b><span class="car">0,05 A et 40 mA ne se comparent qu'une fois mis dans la même unité, et c'est là que la séquence se joue.</span></li></ul></aside>
@@ -79,6 +79,8 @@
 </tr>
 </tbody>
 </table></div>
+<p><strong>Les deux colonnes de droite ne se remplacent pas l’une l’autre.</strong> Un disjoncteur parfaitement calibré laisse passer sans broncher les 30 mA qui tuent : il ne les voit pas, parce qu’il ne compte que ce qui circule dans le fil.</p>
+<figure class="schema"><div class="dessin" data-schema="qui-protege-qui"></div><figcaption>Quatre dispositifs, rangés selon ce qu’ils sauvent.</figcaption></figure>
 <div class="piege">
 <p><strong>Un fusible ne protège jamais une personne.</strong> Calibré à 16 A, il laisse passer 16 000 mA — plus de cinq cents fois le seuil de danger. Il aura fondu longtemps après que le cœur se sera arrêté.</p>
 </div>
@@ -86,6 +88,7 @@
 <p>Le différentiel et la mise à la terre <strong>travaillent ensemble</strong> : la terre donne au courant de fuite un chemin facile, et c’est ce déséquilibre que le différentiel détecte. Sans terre, la fuite passe par la personne, et le différentiel coupe quand même — mais après l’avoir traversée.</p>
 </div>
 <h2 id="la-tres-basse-tension-de-securite">La très basse tension de sécurité</h2>
+<p>En dessous d’un certain seuil, une tension ne peut pas faire passer assez de courant à travers un corps pour être dangereuse. <strong>Ce seuil n’est pas le même en alternatif et en continu</strong>, et c’est le continu qui est le plus permissif.</p>
 <div class="formule">
 <p>La <strong>TBTS</strong> s’arrête à <strong>50 V alternatifs</strong> et <strong>120 V continus</strong>.</p>
 <p>Le switch, les cartes et les capteurs y travaillent : 5 V, 12 V, 48 V continus.</p>
@@ -93,6 +96,7 @@
 <div class="piege">
 <p><strong>TBTS ne veut pas dire sans précaution.</strong> Un câble PoE transporte 625 mA sous 48 V, soit vingt fois le seuil du différentiel — et on le tient pourtant en main. Ce qui compte, c’est le courant <strong>qui traverserait le corps</strong>, pas celui qui circule dans le câble.</p>
 </div>
+<figure class="schema"><div class="dessin" data-schema="tbts-les-seuils"></div><figcaption>Les deux plafonds, et les tensions du matériel réseau en dessous.</figcaption></figure>
 <h2 id="mesurer-au-multimetre">Mesurer au multimètre</h2>
 <div class="etapes">
 <ol type="1">
@@ -147,8 +151,8 @@
 </div><nav class="suite"><p class="chapeau-s">La suite</p><div class="pas-a-pas"><a class="av" href="S1.html" rel="prev"><span class="k">&lsaquo; Précédent</span><span class="t">Séquence 1 — grandeurs du numérique</span></a><a class="ap" href="S3.html" rel="next"><span class="k">Suivant &rsaquo;</span><span class="t">Séquence 3 — loi d'Ohm</span></a></div></nav>
 <p class="pied">Cette page rappelle la séquence. Elle ne remplace pas les documents distribués et ne donne aucun corrigé. Tous les calculs se font dans votre tablette ; rien n'est enregistré.</p><p class="pied-site"><a class="mentions" href="../mentions-legales.html">Mentions légales</a></p>
 </div>
-<script src="../assets/kit.js?v=a6b17ea9"></script>
-<script src="../assets/site.js?v=a6b17ea9"></script>
-<script src="../assets/vivant.js?v=a6b17ea9"></script>
-<script src="../assets/plan.js?v=a6b17ea9"></script>
-<script src="../assets/doc.js?v=a6b17ea9"></script>
+<script src="../assets/kit.js?v=5b4b026f"></script>
+<script src="../assets/site.js?v=5b4b026f"></script>
+<script src="../assets/vivant.js?v=5b4b026f"></script>
+<script src="../assets/plan.js?v=5b4b026f"></script>
+<script src="../assets/doc.js?v=5b4b026f"></script>

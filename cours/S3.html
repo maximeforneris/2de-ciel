@@ -3,11 +3,11 @@
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta name="robots" content="noindex, nofollow">
 <title>Séquence 3 — loi d'Ohm</title>
-<link rel="stylesheet" href="../assets/kit.css?v=a6b17ea9">
-<link rel="stylesheet" href="../assets/site.css?v=a6b17ea9">
-<link rel="stylesheet" href="../assets/cablage.css?v=a6b17ea9">
-<link rel="stylesheet" href="../assets/vivant.css?v=a6b17ea9">
-<link rel="stylesheet" href="../assets/doc.css?v=a6b17ea9">
+<link rel="stylesheet" href="../assets/kit.css?v=5b4b026f">
+<link rel="stylesheet" href="../assets/site.css?v=5b4b026f">
+<link rel="stylesheet" href="../assets/cablage.css?v=5b4b026f">
+<link rel="stylesheet" href="../assets/vivant.css?v=5b4b026f">
+<link rel="stylesheet" href="../assets/doc.css?v=5b4b026f">
 
 <div class="page" data-site="ciel2" data-page="cours/S3">
 <div class="jauge-lecture" id="jauge-lecture"><i></i></div><div class="barre-site"><a class="accueil" href="../index.html">Maths et physique-chimie — 2de Bac Pro CIEL</a><span class="fleches"><a class="fleche" href="S2.html" rel="prev" title="Séquence 2 — sécurité et mesures" aria-label="Séquence 2 — sécurité et mesures">&lsaquo;</a></span><button type="button" class="lu" data-lu="cours/S3">Marquer comme lu</button></div>
@@ -18,7 +18,7 @@
     <h1>Loi d'Ohm<span>et diviseur de tension</span></h1>
   </div>
   <p class="accroche">Une LED qui ne supporte que 2 V, branchée sur du 5 V. Le technicien a mis une résistance en série. Pourquoi, et comment on la choisit, avec un calculateur pour essayer dix valeurs en dix secondes.</p>
-  <p class="contenu">1 outil · 3 exercices · 1 repli</p>
+  <p class="contenu">1 outil · 3 exercices · 1 repli · 2 figures</p>
   <p class="k-savoirs">Savoirs travaillés</p><div class="savoirs"><span class="tag">ELEC Électricité — U, I, R, montages</span><span class="tag">PREM Résolution d'un problème du premier degré</span><span class="tag">AU Automatismes</span></div>
 </header>
 <aside class="prerequis"><p class="chapeau-p">Avant de commencer</p><ul><li><b><a href="../aide/FICHE-01-isoler-et-convertir.html">Isoler une inconnue et convertir</a></b><span class="ou">Fiche 1 — isoler et convertir</span><span class="car">U = R × I se retourne dans les deux sens, et les milliampères sont le piège de la LED.</span></li><li><b><a href="../aide/FICHE-03-mettre-en-equation.html">Mettre un problème en équation</a></b><span class="ou">Fiche 3 — mettre en équation</span><span class="car">choisir la résistance de la LED, c'est écrire une équation avant de la résoudre.</span></li><li><b><a href="../aide/AUTO-01-puissances-de-dix.html">Les puissances de 10</a></b><span class="ou">Auto 01 — puissances de 10</span><span class="car">20 mA et 4,7 kΩ ne se multiplient pas sans passer par 10⁻³ et 10³.</span></li></ul></aside>
@@ -46,6 +46,7 @@
 <p>La LED, elle, <strong>n’est pas</strong> un dipôle ohmique. Sa caractéristique n’est pas une droite : sa tension reste bloquée autour de 2 V pendant que le courant varie. C’est pour cela qu’on ne peut pas lui appliquer U = R × I.</p>
 </div>
 <h2 id="deux-dipoles-en-serie-la-tension-se-partage">Deux dipôles en série : la tension se partage</h2>
+<p>En série, il n’y a <strong>qu’un seul chemin</strong> : le courant est donc le même dans les deux dipôles. C’est la tension, elle, qui se répartit — et elle se répartit <strong>proportionnellement aux résistances</strong>.</p>
 <div class="formule">
 <p><strong>Loi des mailles : E = U₁ + U₂</strong></p>
 <p><strong>Loi des nœuds : le courant est le même partout</strong>, sur une seule maille</p>
@@ -53,6 +54,7 @@
 <p>Les deux tensions s’ajoutent pour faire celle de l’alimentation. C’est tout ce qu’il faut pour le diviseur.</p>
 </blockquote>
 </div>
+<figure class="schema"><div class="dessin" data-schema="diviseur-de-tension"></div><figcaption>300 Ω et 200 Ω sous 5 V : qui prend combien.</figcaption></figure>
 <h2 id="essayez-c-est-plus-rapide-que-de-lire">Essayez, c’est plus rapide que de lire</h2>
 <div class="outil" data-outil="diviseur">
 
@@ -61,6 +63,7 @@
 <p>Bougez R1 et regardez U1. <strong>La tension se partage proportionnellement aux résistances</strong> : celle qui vaut 60 % du total prend 60 % de la tension. Vous n’avez pas à me croire, mettez R1 = R2 et voyez.</p>
 </div>
 <h2 id="choisir-la-resistance-de-la-led">Choisir la résistance de la LED</h2>
+<p>C’est le diviseur, appliqué à un cas réel. <strong>La LED impose sa tension</strong> — elle garde ses 2 V quoi qu’il arrive — et la résistance encaisse tout le reste. Ce qu’on choisit, ce n’est donc pas la tension : c’est le <strong>courant</strong>.</p>
 <div class="etapes">
 <ol type="1">
 <li>La LED garde <strong>2 V</strong>. La résistance encaisse donc <strong>5 − 2 = 3 V</strong>.</li>
@@ -72,6 +75,7 @@
 <div class="piege">
 <p>Prendre la valeur normalisée <strong>en dessous</strong> ferait passer plus de 20 mA. Quand un calcul donne un maximum, on arrondit <strong>du côté qui protège</strong>, pas au plus proche.</p>
 </div>
+<figure class="schema"><div class="dessin" data-schema="led-et-sa-resistance"></div><figcaption>Trois volts pour la résistance, vingt milliampères au plus.</figcaption></figure>
 <h2 id="vous-verifier">Vous vérifier</h2>
 <section class="exo" id="S3-e1" data-exo="S3-e1" data-type="calcul" data-savoir="ELEC" data-a="IXgueGB4OTs2OS82eHZ4LHhgbGxtdGp2eC41NnhgaXRqdngveGB4Bi9qaTtjeCc="><p class="k">Exercice · ELEC</p><h4>La résistance à mettre</h4><div class="enonce">
 
@@ -95,8 +99,8 @@
 </div><nav class="suite"><p class="chapeau-s">La suite</p><div class="pas-a-pas"><a class="av" href="S2.html" rel="prev"><span class="k">&lsaquo; Précédent</span><span class="t">Séquence 2 — sécurité et mesures</span></a></div></nav>
 <p class="pied">Cette page rappelle la séquence. Elle ne remplace pas les documents distribués et ne donne aucun corrigé. Tous les calculs se font dans votre tablette ; rien n'est enregistré.</p><p class="pied-site"><a class="mentions" href="../mentions-legales.html">Mentions légales</a></p>
 </div>
-<script src="../assets/kit.js?v=a6b17ea9"></script>
-<script src="../assets/site.js?v=a6b17ea9"></script>
-<script src="../assets/vivant.js?v=a6b17ea9"></script>
-<script src="../assets/plan.js?v=a6b17ea9"></script>
-<script src="../assets/doc.js?v=a6b17ea9"></script>
+<script src="../assets/kit.js?v=5b4b026f"></script>
+<script src="../assets/site.js?v=5b4b026f"></script>
+<script src="../assets/vivant.js?v=5b4b026f"></script>
+<script src="../assets/plan.js?v=5b4b026f"></script>
+<script src="../assets/doc.js?v=5b4b026f"></script>

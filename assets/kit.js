@@ -9456,10 +9456,10 @@ SCHEMAS["deux-modeles-qui-se-valent"]=function(el){
   var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
     "aria-label":"Sur le relevé charge-consommation, le modèle affine et le modèle "+
                  "quadratique ont le même R carré et se confondent"});
-  var X=[5,7,9,11,13,15,18,21,24,28], Y=[26,28,28,32,34,34,36,40,43,46];
+  var X=[5,7,9,11,13,15,19,22,25,28], Y=[26,28,28,32,34,34,39,44,45,48];
   var X0=80,X1=590,Y0=300,Y1=76;
   function fx(x){ return X0+(x-3)/43*(X1-X0); }
-  function fy(y){ return Y0-(y-22)/42*(Y0-Y1); }
+  function fy(y){ return Y0-(y-22)/48*(Y0-Y1); }
   svg.appendChild(S("text",{x:20,y:28,"class":"s-tit",fill:V("chaud")},
     "DEUX MODÈLES, LE MÊME R² : LEQUEL PRENDRE ?"));
   /* la plage des releves, en fond */
@@ -9481,14 +9481,14 @@ SCHEMAS["deux-modeles-qui-se-valent"]=function(el){
     svg.appendChild(S("text",{x:fx(v),y:Y0+18,"text-anchor":"middle","class":"s-pet",
       fill:V("encre2")},""+v));
   });
-  _courbe(svg,function(x){return 0.002079*x*x+0.80685*x+21.9355;},3,45,fx,fy,
-          "froid","5.5",22,64);
-  _courbe(svg,function(x){return 0.8745*x+21.4945;},3,45,fx,fy,"chaud","2.4",22,64);
+  _courbe(svg,function(x){return 0.001867*x*x+0.92849*x+20.9552;},3,45,fx,fy,
+          "froid","5.5",22,70);
+  _courbe(svg,function(x){return 0.9899*x+20.5561;},3,45,fx,fy,"chaud","2.4",22,70);
   _pts(svg,X,Y,fx,fy);
   /* nommees en bout de trace : l'identite ne tient pas a la couleur seule */
-  svg.appendChild(S("text",{x:X1+10,y:fy(60.85)+4,"class":"s-pet",fill:V("chaud")},
+  svg.appendChild(S("text",{x:X1+10,y:fy(65.1)+4,"class":"s-pet",fill:V("chaud")},
     "affine"));
-  svg.appendChild(S("text",{x:X1+10,y:fy(62.45)-10,"class":"s-pet",fill:V("froid")},
+  svg.appendChild(S("text",{x:X1+10,y:fy(66.5)-10,"class":"s-pet",fill:V("froid")},
     "quadratique"));
   svg.appendChild(S("rect",{x:100,y:88,width:240,height:62,rx:"6",fill:V("carte"),
     stroke:V("encre2"),"stroke-width":"1.4"}));
@@ -9501,7 +9501,7 @@ SCHEMAS["deux-modeles-qui-se-valent"]=function(el){
   el.appendChild(svg);
   (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
     "Sur toute la plage des relevés, les deux courbes <b>se confondent</b> : l'écart le plus "+
-    "grand entre elles est de <b>0,18 L/100 km</b>, soit moins que l'épaisseur du trait. "+
+    "grand entre elles est de <b>0,14 L/100 km</b>, soit moins que l'épaisseur du trait. "+
     "Les deux R² sont égaux parce que les deux modèles décrivent aussi bien. <b>Quand le R² "+
     "ne tranche pas, on prend le plus simple</b>, donc l'affine : une droite s'explique à un "+
     "exploitant, une parabole beaucoup moins. Et il n'y a rien à gagner à choisir le "+
@@ -9640,6 +9640,960 @@ SCHEMAS["cafe-deux-modeles"]=function(el){
 };
 
 
+
+
+
+/* ─────────── CAP · ce qu'une multiprise accepte ─────────── */
+SCHEMAS["multiprise-limite"]=function(el){
+  var W=724,H=300,X0=60,X1=700,MAX=4200,k=(X1-X0)/MAX;
+  function px(w){return w*k;}
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"La limite de 3 680 watts, et deux combinaisons d'appareils comparees"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "CE QUI TIENT SUR LA MULTIPRISE, ET CE QUI NE TIENT PAS"));
+  var XL=X0+px(3680);
+  svg.appendChild(S("line",{x1:XL,y1:52,x2:XL,y2:258,stroke:V("chaud"),
+    "stroke-width":"2","stroke-dasharray":"6 4"}));
+  svg.appendChild(S("text",{x:XL-8,y:46,"text-anchor":"end","class":"s-lab",
+    fill:V("chaud")},"limite : 3 680 W"));
+  var lignes=[
+    {y:96,  t:"lampe + chargeur + enceinte + console",  w:249,  c:"froid",
+     v:"249 W",  ok:"il reste de la place"},
+    {y:186, t:"sèche-cheveux + bouilloire",             w:4000, c:"chaud",
+     v:"4 000 W", ok:"320 W de trop"}
+  ];
+  lignes.forEach(function(L){
+    svg.appendChild(S("text",{x:X0,y:L.y-8,"class":"s-lab"},L.t));
+    svg.appendChild(S("rect",{x:X0,y:L.y,width:px(L.w),height:34,rx:"4",
+      fill:V(L.c),opacity:".55",stroke:V(L.c),"stroke-width":"1.5"}));
+    svg.appendChild(S("text",{x:W-20,y:L.y-8,"text-anchor":"end","class":"s-lab",
+      fill:V(L.c)},L.v));
+    svg.appendChild(S("text",{x:X0+6,y:L.y+56,"class":"s-nom"},L.ok));
+  });
+  svg.appendChild(S("rect",{x:XL,y:186,width:X0+px(4000)-XL,height:34,rx:"4",
+    fill:V("chaud"),opacity:".95"}));
+  svg.appendChild(S("line",{x1:X0,y1:266,x2:X1,y2:266,stroke:V("trait2"),
+    "stroke-width":"1"}));
+  [0,1000,2000,3000,4000].forEach(function(w){
+    svg.appendChild(S("line",{x1:X0+px(w),y1:266,x2:X0+px(w),y2:272,
+      stroke:V("trait2"),"stroke-width":"1"}));
+    svg.appendChild(S("text",{x:X0+px(w),y:288,"text-anchor":"middle",
+      "class":"s-pet"},w===0?"0":(w/1000)+" kW"));
+  });
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "Quatre appareils qui <b>ne chauffent pas</b> occupent à peine le début de la barre. "+
+    "<b>Deux qui chauffent</b> la dépassent à eux seuls : la partie pleine, à droite du "+
+    "trait, est ce qui passe en trop dans le fil."));
+};
+
+/* ─────────── CAP · l'ordre dans lequel les choses arrivent ─────────── */
+SCHEMAS["chaine-depassement"]=function(el){
+  var W=724,H=236,B=[
+    {t:"on branche trop",   s:"4 000 W",            c:"chaud"},
+    {t:"le fil chauffe",    s:"on ne voit rien",    c:"chaud"},
+    {t:"la prise noircit",  s:"on le voit enfin",   c:"chaud"},
+    {t:"le disjoncteur coupe", s:"le garde-fou",    c:"froid"}
+  ];
+  var LB=164,GAP=12,X=(724-4*164-3*12)/2,Y=84,HB=62;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Quatre etapes : brancher trop, le fil chauffe, la prise noircit, le disjoncteur coupe"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "CE QUI ARRIVE QUAND ON DÉPASSE, ET DANS QUEL ORDRE"));
+  var defs=S("defs",{}),mk=S("marker",{id:"fl-dep",viewBox:"0 0 10 10",refX:"9",refY:"5",
+    markerWidth:"6",markerHeight:"6",orient:"auto-start-reverse"});
+  mk.appendChild(S("path",{d:"M 0 0 L 10 5 L 0 10 z",fill:V("trait")}));
+  defs.appendChild(mk); svg.appendChild(defs);
+  B.forEach(function(b,i){
+    var x=X+i*(LB+GAP);
+    svg.appendChild(S("rect",{x:x,y:Y,width:LB,height:HB,rx:"8",fill:V("carte2"),
+      stroke:V(b.c),"stroke-width":"2"}));
+    svg.appendChild(S("text",{x:x+LB/2,y:Y+26,"text-anchor":"middle","class":"s-lab",
+      style:"font-size:12px"},b.t));
+    svg.appendChild(S("text",{x:x+LB/2,y:Y+46,"text-anchor":"middle","class":"s-nom",
+      fill:V(b.c)},b.s));
+    if(i<3)svg.appendChild(S("line",{x1:x+LB+4,y1:Y+HB/2,x2:x+LB+GAP-6,y2:Y+HB/2,
+      stroke:V("trait"),"stroke-width":"2","marker-end":"url(#fl-dep)"}));
+    svg.appendChild(S("text",{x:x+LB/2,y:Y-14,"text-anchor":"middle","class":"s-pet"},
+      (i+1)+""));
+  });
+  var xc=X+LB/2;
+  svg.appendChild(S("path",{d:"M "+xc+" "+(Y+HB+44)+" L "+xc+" "+(Y+HB+10),fill:"none",
+    stroke:V("vert"),"stroke-width":"2.5","marker-end":"url(#fl-dep)"}));
+  svg.appendChild(S("text",{x:X,y:Y+HB+64,"class":"s-lab",fill:V("vert")},
+    "l'addition agit ici — avant"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "Le disjoncteur est en <b>quatrième</b> position : il coupe, mais le fil a déjà "+
+    "chauffé et la prise a déjà noirci. <b>La seule protection qui agit à l'étape 1, "+
+    "c'est le calcul.</b>"));
+};
+
+/* ─────────── CAP · un chemin ou plusieurs ─────────── */
+SCHEMAS["serie-ou-derivation"]=function(el){
+  var W=724,H=310;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Montage en serie et montage en derivation, une lampe grillee dans chacun"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "UNE AMPOULE GRILLE : CE QUI ARRIVE AUX AUTRES"));
+  function pile(x,y){
+    svg.appendChild(S("line",{x1:x,y1:y-18,x2:x,y2:y+18,stroke:V("encre"),"stroke-width":"3"}));
+    svg.appendChild(S("line",{x1:x+9,y1:y-9,x2:x+9,y2:y+9,stroke:V("encre"),"stroke-width":"3"}));
+  }
+  function lampe(x,y,allumee,grillee){
+    svg.appendChild(S("circle",{cx:x,cy:y,r:"15",
+      fill:grillee?V("carte2"):(allumee?V("chaud"):V("carte2")),
+      opacity:grillee?"1":(allumee?".55":"1"),
+      stroke:grillee?V("chaud"):V("encre"),"stroke-width":"2"}));
+    var d=11;
+    svg.appendChild(S("line",{x1:x-d,y1:y-d,x2:x+d,y2:y+d,stroke:V("encre"),"stroke-width":"1.5"}));
+    svg.appendChild(S("line",{x1:x-d,y1:y+d,x2:x+d,y2:y-d,stroke:V("encre"),"stroke-width":"1.5"}));
+    if(grillee){
+      svg.appendChild(S("line",{x1:x-22,y1:y-22,x2:x+22,y2:y+22,stroke:V("chaud"),"stroke-width":"3"}));
+      svg.appendChild(S("line",{x1:x-22,y1:y+22,x2:x+22,y2:y-22,stroke:V("chaud"),"stroke-width":"3"}));
+    }
+  }
+  /* ---- serie : une seule boucle ---- */
+  svg.appendChild(S("text",{x:40,y:62,"class":"s-lab"},"EN SÉRIE — un seul chemin"));
+  var L=70,R=320,T=126,Bo=232;
+  svg.appendChild(S("path",{d:"M "+L+" "+T+" H "+R+" V "+Bo+" H "+L+" Z",fill:"none",
+    stroke:V("encre"),"stroke-width":"2"}));
+  pile(L,(T+Bo)/2);
+  [130,195,260].forEach(function(x,i){ lampe(x,T,false,i===1); });
+  svg.appendChild(S("text",{x:(L+R)/2,y:268,"text-anchor":"middle","class":"s-nom",
+    fill:V("chaud")},"le chemin est coupé : les trois s'éteignent"));
+  /* ---- derivation : trois branches ---- */
+  svg.appendChild(S("text",{x:404,y:62,"class":"s-lab"},"EN DÉRIVATION — trois chemins"));
+  var L2=414,R2=634;
+  svg.appendChild(S("path",{d:"M "+L2+" "+T+" H "+R2+" M "+L2+" "+Bo+" H "+R2+
+    " M "+L2+" "+T+" V "+Bo,fill:"none",stroke:V("encre"),"stroke-width":"2"}));
+  pile(L2,(T+Bo)/2);
+  [474,554,634].forEach(function(x,i){
+    svg.appendChild(S("line",{x1:x,y1:T,x2:x,y2:Bo,stroke:V("encre"),"stroke-width":"2"}));
+    lampe(x,(T+Bo)/2,i!==1,i===1);
+  });
+  svg.appendChild(S("text",{x:(L2+R2)/2,y:268,"text-anchor":"middle","class":"s-nom",
+    fill:V("vert")},"les deux autres chemins restent : elles brillent"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "La question à se poser devant un circuit : <b>combien de chemins ?</b> "+
+    "Un seul, et la moindre coupure éteint tout. Plusieurs, et chaque branche "+
+    "vit sa vie — c'est pour cela qu'une installation se câble <b>en dérivation</b>."));
+};
+
+/* ─────────── CAP · ou se branchent les deux appareils ─────────── */
+SCHEMAS["ou-brancher-les-appareils"]=function(el){
+  var W=724,H=300;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"L'amperemetre dans le circuit, le voltmetre a cote du composant"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "OÙ SE BRANCHE CHAQUE APPAREIL"));
+  function pile(x,y){
+    svg.appendChild(S("line",{x1:x,y1:y-18,x2:x,y2:y+18,stroke:V("encre"),"stroke-width":"3"}));
+    svg.appendChild(S("line",{x1:x+9,y1:y-9,x2:x+9,y2:y+9,stroke:V("encre"),"stroke-width":"3"}));
+  }
+  function lampe(x,y){
+    svg.appendChild(S("circle",{cx:x,cy:y,r:"15",fill:V("carte2"),stroke:V("encre"),
+      "stroke-width":"2"}));
+    svg.appendChild(S("line",{x1:x-11,y1:y-11,x2:x+11,y2:y+11,stroke:V("encre"),"stroke-width":"1.5"}));
+    svg.appendChild(S("line",{x1:x-11,y1:y+11,x2:x+11,y2:y-11,stroke:V("encre"),"stroke-width":"1.5"}));
+  }
+  function appareil(x,y,lettre,coul){
+    svg.appendChild(S("circle",{cx:x,cy:y,r:"17",fill:V("carte"),stroke:V(coul),
+      "stroke-width":"2.5"}));
+    svg.appendChild(S("text",{x:x,y:y+6,"text-anchor":"middle","class":"s-lab",
+      fill:V(coul),style:"font-size:16px"},lettre));
+  }
+  var T=112,Bo=224;
+  /* --- amperemetre : dans la boucle --- */
+  svg.appendChild(S("text",{x:40,y:62,"class":"s-lab"},"L'AMPÈREMÈTRE — dans le circuit"));
+  var L=70,R=320;
+  svg.appendChild(S("path",{d:"M "+L+" "+Bo+" H "+R+" V "+T+" H "+(L+140)+
+    " M "+(L+100)+" "+T+" H "+L+" V "+Bo,fill:"none",stroke:V("encre"),"stroke-width":"2"}));
+  pile(L,(T+Bo)/2); lampe(250,T);
+  appareil(L+120,T,"A","froid");
+  svg.appendChild(S("text",{x:(L+R)/2,y:262,"text-anchor":"middle","class":"s-nom",
+    fill:V("froid")},"on coupe le fil et on l'intercale"));
+  /* --- voltmetre : a cote --- */
+  svg.appendChild(S("text",{x:404,y:62,"class":"s-lab"},"LE VOLTMÈTRE — à côté"));
+  var L2=414,R2=664;
+  svg.appendChild(S("path",{d:"M "+L2+" "+T+" H "+R2+" V "+Bo+" H "+L2+" Z",fill:"none",
+    stroke:V("encre"),"stroke-width":"2"}));
+  pile(L2,(T+Bo)/2); lampe(560,T);
+  svg.appendChild(S("path",{d:"M 530 "+T+" V 170 H 590 V "+T,fill:"none",
+    stroke:V("violet"),"stroke-width":"2"}));
+  appareil(560,170,"V","violet");
+  svg.appendChild(S("text",{x:(L2+R2)/2,y:262,"text-anchor":"middle","class":"s-nom",
+    fill:V("violet")},"on ne coupe rien, on se branche en parallèle"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>L'ampèremètre mesure ce qui passe</b> : il faut donc que tout passe par lui, "+
+    "on ouvre le circuit. <b>Le voltmètre mesure une différence entre deux points</b> : "+
+    "il se pose à cheval, sans rien ouvrir. Inverser les deux fait sauter le fusible "+
+    "de l'ampèremètre."));
+};
+
+/* ─────────── CAP · la droite U-I et le quotient qui ne bouge pas ─────────── */
+SCHEMAS["caracteristique-resistance"]=function(el){
+  var W=724,H=330,X0=96,X1=560,Y0=262,Y1=64,UM=4.4,IM=220;
+  function fx(u){return X0+u/UM*(X1-X0);}
+  function fy(i){return Y0-i/IM*(Y0-Y1);}
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"La caracteristique d'une resistance : une droite qui passe par zero"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "LA CARACTÉRISTIQUE, ET LE NOMBRE QUI NE BOUGE PAS"));
+  [0,50,100,150,200].forEach(function(i){
+    svg.appendChild(S("line",{x1:X0,y1:fy(i),x2:X1,y2:fy(i),stroke:V("trait2"),
+      "stroke-width":"1",opacity:".5"}));
+    svg.appendChild(S("text",{x:X0-10,y:fy(i)+4,"text-anchor":"end","class":"s-pet"},i+""));
+  });
+  [0,1,2,3,4].forEach(function(u){
+    svg.appendChild(S("line",{x1:fx(u),y1:Y0,x2:fx(u),y2:Y1,stroke:V("trait2"),
+      "stroke-width":"1",opacity:".5"}));
+    svg.appendChild(S("text",{x:fx(u),y:Y0+20,"text-anchor":"middle","class":"s-pet"},u+""));
+  });
+  svg.appendChild(S("line",{x1:X0,y1:Y0,x2:X1,y2:Y0,stroke:V("encre"),"stroke-width":"2"}));
+  svg.appendChild(S("line",{x1:X0,y1:Y0,x2:X0,y2:Y1,stroke:V("encre"),"stroke-width":"2"}));
+  svg.appendChild(S("text",{x:(X0+X1)/2,y:Y0+40,"text-anchor":"middle","class":"s-nom"},
+    "U (V)"));
+  svg.appendChild(S("text",{x:X0-10,y:Y1-14,"text-anchor":"end","class":"s-nom"},"I (mA)"));
+  svg.appendChild(S("line",{x1:fx(0),y1:fy(0),x2:fx(4),y2:fy(200),stroke:V("chaud"),
+    "stroke-width":"2.5"}));
+  [[0,0],[1,50],[2,100],[3,150],[4,200]].forEach(function(p){
+    svg.appendChild(S("circle",{cx:fx(p[0]),cy:fy(p[1]),r:"4.5",fill:V("chaud")}));
+  });
+  svg.appendChild(S("rect",{x:586,y:88,width:124,height:150,rx:"8",fill:V("carte2"),
+    stroke:V("trait"),"stroke-width":"1.5"}));
+  svg.appendChild(S("text",{x:648,y:110,"text-anchor":"middle","class":"s-lab"},"U ÷ I"));
+  [["1 ÷ 0,05"],["2 ÷ 0,10"],["3 ÷ 0,15"],["4 ÷ 0,20"]].forEach(function(t,i){
+    svg.appendChild(S("text",{x:648,y:136+i*22,"text-anchor":"middle","class":"s-pet"},t[0]));
+  });
+  svg.appendChild(S("text",{x:648,y:228,"text-anchor":"middle","class":"s-lab",
+    fill:V("chaud")},"= 20 Ω"));
+  svg.appendChild(S("text",{x:648,y:256,"text-anchor":"middle","class":"s-nom"},
+    "à chaque ligne"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "Les points sont <b>alignés</b> et la droite <b>part de zéro</b> : doubler la "+
+    "tension double le courant. Le quotient U ÷ I, lui, donne le même nombre à chaque "+
+    "ligne — <b>c'est la résistance</b>, et c'est ce que l'ohmmètre affiche."));
+};
+
+
+
+/* ─────────── CAP · ce qui rentre encore quand le radiateur tourne ─────────── */
+SCHEMAS["radiateur-et-le-reste"]=function(el){
+  var W=724,H=300,X0=60,X1=690,MAX=3680,k=(X1-X0)/MAX;
+  function px(w){return w*k;}
+  var XR=X0+px(1000);
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Le radiateur occupe mille watts ; ce qui rentre dans les 2 680 restants"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "LE RADIATEUR TOURNE : CE QUI PEUT ENCORE S'AJOUTER"));
+  svg.appendChild(S("rect",{x:X0,y:56,width:px(1000),height:34,rx:"4",fill:V("violet"),
+    opacity:".6",stroke:V("violet"),"stroke-width":"1.5"}));
+  svg.appendChild(S("text",{x:X0+10,y:79,"class":"s-lab",fill:V("carte")},"radiateur"));
+  svg.appendChild(S("rect",{x:XR,y:56,width:X1-XR,height:34,rx:"4",fill:"none",
+    stroke:V("trait"),"stroke-width":"1.5","stroke-dasharray":"5 4"}));
+  svg.appendChild(S("text",{x:(XR+X1)/2,y:79,"text-anchor":"middle","class":"s-lab"},
+    "il reste 2 680 W"));
+  svg.appendChild(S("line",{x1:X1,y1:48,x2:X1,y2:274,stroke:V("chaud"),"stroke-width":"2",
+    "stroke-dasharray":"6 4"}));
+  svg.appendChild(S("text",{x:X1-6,y:42,"text-anchor":"end","class":"s-lab",fill:V("chaud")},
+    "3 680 W"));
+  [{t:"+ sèche-cheveux",w:1800,ok:true},
+   {t:"+ bouilloire",   w:2200,ok:true},
+   {t:"+ les deux",     w:4000,ok:false}].forEach(function(L,i){
+    var y=126+i*48, bout=Math.min(XR+px(L.w),X1+16);
+    svg.appendChild(S("text",{x:X0,y:y+20,"class":"s-lab"},L.t));
+    svg.appendChild(S("rect",{x:XR,y:y,width:bout-XR,height:28,rx:"4",
+      fill:V(L.ok?"froid":"chaud"),opacity:".5",stroke:V(L.ok?"froid":"chaud"),
+      "stroke-width":"1.5"}));
+    if(!L.ok){
+      svg.appendChild(S("path",{d:"M "+(X1+16)+" "+y+" l 14 14 l -14 14",fill:"none",
+        stroke:V("chaud"),"stroke-width":"2.5"}));
+    }else{
+      svg.appendChild(S("text",{x:bout+10,y:y+20,"class":"s-lab",fill:V("froid")},"✓"));
+    }
+  });
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "Le radiateur mange <b>mille watts en permanence</b>. Ce qui reste, 2 680 W, accepte "+
+    "encore le sèche-cheveux <i>ou</i> la bouilloire — <b>jamais les deux</b>."));
+};
+
+/* ─────────── CAP · trouver l'ampoule grillee au voltmetre ─────────── */
+SCHEMAS["chercher-la-coupure"]=function(el){
+  var W=724,H=280,N=8,X0=76,PAS=82,Y=118;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Une guirlande en serie : toute la tension se retrouve aux bornes de l'ampoule coupee"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "OÙ EST LA COUPURE : CE QUE DIT LE VOLTMÈTRE"));
+  var CASSE=4;
+  svg.appendChild(S("line",{x1:X0-40,y1:Y,x2:X0+(N-1)*PAS+40,y2:Y,stroke:V("encre"),
+    "stroke-width":"2"}));
+  for(var i=0;i<N;i++){
+    var x=X0+i*PAS, mort=(i===CASSE);
+    svg.appendChild(S("circle",{cx:x,cy:Y,r:"16",fill:V("carte2"),
+      stroke:mort?V("chaud"):V("encre"),"stroke-width":mort?"2.5":"2"}));
+    svg.appendChild(S("line",{x1:x-11,y1:Y-11,x2:x+11,y2:Y+11,stroke:V("encre"),"stroke-width":"1.5"}));
+    svg.appendChild(S("line",{x1:x-11,y1:Y+11,x2:x+11,y2:Y-11,stroke:V("encre"),"stroke-width":"1.5"}));
+    if(mort){
+      svg.appendChild(S("line",{x1:x-23,y1:Y-23,x2:x+23,y2:Y+23,stroke:V("chaud"),"stroke-width":"3"}));
+      svg.appendChild(S("line",{x1:x-23,y1:Y+23,x2:x+23,y2:Y-23,stroke:V("chaud"),"stroke-width":"3"}));
+    }
+    svg.appendChild(S("text",{x:x,y:Y+56,"text-anchor":"middle","class":"s-lab",
+      fill:mort?V("chaud"):V("encre2"),style:mort?"font-size:16px":""},mort?"24 V":"0 V"));
+  }
+  svg.appendChild(S("text",{x:X0-46,y:Y-34,"class":"s-nom"},
+    "le voltmètre, posé aux bornes de chaque ampoule"));
+  svg.appendChild(S("text",{x:X0+CASSE*PAS,y:Y+82,"text-anchor":"middle","class":"s-nom",
+    fill:V("chaud")},"la seule qui sort du lot"));
+  svg.appendChild(S("text",{x:20,y:H-16,"class":"s-nom"},
+    "bloc 24 V · 20 ampoules · aucune ne s'allume"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "Le circuit étant coupé, <b>plus aucun courant ne passe</b> : les ampoules saines ne "+
+    "voient donc <b>rien du tout</b>, 0 V. Toute la tension du bloc se retrouve aux bornes "+
+    "de la coupure. <b>C'est la mesure élevée qui désigne la coupable</b>, pas la mesure faible."));
+};
+
+/* ─────────── CAP · faire le tour ou couvrir la surface ─────────── */
+SCHEMAS["perimetre-ou-aire"]=function(el){
+  var W=724,H=346,L=4.20,l=3.50,E0=44;
+  var lw=L*E0, lh=l*E0;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"La meme piece : son perimetre en metres, son aire en metres carres"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "LA MÊME PIÈCE, DEUX QUESTIONS DIFFÉRENTES"));
+  function piece(x0,y0,mode,titre,calc,res,unite,coul){
+    svg.appendChild(S("text",{x:x0,y:y0-42,"class":"s-lab"},titre));
+    if(mode==="aire")
+      svg.appendChild(S("rect",{x:x0,y:y0,width:lw,height:lh,fill:V(coul),opacity:".38"}));
+    svg.appendChild(S("rect",{x:x0,y:y0,width:lw,height:lh,fill:"none",
+      stroke:V(mode==="tour"?coul:"encre"),"stroke-width":mode==="tour"?"5":"1.5"}));
+    svg.appendChild(S("text",{x:x0+lw/2,y:y0-10,"text-anchor":"middle","class":"s-pet"},"4,20 m"));
+    svg.appendChild(S("text",{x:x0-10,y:y0+lh/2,"text-anchor":"end","class":"s-pet"},"3,50 m"));
+    svg.appendChild(S("text",{x:x0,y:y0+lh+28,"class":"s-pet"},calc));
+    svg.appendChild(S("text",{x:x0,y:y0+lh+52,"class":"s-lab",fill:V(coul),
+      style:"font-size:16px"},res+" "+unite));
+  }
+  piece(104,110,"tour","LE TOUR — le périmètre","2 × (4,20 + 3,50)","15,40","m","froid");
+  piece(444,110,"aire","LA SURFACE — l'aire","4,20 × 3,50","14,70","m²","chaud");
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>Le tour se mesure en mètres, la surface en mètres carrés.</b> C'est l'unité de la "+
+    "réponse attendue qui dit lequel des deux calculer : une plinthe s'achète au mètre, "+
+    "un sol au mètre carré."));
+};
+
+/* ─────────── CAP · la diagonale, et les pouces ─────────── */
+SCHEMAS["diagonale-pouces"]=function(el){
+  var W=724,H=340,E0=2.6,lw=80*E0,lh=60*E0,X=74,Y=92;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Un ecran de 80 sur 60 centimetres, sa diagonale, et sa conversion en pouces"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "LA DIAGONALE D'UN ÉCRAN, ET CE QU'ELLE VAUT EN POUCES"));
+  svg.appendChild(S("rect",{x:X,y:Y,width:lw,height:lh,rx:"4",fill:V("carte2"),
+    stroke:V("encre"),"stroke-width":"2"}));
+  svg.appendChild(S("line",{x1:X,y1:Y+lh,x2:X+lw,y2:Y,stroke:V("chaud"),"stroke-width":"3"}));
+  svg.appendChild(S("text",{x:X+lw/2,y:Y-12,"text-anchor":"middle","class":"s-pet"},"80 cm"));
+  svg.appendChild(S("text",{x:X-10,y:Y+lh/2,"text-anchor":"end","class":"s-pet"},"60 cm"));
+  svg.appendChild(S("text",{x:X+lw/2-24,y:Y+lh/2-10,"class":"s-lab",fill:V("chaud"),
+    style:"font-size:17px"},"?"));
+  var XC=420;
+  [["80² + 60²","encre"],["6 400 + 3 600 = 10 000","encre"],
+   ["√10 000 = 100 cm","chaud"],["100 ÷ 2,54","encre"]
+  ].forEach(function(t,i){
+    svg.appendChild(S("text",{x:XC,y:Y+24+i*38,"class":"s-lab",
+      fill:V(t[1]),style:(t[1]==="chaud"?"font-size:16px":"")},t[0]));
+  });
+  svg.appendChild(S("line",{x1:XC,y1:Y+188,x2:XC+218,y2:Y+188,stroke:V("trait2"),
+    "stroke-width":"1"}));
+  svg.appendChild(S("text",{x:XC,y:Y+216,"class":"s-lab",fill:V("chaud"),
+    style:"font-size:17px"},"= 39,4 pouces"));
+  svg.appendChild(S("text",{x:XC,y:Y+242,"class":"s-nom"},
+    "un pouce vaut 2,54 cm — toujours"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "La diagonale <b>ne se compare jamais directement à un meuble</b> : elle traverse "+
+    "l'écran en biais. C'est la largeur, 80 cm, qu'il faut confronter à la place "+
+    "disponible — et c'est là que les 1,8 cm de trop se jouent."));
+};
+
+/* ─────────── CAP · ce que fait le courant selon son intensite ─────────── */
+SCHEMAS["seuils-courant"]=function(el){
+  var W=724,H=268,X0=80,X1=670,Y=138,min=Math.log10(0.5),max=Math.log10(5000);
+  function x(ma){return X0+(Math.log10(ma)-min)/(max-min)*(X1-X0);}
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Echelle des courants : perception, non-lacher, seuil du differentiel, fibrillation"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "CE QUE FAIT LE COURANT, SELON SON INTENSITÉ"));
+  svg.appendChild(S("line",{x1:X0,y1:Y,x2:X1,y2:Y,stroke:V("encre"),"stroke-width":"2"}));
+  var S1=x(30);
+  svg.appendChild(S("rect",{x:S1,y:Y-13,width:X1-S1,height:26,fill:V("chaud"),opacity:".18"}));
+  [[0.5,"on le sent","froid",-1],[10,"on ne lâche plus","tiede",1],
+   [30,"seuil du différentiel","chaud",-1],[75,"le cœur s'affole","chaud",1],
+   [1000,"brûlures","chaud",-1]].forEach(function(p){
+    var xx=x(p[0]);
+    svg.appendChild(S("circle",{cx:xx,cy:Y,r:p[0]===30?"7":"5",fill:V(p[2])}));
+    var dy=p[3]<0?-30:44;
+    svg.appendChild(S("line",{x1:xx,y1:Y+(p[3]<0?-8:8),x2:xx,y2:Y+(p[3]<0?-24:26),
+      stroke:V(p[2]),"stroke-width":"1.5"}));
+    svg.appendChild(S("text",{x:xx,y:Y+dy,"text-anchor":"middle","class":"s-lab",
+      fill:V(p[2]),style:p[0]===30?"font-size:15px":""},p[1]));
+    svg.appendChild(S("text",{x:xx,y:Y+(p[3]<0?-46:60),"text-anchor":"middle","class":"s-pet"},
+      p[0]>=1000?(p[0]/1000)+" A":(""+p[0]).replace(".",",")+" mA"));
+  });
+  svg.appendChild(S("text",{x:X1,y:Y+86,"text-anchor":"end","class":"s-nom",fill:V("chaud")},
+    "au-delà de 30 mA, le différentiel doit avoir coupé"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "L'échelle n'est pas régulière : <b>elle est graduée par multiplications</b>, parce "+
+    "qu'entre le courant qu'on sent et celui qui tue il y a un facteur cent. "+
+    "<b>30 mA, c'est 0,03 A</b> — trois centièmes d'ampère suffisent."));
+};
+
+/* ─────────── CAP · la conversion decide du resultat ─────────── */
+SCHEMAS["ohm-au-poste"]=function(el){
+  var W=724,H=280;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Le meme affichage lu en milliamperes ou en amperes : deux resistances mille fois differentes"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "LE MULTIMÈTRE AFFICHE 30 : DEUX LECTURES, DEUX RÉSULTATS"));
+  svg.appendChild(S("rect",{x:282,y:48,width:160,height:48,rx:"6",fill:V("carte2"),
+    stroke:V("encre"),"stroke-width":"2"}));
+  svg.appendChild(S("text",{x:362,y:80,"text-anchor":"middle","class":"s-lab",
+    style:"font-size:22px"},"30"));
+  svg.appendChild(S("text",{x:362,y:114,"text-anchor":"middle","class":"s-nom"},
+    "et la tension vaut 6 V"));
+  [{x:64,cal:"calibre 200 mA",cv:"30 mA = 0,03 A",op:"6 ÷ 0,03",r:"200 Ω",
+    c:"froid",v:"✓ la valeur de l'ohmmètre"},
+   {x:394,cal:"lu comme 30 A",cv:"30 A",op:"6 ÷ 30",r:"0,2 Ω",
+    c:"chaud",v:"✗ mille fois trop petit"}].forEach(function(B){
+    svg.appendChild(S("rect",{x:B.x,y:142,width:266,height:112,rx:"8",fill:V("carte2"),
+      stroke:V(B.c),"stroke-width":"2"}));
+    svg.appendChild(S("text",{x:B.x+16,y:166,"class":"s-lab",fill:V(B.c)},B.cal));
+    svg.appendChild(S("text",{x:B.x+16,y:190,"class":"s-pet"},B.cv));
+    svg.appendChild(S("text",{x:B.x+16,y:216,"class":"s-lab"},B.op));
+    svg.appendChild(S("text",{x:B.x+250,y:216,"text-anchor":"end","class":"s-lab",
+      fill:V(B.c),style:"font-size:17px"},"= "+B.r));
+    svg.appendChild(S("text",{x:B.x+16,y:240,"class":"s-nom",fill:V(B.c)},B.v));
+    svg.appendChild(S("line",{x1:362,y1:124,x2:B.x+133,y2:138,stroke:V(B.c),
+      "stroke-width":"1.5","stroke-dasharray":"4 3"}));
+  });
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>Le même nombre affiché, et mille fois d'écart sur le résultat.</b> L'appareil "+
+    "donne un nombre, pas une unité : <b>c'est le calibre qui la donne</b>, et il se lit "+
+    "avant de noter la valeur."));
+};
+
+
+
+/* ─────────── CAP · deux appareils, deux protections ─────────── */
+SCHEMAS["disjoncteur-differentiel"]=function(el){
+  var W=724,H=310;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Le disjoncteur surveille ce qui passe, le differentiel surveille la difference"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "DEUX APPAREILS SUR LE TABLEAU, ET CE QUE CHACUN SURVEILLE"));
+  var defs=S("defs",{}),mk=S("marker",{id:"fl-prot",viewBox:"0 0 10 10",refX:"9",refY:"5",
+    markerWidth:"7",markerHeight:"7",orient:"auto-start-reverse"});
+  mk.appendChild(S("path",{d:"M 0 0 L 10 5 L 0 10 z",fill:V("encre")}));
+  defs.appendChild(mk); svg.appendChild(defs);
+  function carte(x,coul,nom,val,quoi,proteg){
+    svg.appendChild(S("rect",{x:x,y:54,width:316,height:214,rx:"10",fill:V("carte2"),
+      stroke:V(coul),"stroke-width":"2.5"}));
+    svg.appendChild(S("text",{x:x+20,y:82,"class":"s-lab",fill:V(coul),
+      style:"font-size:15px"},nom));
+    svg.appendChild(S("text",{x:x+296,y:82,"text-anchor":"end","class":"s-lab",
+      fill:V(coul),style:"font-size:17px"},val));
+    svg.appendChild(S("text",{x:x+20,y:212,"class":"s-nom"},quoi));
+    svg.appendChild(S("rect",{x:x+16,y:226,width:284,height:30,rx:"6",fill:V(coul),
+      opacity:".2"}));
+    svg.appendChild(S("text",{x:x+158,y:246,"text-anchor":"middle","class":"s-lab",
+      fill:V(coul)},proteg));
+  }
+  carte(28,"froid","DISJONCTEUR","16 A","il compte ce qui passe dans le fil",
+        "il protège LES FILS");
+  carte(380,"chaud","DIFFÉRENTIEL","30 mA","il compare l'aller et le retour",
+        "il protège LES PERSONNES");
+  /* --- disjoncteur : un seul fil, une seule fleche --- */
+  svg.appendChild(S("line",{x1:60,y1:140,x2:300,y2:140,stroke:V("encre"),"stroke-width":"2",
+    "marker-end":"url(#fl-prot)"}));
+  svg.appendChild(S("text",{x:180,y:128,"text-anchor":"middle","class":"s-pet"},"16 A maxi"));
+  svg.appendChild(S("text",{x:180,y:172,"text-anchor":"middle","class":"s-nom"},
+    "au-delà, le fil chaufferait"));
+  /* --- differentiel : aller, retour, et la fuite --- */
+  svg.appendChild(S("line",{x1:412,y1:124,x2:652,y2:124,stroke:V("encre"),"stroke-width":"2",
+    "marker-end":"url(#fl-prot)"}));
+  svg.appendChild(S("text",{x:404,y:118,"text-anchor":"end","class":"s-pet"},"aller"));
+  svg.appendChild(S("line",{x1:652,y1:156,x2:412,y2:156,stroke:V("encre"),"stroke-width":"2",
+    "marker-end":"url(#fl-prot)"}));
+  svg.appendChild(S("text",{x:404,y:162,"text-anchor":"end","class":"s-pet"},"retour"));
+  svg.appendChild(S("line",{x1:568,y1:126,x2:568,y2:188,stroke:V("chaud"),"stroke-width":"2.5",
+    "stroke-dasharray":"5 3","marker-end":"url(#fl-prot)"}));
+  svg.appendChild(S("text",{x:578,y:186,"class":"s-lab",fill:V("chaud")},"la fuite"));
+  svg.appendChild(S("text",{x:556,y:178,"text-anchor":"end","class":"s-nom"},
+    "si aller ≠ retour"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "Le disjoncteur ne sait qu'une chose : <b>combien passe</b>. Le différentiel en sait "+
+    "une autre : <b>si tout ce qui est parti est bien revenu</b>. Ce qui manque est passé "+
+    "ailleurs — souvent par quelqu'un. <b>Aucun des deux ne remplace la consignation.</b>"));
+};
+
+/* ─────────── CAP · un chiffre plutot qu'un adjectif ─────────── */
+SCHEMAS["de-l-adjectif-au-chiffre"]=function(el){
+  var W=724,H=280;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Une phrase vague ne fait rien bouger, un chiffre arrete la discussion"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "CE QUI FAIT BOUGER UNE RÉUNION DE SÉCURITÉ"));
+  var defs=S("defs",{}),mk=S("marker",{id:"fl-adj",viewBox:"0 0 10 10",refX:"9",refY:"5",
+    markerWidth:"6",markerHeight:"6",orient:"auto-start-reverse"});
+  mk.appendChild(S("path",{d:"M 0 0 L 10 5 L 0 10 z",fill:V("trait")}));
+  defs.appendChild(mk); svg.appendChild(defs);
+  function bulle(y,txt,coul,suite,fort){
+    svg.appendChild(S("rect",{x:40,y:y,width:300,height:54,rx:"14",fill:V("carte2"),
+      stroke:V(coul),"stroke-width":fort?"2.5":"1.5",opacity:fort?"1":".75"}));
+    svg.appendChild(S("text",{x:190,y:y+33,"text-anchor":"middle","class":"s-lab",
+      fill:V(coul),style:fort?"font-size:16px":""},txt));
+    svg.appendChild(S("line",{x1:350,y1:y+27,x2:404,y2:y+27,stroke:V("trait"),
+      "stroke-width":"2","marker-end":"url(#fl-adj)"}));
+    svg.appendChild(S("text",{x:418,y:y+33,"class":"s-lab",fill:V(coul),
+      style:fort?"font-size:16px":""},suite));
+  }
+  bulle(60,"« c'est dangereux »","trait","rien ne bouge",false);
+  bulle(160,"« 230 mA le traversent »","chaud","la discussion s'arrête",true);
+  svg.appendChild(S("text",{x:40,y:248,"class":"s-pet"},
+    "230 V ÷ 1 000 Ω = 0,23 A = 230 mA — soit près de huit fois le seuil du différentiel"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>Un adjectif se discute, un chiffre non.</b> C'est le même constat, mais le second "+
+    "se vérifie, se compare au seuil de 30 mA, et se note dans un rapport."));
+};
+
+/* ─────────── CAP · c'est le plus faible qui fixe la limite ─────────── */
+SCHEMAS["le-plus-faible-fixe"]=function(el){
+  var W=724,H=300,X0=182,X1=600,MAX=100,k=(X1-X0)/MAX;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Ce que chaque ingredient permet : c'est le plus petit nombre qui decide"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "CE QUE CHAQUE INGRÉDIENT PERMET, EN CRÊPES"));
+  var D=[{t:"beurre",v:100,d:"250 g ÷ 30 g"},
+         {t:"farine",v:48, d:"1 000 g ÷ 250 g"},
+         {t:"lait",  v:36, d:"150 cL ÷ 50 cL"},
+         {t:"œufs",  v:32, d:"8 ÷ 3"}];
+  D.forEach(function(L,i){
+    var y=64+i*52, mini=(L.v===32);
+    svg.appendChild(S("text",{x:X0-14,y:y+22,"text-anchor":"end","class":"s-lab",
+      fill:mini?V("chaud"):V("encre")},L.t));
+    svg.appendChild(S("rect",{x:X0,y:y,width:L.v*k,height:30,rx:"4",
+      fill:V(mini?"chaud":"froid"),opacity:mini?".75":".4",
+      stroke:V(mini?"chaud":"froid"),"stroke-width":"1.5"}));
+    svg.appendChild(S("text",{x:X0+L.v*k+12,y:y+21,"class":"s-lab",
+      fill:mini?V("chaud"):V("encre2")},L.v+" crêpes"));
+    svg.appendChild(S("text",{x:X0+8,y:y+21,"class":"s-pet",fill:V("encre")},L.d));
+  });
+  var XM=X0+32*k;
+  svg.appendChild(S("line",{x1:XM,y1:56,x2:XM,y2:266,stroke:V("chaud"),"stroke-width":"2.5",
+    "stroke-dasharray":"6 4"}));
+  svg.appendChild(S("text",{x:XM+10,y:284,"class":"s-lab",fill:V("chaud")},
+    "32 — c'est là que ça s'arrête"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "Le beurre permettrait cent crêpes, mais <b>il n'y a que huit œufs</b>. "+
+    "Devant plusieurs ressources et une seule production, on calcule ce que chacune "+
+    "permet et <b>on garde la plus petite</b> — au chantier c'est pareil : le câble, "+
+    "le disjoncteur, la prise, c'est le plus faible qui fixe la limite."));
+};
+
+/* ─────────── CAP · proportionnel, ou pas ─────────── */
+SCHEMAS["propo-ou-pas"]=function(el){
+  var W=724,H=330,X0=90,X1=600,Y0=266,Y1=60,NM=30,PM=100;
+  function fx(n){return X0+n/NM*(X1-X0);}
+  function fy(p){return Y0-p/PM*(Y0-Y1);}
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Deux tarifs : une droite qui part de zero, une autre qui part de vingt euros"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "DEUX SALLES : D'OÙ PART CHAQUE DROITE"));
+  [0,25,50,75,100].forEach(function(p){
+    svg.appendChild(S("line",{x1:X0,y1:fy(p),x2:X1,y2:fy(p),stroke:V("trait2"),
+      "stroke-width":"1",opacity:".5"}));
+    svg.appendChild(S("text",{x:X0-10,y:fy(p)+4,"text-anchor":"end","class":"s-pet"},p+" €"));
+  });
+  [0,10,20,30].forEach(function(n){
+    svg.appendChild(S("text",{x:fx(n),y:Y0+20,"text-anchor":"middle","class":"s-pet"},n+""));
+  });
+  svg.appendChild(S("line",{x1:X0,y1:Y0,x2:X1,y2:Y0,stroke:V("encre"),"stroke-width":"2"}));
+  svg.appendChild(S("line",{x1:X0,y1:Y0,x2:X0,y2:Y1,stroke:V("encre"),"stroke-width":"2"}));
+  svg.appendChild(S("text",{x:(X0+X1)/2,y:Y0+40,"text-anchor":"middle","class":"s-nom"},
+    "nombre de séances"));
+  svg.appendChild(S("line",{x1:fx(0),y1:fy(0),x2:fx(30),y2:fy(90),stroke:V("froid"),
+    "stroke-width":"2.5"}));
+  svg.appendChild(S("line",{x1:fx(0),y1:fy(20),x2:fx(30),y2:fy(80),stroke:V("chaud"),
+    "stroke-width":"2.5"}));
+  svg.appendChild(S("circle",{cx:fx(0),cy:fy(0),r:"5",fill:V("froid")}));
+  svg.appendChild(S("circle",{cx:fx(0),cy:fy(20),r:"5",fill:V("chaud")}));
+  svg.appendChild(S("text",{x:fx(30)+8,y:fy(90)+4,"class":"s-lab",fill:V("froid")},"A"));
+  svg.appendChild(S("text",{x:fx(30)+8,y:fy(80)+4,"class":"s-lab",fill:V("chaud")},"B"));
+  svg.appendChild(S("text",{x:X0+16,y:fy(97),"class":"s-nom",fill:V("froid")},
+    "A part de zéro : proportionnel"));
+  svg.appendChild(S("text",{x:X0+16,y:fy(89),"class":"s-nom",fill:V("chaud")},
+    "B part de 20 € : pas proportionnel"));
+  var XC=fx(20);
+  svg.appendChild(S("line",{x1:XC,y1:fy(60),x2:XC,y2:Y0,stroke:V("encre"),"stroke-width":"1.5",
+    "stroke-dasharray":"4 3"}));
+  svg.appendChild(S("circle",{cx:XC,cy:fy(60),r:"6",fill:"none",stroke:V("encre"),
+    "stroke-width":"2"}));
+  svg.appendChild(S("text",{x:XC+12,y:fy(60)-26,"class":"s-lab"},
+    "20 séances : 60 € des deux côtés"));
+  svg.appendChild(S("text",{x:620,y:fy(50),"class":"s-nom"},"avant 20 :"));
+  svg.appendChild(S("text",{x:620,y:fy(50)+18,"class":"s-lab",fill:V("froid")},"A moins cher"));
+  svg.appendChild(S("text",{x:620,y:fy(50)+44,"class":"s-nom"},"après 20 :"));
+  svg.appendChild(S("text",{x:620,y:fy(50)+62,"class":"s-lab",fill:V("chaud")},"B moins cher"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>Une situation est proportionnelle quand la droite passe par zéro</b> — zéro séance, "+
+    "zéro euro. Les 20 € d'inscription de la salle B cassent cela : elle se paie même "+
+    "sans venir. <b>Les deux droites se croisent à 20 séances</b>, et c'est là que la "+
+    "réponse change de camp."));
+};
+
+/* ─────────── CAP · le meme tableau, deux metiers ─────────── */
+SCHEMAS["le-meme-coefficient"]=function(el){
+  var W=724,H=280;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Le tableau des seances et le tableau tension-courant ont la meme forme"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "LE MÊME TABLEAU, DEUX FOIS"));
+  function tableau(x,y,coul,titre,l1,l2,vals1,vals2,coef,unite){
+    svg.appendChild(S("text",{x:x,y:y-14,"class":"s-lab",fill:V(coul)},titre));
+    svg.appendChild(S("rect",{x:x,y:y,width:290,height:72,rx:"6",fill:V("carte2"),
+      stroke:V(coul),"stroke-width":"2"}));
+    svg.appendChild(S("line",{x1:x,y1:y+36,x2:x+290,y2:y+36,stroke:V(coul),"stroke-width":"1.5"}));
+    svg.appendChild(S("line",{x1:x+86,y1:y,x2:x+86,y2:y+72,stroke:V(coul),"stroke-width":"1.5"}));
+    svg.appendChild(S("text",{x:x+12,y:y+24,"class":"s-lab"},l1));
+    svg.appendChild(S("text",{x:x+12,y:y+60,"class":"s-lab"},l2));
+    vals1.forEach(function(v,i){
+      svg.appendChild(S("text",{x:x+120+i*52,y:y+24,"text-anchor":"middle","class":"s-pet"},v));
+      svg.appendChild(S("text",{x:x+120+i*52,y:y+60,"text-anchor":"middle","class":"s-pet"},vals2[i]));
+    });
+    svg.appendChild(S("text",{x:x+290,y:y+104,"text-anchor":"end","class":"s-lab",
+      fill:V(coul),style:"font-size:16px"},coef));
+    svg.appendChild(S("text",{x:x,y:y+104,"class":"s-nom"},unite));
+  }
+  tableau(40,72,"froid","LA SALLE DE SPORT","séances","prix (€)",
+    ["1","2","3","4"],["3","6","9","12"],"× 3","le coefficient est un tarif");
+  tableau(390,72,"chaud","LE POSTE DE MESURE","I (mA)","U (V)",
+    ["2","4","6","8"],["2","4","6","8"],"× 1 000","le coefficient est une résistance");
+  svg.appendChild(S("rect",{x:40,y:214,width:640,height:44,rx:"8",fill:V("carte2"),
+    stroke:V("trait"),"stroke-width":"1.5"}));
+  svg.appendChild(S("text",{x:360,y:242,"text-anchor":"middle","class":"s-lab"},
+    "même tableau · même graphique · même coefficient — seul le nom change"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "À gauche on multiplie des séances par un tarif, à droite des ampères par une "+
+    "résistance. <b>C'est la même opération</b> : ce qu'on a appris en maths sur les prix "+
+    "sert tel quel au poste de mesure. <b>2 mA font 0,002 A</b>, et 2 ÷ 0,002 donne 1 000 Ω."));
+};
+
+/* ─────────── CAP · decouper un local en rectangles ─────────── */
+SCHEMAS["decouper-en-rectangles"]=function(el){
+  var W=724,H=310,E0=44,X=110,Y=64;
+  function px(m){return m*E0;}
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Un local en L decoupe en deux rectangles dont on additionne les aires"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "UN LOCAL QUI N'EST PAS UN RECTANGLE : ON LE DÉCOUPE"));
+  var YB=Y+px(1.5);
+  svg.appendChild(S("rect",{x:X,y:YB,width:px(6),height:px(2.5),fill:V("froid"),
+    opacity:".35",stroke:V("froid"),"stroke-width":"1.5"}));
+  svg.appendChild(S("rect",{x:X,y:Y,width:px(4),height:px(1.5),fill:V("chaud"),
+    opacity:".35",stroke:V("chaud"),"stroke-width":"1.5"}));
+  svg.appendChild(S("path",{d:"M "+X+" "+Y+" H "+(X+px(4))+" V "+YB+" H "+(X+px(6))+
+    " V "+(YB+px(2.5))+" H "+X+" Z",fill:"none",stroke:V("encre"),"stroke-width":"2.5"}));
+  svg.appendChild(S("line",{x1:X,y1:YB,x2:X+px(4),y2:YB,stroke:V("encre"),"stroke-width":"2",
+    "stroke-dasharray":"7 4"}));
+  svg.appendChild(S("text",{x:X+px(2),y:Y+px(1.5)/2+5,"text-anchor":"middle","class":"s-lab",
+    fill:V("chaud")},"4 × 1,5 = 6 m²"));
+  svg.appendChild(S("text",{x:X+px(3),y:YB+px(2.5)/2+5,"text-anchor":"middle","class":"s-lab",
+    fill:V("froid")},"6 × 2,5 = 15 m²"));
+  svg.appendChild(S("text",{x:X+px(2),y:Y-10,"text-anchor":"middle","class":"s-pet"},"4 m"));
+  svg.appendChild(S("text",{x:X+px(6)+10,y:YB+px(1.25),"class":"s-pet"},"2,5 m"));
+  svg.appendChild(S("text",{x:X-10,y:Y+px(2),"text-anchor":"end","class":"s-pet"},"4 m"));
+  svg.appendChild(S("text",{x:X+px(3),y:YB+px(2.5)+22,"text-anchor":"middle","class":"s-pet"},"6 m"));
+  var XR=X+px(6)+70;
+  svg.appendChild(S("rect",{x:XR,y:Y+30,width:186,height:104,rx:"8",fill:V("carte2"),
+    stroke:V("trait"),"stroke-width":"1.5"}));
+  svg.appendChild(S("text",{x:XR+16,y:Y+56,"class":"s-lab"},"15 + 6"));
+  svg.appendChild(S("text",{x:XR+16,y:Y+86,"class":"s-lab",fill:V("vert"),
+    style:"font-size:18px"},"= 21 m²"));
+  svg.appendChild(S("text",{x:XR+16,y:Y+114,"class":"s-nom"},"le tour, lui, fait 20 m"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "Le décrochement se traite en <b>deux rectangles qu'on additionne</b>. Le trait "+
+    "pointillé n'existe pas sur le chantier : c'est une aide au calcul, et on peut "+
+    "le placer autrement — <b>le total ne change pas</b>."));
+};
+
+/* ─────────── CAP · l'angle droit au metre ruban ─────────── */
+SCHEMAS["triangle-3-4-5"]=function(el){
+  var W=724,H=300,E0=52,X=110,Y=250;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Le triangle 3-4-5 : trois longueurs suffisent a verifier un angle droit"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "L'ANGLE DROIT SANS ÉQUERRE : 3, 4, 5"));
+  var A=[X,Y],B=[X+4*E0,Y],C=[X,Y-3*E0];
+  svg.appendChild(S("path",{d:"M "+A[0]+" "+A[1]+" L "+B[0]+" "+B[1]+" L "+C[0]+" "+C[1]+" Z",
+    fill:V("froid"),opacity:".22",stroke:V("encre"),"stroke-width":"2.5"}));
+  svg.appendChild(S("path",{d:"M "+(A[0]+18)+" "+A[1]+" V "+(A[1]-18)+" H "+A[0],fill:"none",
+    stroke:V("chaud"),"stroke-width":"2.5"}));
+  svg.appendChild(S("text",{x:A[0]+26,y:A[1]-26,"class":"s-lab",fill:V("chaud")},"90°"));
+  svg.appendChild(S("text",{x:(A[0]+B[0])/2,y:Y+26,"text-anchor":"middle","class":"s-lab"},"4 m"));
+  svg.appendChild(S("text",{x:A[0]-14,y:(A[1]+C[1])/2,"text-anchor":"end","class":"s-lab"},"3 m"));
+  svg.appendChild(S("text",{x:(B[0]+C[0])/2+26,y:(B[1]+C[1])/2-8,"class":"s-lab",
+    fill:V("chaud"),style:"font-size:17px"},"5 m"));
+  var XR=420;
+  svg.appendChild(S("text",{x:XR,y:88,"class":"s-lab"},"3² + 4²"));
+  svg.appendChild(S("text",{x:XR,y:124,"class":"s-lab"},"9 + 16 = 25"));
+  svg.appendChild(S("text",{x:XR,y:160,"class":"s-lab",fill:V("chaud"),style:"font-size:17px"},
+    "√25 = 5"));
+  svg.appendChild(S("line",{x1:XR,y1:180,x2:XR+230,y2:180,stroke:V("trait2"),"stroke-width":"1"}));
+  ["on marque 3 m sur un mur,","4 m sur l'autre,",
+   "et si la diagonale fait 5 m","l'angle est droit."].forEach(function(t,i){
+    svg.appendChild(S("text",{x:XR,y:212+i*24,"class":"s-nom"},t));
+  });
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>Trois longueurs, un mètre ruban, rien d'autre.</b> Ça marche aussi avec 6-8-10 "+
+    "ou 30-40-50 : ce sont les mêmes proportions, et plus elles sont grandes, plus "+
+    "le tracé est précis. Une équerre de maçon, elle, se fausse en tombant."));
+};
+
+
+
+/* ─────────── 2DE CIEL · le facteur huit entre bits et octets ─────────── */
+SCHEMAS["bits-ou-octets"]=function(el){
+  var W=724,H=348;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Huit gigaoctets sous un gigabit par seconde : le facteur huit et la duree reelle"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "8 Go SOUS 1 Gbit/s : COMBIEN DE TEMPS, VRAIMENT ?"));
+  var defs=S("defs",{}),mk=S("marker",{id:"fl-bo",viewBox:"0 0 10 10",refX:"9",refY:"5",
+    markerWidth:"6",markerHeight:"6",orient:"auto-start-reverse"});
+  mk.appendChild(S("path",{d:"M 0 0 L 10 5 L 0 10 z",fill:V("trait")}));
+  defs.appendChild(mk); svg.appendChild(defs);
+  function voie(y,coul,marque,etapes,res,note){
+    svg.appendChild(S("rect",{x:34,y:y,width:560,height:58,rx:"8",fill:V("carte2"),
+      stroke:V(coul),"stroke-width":"2"}));
+    svg.appendChild(S("text",{x:50,y:y+36,"class":"s-lab",fill:V(coul),
+      style:"font-size:17px"},marque));
+    svg.appendChild(S("text",{x:86,y:y+24,"class":"s-lab"},etapes[0]));
+    svg.appendChild(S("text",{x:86,y:y+46,"class":"s-pet"},etapes[1]));
+    svg.appendChild(S("text",{x:578,y:y+36,"text-anchor":"end","class":"s-lab",fill:V(coul),
+      style:"font-size:18px"},res));
+    svg.appendChild(S("text",{x:610,y:y+36,"class":"s-nom",fill:V(coul)},note));
+  }
+  voie(52,"chaud","✗",["8 ÷ 1 = 8","on a divisé des Go par des Gbit"],"8 s","");
+  voie(144,"vert","✓",["8 Go = 64 Gbit, puis 64 ÷ 1","on a mis les deux dans la même unité"],
+       "64 s","");
+  svg.appendChild(S("path",{d:"M 300 140 L 300 114",fill:"none",stroke:V("trait"),
+    "stroke-width":"2.5","marker-end":"url(#fl-bo)"}));
+  svg.appendChild(S("text",{x:312,y:132,"class":"s-lab",fill:V("trait")},"× 8"));
+  svg.appendChild(S("line",{x1:34,y1:230,x2:690,y2:230,stroke:V("trait2"),"stroke-width":"1"}));
+  svg.appendChild(S("text",{x:34,y:262,"class":"s-lab"},"Le client, lui, a mis 3 minutes — 180 s."));
+  svg.appendChild(S("text",{x:34,y:290,"class":"s-pet"},
+    "64 Gbit ÷ 180 s = 0,36 Gbit/s, soit 355 Mbit/s réellement reçus"));
+  svg.appendChild(S("rect",{x:34,y:306,width:656,height:30,rx:"6",fill:V("chaud"),opacity:".18"}));
+  svg.appendChild(S("text",{x:46,y:326,"class":"s-lab",fill:V("chaud")},
+    "le débit annoncé n'est pas tenu — mais l'écart est de 3, pas de 8"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>Un octet vaut huit bits</b>, et les deux unités se ressemblent trop pour qu'on "+
+    "s'en méfie. Tant que la taille et le débit ne sont pas dans la même unité, le "+
+    "quotient ne veut rien dire — et <b>il a toujours l'air plausible</b>."));
+};
+
+/* ─────────── 2DE CIEL · qui protege qui ─────────── */
+SCHEMAS["qui-protege-qui"]=function(el){
+  var W=724,H=300;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Quatre dispositifs ranges selon ce qu'ils protegent : le materiel ou les personnes"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "QUATRE DISPOSITIFS, DEUX CHOSES À PROTÉGER"));
+  function colonne(x,coul,titre,items){
+    svg.appendChild(S("rect",{x:x,y:52,width:326,height:226,rx:"10",fill:V(coul),
+      opacity:".12"}));
+    svg.appendChild(S("rect",{x:x,y:52,width:326,height:226,rx:"10",fill:"none",
+      stroke:V(coul),"stroke-width":"2.5"}));
+    svg.appendChild(S("text",{x:x+163,y:80,"text-anchor":"middle","class":"s-lab",
+      fill:V(coul),style:"font-size:16px"},titre));
+    items.forEach(function(it,i){
+      var y=100+i*62;
+      svg.appendChild(S("rect",{x:x+16,y:y,width:294,height:52,rx:"6",fill:V("carte"),
+        stroke:V("trait2"),"stroke-width":"1"}));
+      svg.appendChild(S("text",{x:x+28,y:y+22,"class":"s-lab"},it[0]));
+      svg.appendChild(S("text",{x:x+28,y:y+41,"class":"s-pet"},it[1]));
+    });
+  }
+  colonne(22,"froid","IL PROTÈGE LE MATÉRIEL",[
+    ["le fusible","un courant trop fort — il se remplace"],
+    ["le disjoncteur","la même chose — il se réarme"]]);
+  colonne(376,"chaud","IL PROTÈGE LES PERSONNES",[
+    ["le disjoncteur différentiel","l'écart entre l'aller et le retour"],
+    ["la mise à la terre","rien : elle offre un chemin au courant"]]);
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>Les deux colonnes ne sont pas interchangeables.</b> Un disjoncteur parfaitement "+
+    "calibré laisse passer sans broncher les 30 mA qui tuent : il ne les voit pas, "+
+    "parce qu'il ne compte que ce qui passe dans le fil. Et <b>la mise à la terre ne "+
+    "détecte rien</b> — elle donne au courant un chemin plus facile que vous."));
+};
+
+/* ─────────── 2DE CIEL · jusqu'ou va la TBTS ─────────── */
+SCHEMAS["tbts-les-seuils"]=function(el){
+  var W=724,H=290,X0=90,X1=660,MAX=130,k=(X1-X0)/MAX;
+  function px(v){return v*k;}
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"La TBTS s'arrete a 50 volts alternatifs et 120 volts continus"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "JUSQU'OÙ VA LA TRÈS BASSE TENSION DE SÉCURITÉ"));
+  [{y:66,t:"ALTERNATIF",s:50,c:"chaud",note:1},
+   {y:150,t:"CONTINU",s:120,c:"froid",note:0}].forEach(function(L){
+    svg.appendChild(S("text",{x:X0-12,y:L.y+24,"text-anchor":"end","class":"s-lab"},L.t));
+    svg.appendChild(S("rect",{x:X0,y:L.y,width:px(L.s),height:34,rx:"4",fill:V(L.c),
+      opacity:".35",stroke:V(L.c),"stroke-width":"1.5"}));
+    svg.appendChild(S("rect",{x:X0+px(L.s),y:L.y,width:X1-X0-px(L.s),height:34,rx:"4",
+      fill:"none",stroke:V("trait2"),"stroke-width":"1.5","stroke-dasharray":"5 4"}));
+    svg.appendChild(S("text",{x:X0+px(L.s)-10,y:L.y+23,"text-anchor":"end","class":"s-lab",
+      fill:V(L.c)},L.s+" V"));
+    if(L.note)svg.appendChild(S("text",{x:X0+px(L.s)+12,y:L.y+23,"class":"s-nom"},
+      "au-delà, ce n'est plus de la TBTS"));
+  });
+  svg.appendChild(S("line",{x1:X0,y1:206,x2:X1,y2:206,stroke:V("encre"),"stroke-width":"2"}));
+  [[5,"5 V",-1],[12,"12 V",1],[48,"48 V",1]].forEach(function(p){
+    var x=X0+px(p[0]);
+    svg.appendChild(S("circle",{cx:x,cy:206,r:"5",fill:V("vert")}));
+    svg.appendChild(S("text",{x:x,y:p[2]<0?194:228,"text-anchor":"middle","class":"s-lab",
+      fill:V("vert")},p[1]));
+  });
+  svg.appendChild(S("text",{x:X0+px(60),y:228,"class":"s-nom"},
+    "le switch, les cartes, les capteurs — tous en continu, tous dans la zone"));
+  svg.appendChild(S("text",{x:X0,y:268,"class":"s-pet"},
+    "PoE : 625 mA sous 48 V — vingt fois le seuil du différentiel, et on le tient en main"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>Le seuil n'est pas le même en alternatif et en continu</b>, et c'est le "+
+    "continu qui est le plus permissif. Mais rester sous le seuil ne veut pas dire "+
+    "qu'il ne passe rien : <b>ce qui compte est le courant qui traverserait le corps</b>, "+
+    "pas celui qui circule dans le câble."));
+};
+
+/* ─────────── 2DE CIEL · la tension se partage ─────────── */
+SCHEMAS["diviseur-de-tension"]=function(el){
+  var W=724,H=334;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Deux resistances en serie : la tension se partage proportionnellement"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "DEUX RÉSISTANCES EN SÉRIE : QUI PREND QUOI"));
+  var L=70,R=330,T=86,Bo=238;
+  svg.appendChild(S("path",{d:"M "+L+" "+T+" H "+R+" V "+Bo+" H "+L+" Z",fill:"none",
+    stroke:V("encre"),"stroke-width":"2"}));
+  svg.appendChild(S("line",{x1:L,y1:(T+Bo)/2-18,x2:L,y2:(T+Bo)/2+18,stroke:V("encre"),
+    "stroke-width":"3"}));
+  svg.appendChild(S("line",{x1:L+9,y1:(T+Bo)/2-9,x2:L+9,y2:(T+Bo)/2+9,stroke:V("encre"),
+    "stroke-width":"3"}));
+  svg.appendChild(S("text",{x:L-12,y:(T+Bo)/2+5,"text-anchor":"end","class":"s-lab"},"5 V"));
+  function resistor(x,y,nom,val,coul){
+    svg.appendChild(S("rect",{x:x-30,y:y-13,width:60,height:26,fill:V("carte"),
+      stroke:V(coul),"stroke-width":"2.5"}));
+    svg.appendChild(S("text",{x:x,y:y-24,"text-anchor":"middle","class":"s-lab",
+      fill:V(coul)},nom));
+    svg.appendChild(S("text",{x:x,y:y+30,"text-anchor":"middle","class":"s-pet"},val));
+  }
+  resistor(180,T,"R1","300 Ω","froid");
+  resistor(280,Bo,"R2","200 Ω","chaud");
+  var XB=430,YB=96,HB=140;
+  svg.appendChild(S("text",{x:XB,y:YB-16,"class":"s-lab"},"la tension se partage"));
+  svg.appendChild(S("rect",{x:XB,y:YB,width:74,height:HB*0.6,fill:V("froid"),opacity:".45",
+    stroke:V("froid"),"stroke-width":"1.5"}));
+  svg.appendChild(S("rect",{x:XB,y:YB+HB*0.6,width:74,height:HB*0.4,fill:V("chaud"),
+    opacity:".45",stroke:V("chaud"),"stroke-width":"1.5"}));
+  svg.appendChild(S("text",{x:XB+86,y:YB+HB*0.3+6,"class":"s-lab",fill:V("froid")},
+    "U1 = 3 V   (60 %)"));
+  svg.appendChild(S("text",{x:XB+86,y:YB+HB*0.8+6,"class":"s-lab",fill:V("chaud")},
+    "U2 = 2 V   (40 %)"));
+  svg.appendChild(S("text",{x:XB,y:YB+HB+28,"class":"s-pet"},
+    "R1 = 60 % des 500 Ω, donc 60 % des 5 V"));
+  svg.appendChild(S("text",{x:XB,y:YB+HB+52,"class":"s-lab"},"E = U1 + U2"));
+  svg.appendChild(S("text",{x:XB,y:YB+HB+76,"class":"s-nom"},
+    "et le courant, lui, est le même dans les deux"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>Sur une seule maille, le courant est le même partout</b> — c'est ce qui fait "+
+    "que la tension, elle, se répartit en proportion des résistances. Doubler R1 sans "+
+    "toucher à R2 ne change pas la somme : <b>ce que l'une prend en plus, l'autre le "+
+    "perd</b>."));
+};
+
+/* ─────────── 2DE CIEL · la resistance de la LED ─────────── */
+SCHEMAS["led-et-sa-resistance"]=function(el){
+  var W=724,H=320;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Choisir la resistance d'une LED : trois volts pour elle, vingt milliamperes au plus"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "LA RÉSISTANCE QUI PROTÈGE LA LED"));
+  var L=64,R=330,T=88,Bo=226;
+  svg.appendChild(S("path",{d:"M "+L+" "+T+" H "+R+" V "+Bo+" H "+L+" Z",fill:"none",
+    stroke:V("encre"),"stroke-width":"2"}));
+  svg.appendChild(S("line",{x1:L,y1:(T+Bo)/2-18,x2:L,y2:(T+Bo)/2+18,stroke:V("encre"),
+    "stroke-width":"3"}));
+  svg.appendChild(S("line",{x1:L+9,y1:(T+Bo)/2-9,x2:L+9,y2:(T+Bo)/2+9,stroke:V("encre"),
+    "stroke-width":"3"}));
+  svg.appendChild(S("text",{x:L-10,y:(T+Bo)/2+5,"text-anchor":"end","class":"s-lab"},"5 V"));
+  svg.appendChild(S("rect",{x:150,y:T-13,width:60,height:26,fill:V("carte"),
+    stroke:V("froid"),"stroke-width":"2.5"}));
+  svg.appendChild(S("text",{x:180,y:T-24,"text-anchor":"middle","class":"s-lab",
+    fill:V("froid")},"R"));
+  svg.appendChild(S("text",{x:180,y:T+30,"text-anchor":"middle","class":"s-pet",
+    fill:V("froid")},"3 V"));
+  svg.appendChild(S("path",{d:"M 262 "+(T-13)+" L 262 "+(T+13)+" L 286 "+T+" Z",
+    fill:V("chaud"),stroke:V("chaud"),"stroke-width":"2"}));
+  svg.appendChild(S("line",{x1:286,y1:T-14,x2:286,y2:T+14,stroke:V("chaud"),"stroke-width":"2.5"}));
+  svg.appendChild(S("text",{x:274,y:T-24,"text-anchor":"middle","class":"s-lab",
+    fill:V("chaud")},"LED"));
+  svg.appendChild(S("text",{x:274,y:T+30,"text-anchor":"middle","class":"s-pet",
+    fill:V("chaud")},"2 V"));
+  svg.appendChild(S("text",{x:(L+R)/2,y:Bo+26,"text-anchor":"middle","class":"s-nom"},
+    "un seul chemin : 20 mA au plus, partout"));
+  var XC=400;
+  [["5 − 2 = 3 V","pour la résistance","encre"],
+   ["20 mA = 0,020 A","le maximum admis","encre"],
+   ["3 ÷ 0,020 = 150 Ω","la valeur calculée","chaud"]].forEach(function(t,i){
+    svg.appendChild(S("text",{x:XC,y:96+i*46,"class":"s-lab",
+      fill:V(t[2]),style:(t[2]==="chaud"?"font-size:17px":"")},t[0]));
+    svg.appendChild(S("text",{x:XC,y:114+i*46,"class":"s-pet"},t[1]));
+  });
+  var XE=XC,YE=254;
+  svg.appendChild(S("line",{x1:XE,y1:YE,x2:XE+240,y2:YE,stroke:V("encre"),"stroke-width":"2"}));
+  [[0,"120"],[110,"150"],[220,"180"]].forEach(function(p,i){
+    svg.appendChild(S("circle",{cx:XE+p[0],cy:YE,r:i===1?"6":"4",
+      fill:i===0?V("chaud"):V("vert")}));
+    svg.appendChild(S("text",{x:XE+p[0],y:YE+22,"text-anchor":"middle","class":"s-pet"},
+      p[1]+" Ω"));
+  });
+  svg.appendChild(S("text",{x:XE-10,y:YE+5,"text-anchor":"end","class":"s-nom",
+    fill:V("chaud")},"jamais"));
+  svg.appendChild(S("text",{x:XE+250,y:YE+5,"class":"s-nom",fill:V("vert")},"toujours"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "Le calcul donne un <b>maximum de courant</b>, donc un <b>minimum de résistance</b>. "+
+    "Descendre à 120 Ω ferait passer 25 mA et abîmerait la LED. <b>Quand un calcul donne "+
+    "une limite, on arrondit du côté qui protège</b> — ici vers le haut."));
+};
 
 
 /* --------- dispersion d'une serie de releves ---------

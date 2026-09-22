@@ -3,11 +3,11 @@
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta name="robots" content="noindex, nofollow">
 <title>Séquence 1 — grandeurs du numérique</title>
-<link rel="stylesheet" href="../assets/kit.css?v=a6b17ea9">
-<link rel="stylesheet" href="../assets/site.css?v=a6b17ea9">
-<link rel="stylesheet" href="../assets/cablage.css?v=a6b17ea9">
-<link rel="stylesheet" href="../assets/vivant.css?v=a6b17ea9">
-<link rel="stylesheet" href="../assets/doc.css?v=a6b17ea9">
+<link rel="stylesheet" href="../assets/kit.css?v=5b4b026f">
+<link rel="stylesheet" href="../assets/site.css?v=5b4b026f">
+<link rel="stylesheet" href="../assets/cablage.css?v=5b4b026f">
+<link rel="stylesheet" href="../assets/vivant.css?v=5b4b026f">
+<link rel="stylesheet" href="../assets/doc.css?v=5b4b026f">
 
 <div class="page" data-site="ciel2" data-page="cours/S1">
 <div class="jauge-lecture" id="jauge-lecture"><i></i></div><div class="barre-site"><a class="accueil" href="../index.html">Maths et physique-chimie — 2de Bac Pro CIEL</a><span class="fleches"><a class="fleche" href="S0.html" rel="prev" title="Où j'en suis" aria-label="Où j'en suis">&lsaquo;</a><a class="fleche" href="S2.html" rel="next" title="Séquence 2 — sécurité et mesures" aria-label="Séquence 2 — sécurité et mesures">&rsaquo;</a></span><button type="button" class="lu" data-lu="cours/S1">Marquer comme lu</button></div>
@@ -18,7 +18,7 @@
     <h1>Les grandeurs<span>du numérique</span></h1>
   </div>
   <p class="accroche">Un client trouve sa fibre lente. Il a téléchargé 8 Go en 3 minutes sur une ligne annoncée à 1 Gbit/s. Pour lui répondre, il faut un facteur 8 et une division — et savoir lequel des deux nombres est un débit.</p>
-  <p class="contenu">3 exercices · 36 items d'entraînement · 1 repli · 2 figures</p>
+  <p class="contenu">3 exercices · 36 items d'entraînement · 1 repli · 3 figures</p>
   <p class="k-savoirs">Savoirs travaillés</p><div class="savoirs"><span class="tag">AU Automatismes</span></div>
 </header>
 <aside class="prerequis"><p class="chapeau-p">Avant de commencer</p><ul><li><b><a href="../aide/AUTO-01-puissances-de-dix.html">Les puissances de 10 et les préfixes k, M, G, T</a></b><span class="ou">Auto 01 — puissances de 10</span><span class="car">un débit et une taille ne se lisent qu'avec eux.</span></li><li><b>Multiplier et diviser par 8</b><span class="car">c'est tout ce qui sépare un bit d'un octet, et c'est le seul facteur de la séquence qui ne soit pas une puissance de dix.</span></li></ul></aside>
@@ -50,6 +50,7 @@
 <p>L’<strong>écriture scientifique</strong> s’écrit <strong>a × 10ⁿ</strong>, avec <strong>1 ≤ a &lt; 10</strong>. Elle sert à comparer d’un coup d’œil : 4,7 × 10⁹ et 470 × 10⁷ sont le même nombre, mais un seul des deux le dit.</p>
 </div>
 <h2 id="du-debit-a-la-duree">Du débit à la durée</h2>
+<p>Une durée est un quotient, et un quotient n’a de sens que si <strong>les deux nombres parlent la même langue</strong>. Toute la difficulté tient là : les tailles s’écrivent en octets, les débits en bits, et rien à l’écran ne le rappelle.</p>
 <div class="etapes">
 <ol type="1">
 <li>Je mets la <strong>taille en mégaoctets</strong>.</li>
@@ -59,7 +60,13 @@
 </ol>
 </div>
 <div class="piege">
-<p>On ne divise jamais une taille en <strong>octets</strong> par un débit en <strong>bits</strong>. Le résultat sort huit fois trop grand, il a l’air plausible, et rien ne signale l’erreur.</p>
+<p>On ne divise jamais une taille en <strong>octets</strong> par un débit en <strong>bits</strong>. Le résultat sort <strong>huit fois trop petit</strong> — le téléchargement paraît huit fois plus rapide qu’il ne l’est. Il a l’air plausible, et rien ne signale l’erreur.</p>
+</div>
+<h3 id="le-cas-du-client-jusquau-bout">Le cas du client, jusqu’au bout</h3>
+<p>Ses 8 Go font <strong>64 Gbit</strong>. À 1 Gbit/s, le transfert aurait dû prendre <strong>64 secondes</strong>, soit un peu plus d’une minute. Il en a mis <strong>trois</strong>.</p>
+<figure class="schema"><div class="dessin" data-schema="bits-ou-octets"></div><figcaption>Le même téléchargement, calculé deux fois.</figcaption></figure>
+<div class="cle">
+<p><strong>Le client a raison de râler, mais pas du bon facteur.</strong> Il a reçu environ 355 Mbit/s là où on lui en promet 1 000 : l’écart est de <strong>trois</strong>, pas de huit. Et une part s’explique — le serveur d’en face, le Wi-Fi, le disque qui écrit.</p>
 </div>
 <h2 id="vous-verifier">Vous vérifier</h2>
 <section class="exo" id="S1-e1" data-exo="S1-e1" data-type="calcul" data-savoir="AU" data-a="IXgueGB4OTs2OS82eHZ4LHhgbm50bnZ4LjU2eGBodGp2eC94YHgXNXUpeCc="><p class="k">Exercice · AU</p><h4>Le débit réellement obtenu</h4><div class="enonce">
@@ -104,8 +111,8 @@
 </div><nav class="suite"><p class="chapeau-s">La suite</p><div class="pas-a-pas"><a class="av" href="S0.html" rel="prev"><span class="k">&lsaquo; Précédent</span><span class="t">Où j'en suis</span></a><a class="ap" href="S2.html" rel="next"><span class="k">Suivant &rsaquo;</span><span class="t">Séquence 2 — sécurité et mesures</span></a></div></nav>
 <p class="pied">Cette page rappelle la séquence. Elle ne remplace pas les documents distribués et ne donne aucun corrigé. Tous les calculs se font dans votre tablette ; rien n'est enregistré.</p><p class="pied-site"><a class="mentions" href="../mentions-legales.html">Mentions légales</a></p>
 </div>
-<script src="../assets/kit.js?v=a6b17ea9"></script>
-<script src="../assets/site.js?v=a6b17ea9"></script>
-<script src="../assets/vivant.js?v=a6b17ea9"></script>
-<script src="../assets/plan.js?v=a6b17ea9"></script>
-<script src="../assets/doc.js?v=a6b17ea9"></script>
+<script src="../assets/kit.js?v=5b4b026f"></script>
+<script src="../assets/site.js?v=5b4b026f"></script>
+<script src="../assets/vivant.js?v=5b4b026f"></script>
+<script src="../assets/plan.js?v=5b4b026f"></script>
+<script src="../assets/doc.js?v=5b4b026f"></script>
