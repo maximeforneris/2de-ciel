@@ -12651,6 +12651,1632 @@ SCHEMAS["centres-de-classe"]=function(el){
     "très différentes peuvent en sortir avec le même résultat."));
 };
 
+/* ─────────── CAP · la même eau sucrée dans trois récipients ─────────── */
+SCHEMAS["sucre-par-litre"]=function(el){
+  var W=724,H=324,BAS=220,PX=80;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Une eau sucree a 60 grammes par litre dans trois recipients de 0,5, 1 et 1,5 litre : 30, 60 et 90 grammes de sucre"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "LA MÊME EAU SUCRÉE, TROIS VOLUMES DIFFÉRENTS"));
+  svg.appendChild(S("text",{x:20,y:50,"class":"s-nom"},
+    "chaque litre contient 60 g de sucre, soit 12 morceaux de 5 g"));
+  var R=[{cx:150,v:"0,5 L",l:0.5,g:"30 g de sucre",m:"6 morceaux"},
+         {cx:362,v:"1 L",  l:1,  g:"60 g de sucre",m:"12 morceaux"},
+         {cx:574,v:"1,5 L",l:1.5,g:"90 g de sucre",m:"18 morceaux"}];
+  R.forEach(function(r){
+    var h=r.l*PX, haut=BAS-h-16, n=Math.round(60*r.l/5);
+    svg.appendChild(S("rect",{x:r.cx-60,y:BAS-h,width:120,height:h,
+      fill:V("froid"),opacity:".22"}));
+    svg.appendChild(S("path",{d:"M "+(r.cx-60)+" "+haut+" L "+(r.cx-60)+" "+BAS+
+      " L "+(r.cx+60)+" "+BAS+" L "+(r.cx+60)+" "+haut,
+      fill:"none",stroke:V("encre"),"stroke-width":"2"}));
+    svg.appendChild(S("text",{x:r.cx,y:haut-10,"text-anchor":"middle","class":"s-lab"},r.v));
+    for(var i=0;i<n;i++){
+      var col=i%6,rang=Math.floor(i/6);
+      svg.appendChild(S("rect",{x:r.cx-46+col*16,y:BAS-18-rang*16,width:12,height:12,
+        rx:"2",fill:V("carte"),stroke:V("encre2"),"stroke-width":"1"}));
+    }
+    svg.appendChild(S("text",{x:r.cx,y:BAS+24,"text-anchor":"middle","class":"s-lab"},r.g));
+    svg.appendChild(S("text",{x:r.cx,y:BAS+42,"text-anchor":"middle","class":"s-pet"},r.m));
+    svg.appendChild(S("text",{x:r.cx,y:BAS+66,"text-anchor":"middle","class":"s-pet",
+      fill:V("chaud")},"concentration : 60 g/L"));
+  });
+  svg.appendChild(S("text",{x:20,y:H-10,"class":"s-nom",fill:V("chaud")},
+    "La masse suit le volume. La concentration, elle, reste la même."));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>Verser moins, c'est verser moins de sucre — pas une boisson moins sucrée.</b> "+
+    "Les trois récipients contiennent la même eau sucrée : la masse se calcule en "+
+    "multipliant la concentration par le volume en litres, et <b>le tableau des "+
+    "trois est un tableau de proportionnalité</b>."));
+};
+
+/* ─────────── CAP · diluer, c'est completer jusqu'au trait ─────────── */
+SCHEMAS["completer-jusqu-au-trait"]=function(el){
+  var W=724,H=340,BAS=230,PX=150;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"200 mL d'un produit a 150 g/L completes a 1 litre : 30 g de produit, concentration divisee par cinq"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "DILUER CINQ FOIS : ON COMPLÈTE JUSQU'AU TRAIT"));
+  var defs=S("defs",{}),mk=S("marker",{id:"fl-dil",viewBox:"0 0 10 10",refX:"9",refY:"5",
+    markerWidth:"7",markerHeight:"7",orient:"auto-start-reverse"});
+  mk.appendChild(S("path",{d:"M 0 0 L 10 5 L 0 10 z",fill:V("trait")}));
+  defs.appendChild(mk); svg.appendChild(defs);
+  /* le concentre : 200 mL, a la meme echelle que le litre */
+  var hc=0.2*PX;
+  svg.appendChild(S("rect",{x:90,y:BAS-hc,width:80,height:hc,fill:V("chaud"),opacity:".6"}));
+  svg.appendChild(S("path",{d:"M 90 "+(BAS-50)+" L 90 "+BAS+" L 170 "+BAS+" L 170 "+(BAS-50),
+    fill:"none",stroke:V("encre"),"stroke-width":"2"}));
+  svg.appendChild(S("text",{x:130,y:BAS-80,"text-anchor":"middle","class":"s-lab"},"le concentré"));
+  svg.appendChild(S("text",{x:130,y:BAS-62,"text-anchor":"middle","class":"s-pet"},
+    "200 mL à 150 g/L"));
+  /* la fleche */
+  svg.appendChild(S("line",{x1:200,y1:190,x2:440,y2:190,stroke:V("trait"),"stroke-width":"2",
+    "marker-end":"url(#fl-dil)"}));
+  svg.appendChild(S("text",{x:320,y:178,"text-anchor":"middle","class":"s-nom"},
+    "on complète avec de l'eau"));
+  svg.appendChild(S("text",{x:320,y:212,"text-anchor":"middle","class":"s-pet",
+    fill:V("chaud")},"800 mL d'eau, pas 1 L"));
+  /* la solution diluee : 1 L */
+  var hd=PX, trait=BAS-hd;
+  svg.appendChild(S("rect",{x:480,y:trait,width:100,height:hd,fill:V("chaud"),opacity:".18"}));
+  svg.appendChild(S("path",{d:"M 480 "+(trait-14)+" L 480 "+BAS+" L 580 "+BAS+" L 580 "+(trait-14),
+    fill:"none",stroke:V("encre"),"stroke-width":"2"}));
+  svg.appendChild(S("line",{x1:474,y1:trait,x2:586,y2:trait,stroke:V("encre"),"stroke-width":"2"}));
+  svg.appendChild(S("text",{x:594,y:trait+4,"class":"s-pet"},"trait : 1 L"));
+  svg.appendChild(S("text",{x:530,y:52,"text-anchor":"middle","class":"s-lab"},"la solution diluée"));
+  svg.appendChild(S("text",{x:530,y:BAS-60,"text-anchor":"middle","class":"s-lab"},"1 L"));
+  svg.appendChild(S("text",{x:530,y:BAS-40,"text-anchor":"middle","class":"s-lab"},"à 30 g/L"));
+  /* le tableau */
+  svg.appendChild(S("line",{x1:30,y1:BAS+12,x2:W-20,y2:BAS+12,stroke:V("trait2"),"stroke-width":"1"}));
+  svg.appendChild(S("text",{x:300,y:BAS+30,"text-anchor":"middle","class":"s-pet"},"avant"));
+  svg.appendChild(S("text",{x:470,y:BAS+30,"text-anchor":"middle","class":"s-pet"},"après"));
+  [["le produit dissous","30 g","30 g","ne change pas"],
+   ["le volume","0,2 L","1 L","× 5"],
+   ["la concentration","150 g/L","30 g/L","÷ 5"]].forEach(function(L,i){
+    var y=BAS+52+i*22;
+    svg.appendChild(S("text",{x:40,y:y,"class":"s-nom"},L[0]));
+    svg.appendChild(S("text",{x:300,y:y,"text-anchor":"middle","class":"s-lab"},L[1]));
+    svg.appendChild(S("text",{x:470,y:y,"text-anchor":"middle","class":"s-lab"},L[2]));
+    svg.appendChild(S("text",{x:590,y:y,"class":"s-pet",fill:V(i===0?"vert":"chaud")},L[3]));
+  });
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>Diluer cinq fois, c'est amener le volume à cinq fois plus</b>, pas ajouter cinq "+
+    "fois plus d'eau. Les 30 g de produit versés ne bougent pas : ils se répartissent "+
+    "dans un volume cinq fois plus grand, donc <b>chaque litre en contient cinq fois "+
+    "moins</b>."));
+};
+
+/* ─────────── CAP · comparer des newtons a des newtons ─────────── */
+SCHEMAS["comparer-dans-la-meme-unite"]=function(el){
+  var W=724,H=330,BAS=250,k=0.75;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"200 newtons et 14 kilogrammes ne se comparent pas ; 14 kg font 140 N, il reste 60 N de marge"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "AVANT DE COMPARER, LA MÊME UNITÉ"));
+  svg.appendChild(S("line",{x1:362,y1:48,x2:362,y2:H-8,stroke:V("trait2"),"stroke-width":"1"}));
+  svg.appendChild(S("text",{x:191,y:60,"text-anchor":"middle","class":"s-nom"},"sans convertir"));
+  svg.appendChild(S("text",{x:553,y:60,"text-anchor":"middle","class":"s-nom"},"après conversion"));
+  function barre(x,val,c,lab){
+    svg.appendChild(S("rect",{x:x,y:BAS-Math.max(val*k,2),width:70,height:Math.max(val*k,2),
+      rx:"3",fill:V(c),opacity:".5",stroke:V(c),"stroke-width":"1.5"}));
+    svg.appendChild(S("text",{x:x+35,y:BAS+20,"text-anchor":"middle","class":"s-lab",
+      fill:V(c)},lab));
+  }
+  /* a gauche : les deux nombres bruts, 200 et 14 */
+  barre(95,200,"froid","200 N");
+  barre(215,14,"chaud","14 kg");
+  svg.appendChild(S("text",{x:191,y:BAS+46,"text-anchor":"middle","class":"s-nom"},
+    "on croit à une marge énorme"));
+  svg.appendChild(S("text",{x:191,y:BAS+66,"text-anchor":"middle","class":"s-pet",
+    fill:V("chaud")},"des newtons contre des kilos"));
+  /* a droite : 140 N contre 200 N */
+  barre(445,200,"froid","200 N");
+  barre(555,140,"chaud","140 N");
+  var yL=BAS-200*k, yC=BAS-140*k;
+  svg.appendChild(S("line",{x1:440,y1:yL,x2:650,y2:yL,stroke:V("froid"),"stroke-width":"1.5",
+    "stroke-dasharray":"5 4"}));
+  svg.appendChild(S("line",{x1:640,y1:yL,x2:640,y2:yC,stroke:V("encre"),"stroke-width":"1.5"}));
+  svg.appendChild(S("line",{x1:634,y1:yL,x2:646,y2:yL,stroke:V("encre"),"stroke-width":"1.5"}));
+  svg.appendChild(S("line",{x1:634,y1:yC,x2:646,y2:yC,stroke:V("encre"),"stroke-width":"1.5"}));
+  svg.appendChild(S("text",{x:652,y:(yL+yC)/2+5,"class":"s-lab",fill:V("vert")},"60 N"));
+  svg.appendChild(S("text",{x:553,y:BAS+46,"text-anchor":"middle","class":"s-nom"},
+    "14 kg × 10 = 140 N"));
+  svg.appendChild(S("text",{x:553,y:BAS+66,"text-anchor":"middle","class":"s-pet",
+    fill:V("vert")},"il reste 60 N, soit 6 kg"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>200 et 14 ne se comparent pas</b> : l'un est un poids en newtons, l'autre une "+
+    "masse en kilogrammes. Une fois la masse multipliée par 10, on compare des newtons "+
+    "à des newtons, et <b>la vraie marge apparaît</b> — bien plus petite qu'elle n'en "+
+    "avait l'air."));
+};
+
+/* ─────────── CAP · repartir la charge sur deux tablettes ─────────── */
+SCHEMAS["repartir-la-charge"]=function(el){
+  var W=724,H=310,X0=60,X1=620,MAX=300,k=(X1-X0)/MAX,XL=X0+200*k;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"26 kg sur une tablette : 260 N, au-dela des 200 N ; repartis sur deux tablettes : 130 N chacune"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "UNE CHARGE TROP LOURDE, PARTAGÉE EN DEUX"));
+  svg.appendChild(S("line",{x1:XL,y1:54,x2:XL,y2:272,stroke:V("chaud"),"stroke-width":"2",
+    "stroke-dasharray":"6 4"}));
+  svg.appendChild(S("text",{x:XL-8,y:48,"text-anchor":"end","class":"s-lab",fill:V("chaud")},
+    "limite : 200 N par tablette"));
+  var L=[{y:86, h:30,t:"26 kg sur une seule tablette",p:260,v:"260 N — non",c:"chaud"},
+         {y:184,h:26,t:"tablette du haut : 13 kg",    p:130,v:"130 N — oui",c:"froid"},
+         {y:240,h:26,t:"tablette du milieu : 13 kg",  p:130,v:"130 N — oui",c:"froid"}];
+  L.forEach(function(b){
+    svg.appendChild(S("text",{x:X0,y:b.y-8,"class":"s-lab"},b.t));
+    svg.appendChild(S("rect",{x:X0,y:b.y,width:b.p*k,height:b.h,rx:"4",
+      fill:V(b.c),opacity:".5",stroke:V(b.c),"stroke-width":"1.5"}));
+    svg.appendChild(S("text",{x:W-20,y:b.y-8,"text-anchor":"end","class":"s-lab",
+      fill:V(b.c)},b.v));
+    if(b.p>200)svg.appendChild(S("rect",{x:XL,y:b.y,width:(b.p-200)*k,height:b.h,rx:"4",
+      fill:V("chaud"),opacity:".95"}));
+  });
+  svg.appendChild(S("text",{x:X0,y:150,"class":"s-nom"},
+    "les mêmes livres, répartis sur deux tablettes :"));
+  svg.appendChild(S("line",{x1:X0,y1:280,x2:X1,y2:280,stroke:V("trait2"),"stroke-width":"1"}));
+  [0,100,200,300].forEach(function(p){
+    svg.appendChild(S("line",{x1:X0+p*k,y1:280,x2:X0+p*k,y2:286,stroke:V("trait2"),
+      "stroke-width":"1"}));
+    svg.appendChild(S("text",{x:X0+p*k,y:302,"text-anchor":"middle","class":"s-pet"},p+" N"));
+  });
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>Une tablette ne tient pas 26 kg, deux les tiennent sans peine</b> : chacune ne "+
+    "porte plus que la moitié. La limite de la notice vaut <b>pour chaque tablette</b>, "+
+    "pas pour l'étagère entière, et c'est ce qui rend la répartition possible."));
+};
+
+/* ─────────── CAP · la fluctuation, 60 lancers contre 600 ─────────── */
+SCHEMAS["fluctuation-60-600"]=function(el){
+  var W=724,H=318,X0=60,X1=680,MAX=25,k=(X1-X0)/MAX;
+  function fx(p){return X0+p*k;}
+  /* series tirees au hasard par ordinateur (graine fixe) : nombre de 6 obtenus */
+  var P60=[10,13,5,11,8,4,6,6,9,12].map(function(n){return n/60*100;});
+  var P600=[112,108,93,95,85,86,105,98,106,102].map(function(n){return n/600*100;});
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Part de 6 obtenue : de 7 a 22 % sur dix series de 60 lancers, de 14 a 19 % sur dix series de 600"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "DIX SÉRIES DE 60 LANCERS, DIX SÉRIES DE 600"));
+  var XP=fx(100/6);
+  svg.appendChild(S("line",{x1:XP,y1:58,x2:XP,y2:262,stroke:V("froid"),"stroke-width":"2",
+    "stroke-dasharray":"5 4"}));
+  svg.appendChild(S("text",{x:XP,y:50,"text-anchor":"middle","class":"s-lab",fill:V("froid")},
+    "1 chance sur 6 : 16,7 %"));
+  function bande(vals,yb,lab,texte,c){
+    svg.appendChild(S("text",{x:20,y:yb-32,"class":"s-nom"},lab));
+    var pos=[];
+    vals.slice().sort(function(a,b){return a-b;}).forEach(function(p){
+      var x=fx(p),pris={};
+      pos.forEach(function(q){if(Math.abs(q.x-x)<12)pris[q.n]=1;});
+      var n=0;while(pris[n])n++;
+      pos.push({x:x,n:n});
+      svg.appendChild(S("circle",{cx:x,cy:yb-n*13,r:"5.5",fill:V(c),opacity:".8"}));
+    });
+    var mn=Math.min.apply(null,vals),mx=Math.max.apply(null,vals);
+    svg.appendChild(S("line",{x1:fx(mn),y1:yb+16,x2:fx(mx),y2:yb+16,stroke:V(c),
+      "stroke-width":"2"}));
+    svg.appendChild(S("text",{x:fx(mn)-8,y:yb+20,"text-anchor":"end","class":"s-pet"},texte));
+  }
+  bande(P60,112,"10 séries de 60 lancers","de 7 % à 22 %","chaud");
+  bande(P600,210,"10 séries de 600 lancers","de 14 % à 19 %","vert");
+  svg.appendChild(S("line",{x1:X0,y1:262,x2:X1,y2:262,stroke:V("trait2"),"stroke-width":"1"}));
+  [0,5,10,15,20,25].forEach(function(p){
+    svg.appendChild(S("line",{x1:fx(p),y1:262,x2:fx(p),y2:268,stroke:V("trait2"),
+      "stroke-width":"1"}));
+    svg.appendChild(S("text",{x:fx(p),y:284,"text-anchor":"middle","class":"s-pet"},p+" %"));
+  });
+  svg.appendChild(S("text",{x:20,y:H-8,"class":"s-nom",fill:V("chaud")},
+    "Plus il y a de lancers, plus les points se serrent autour du trait."));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "Chaque point est une série de lancers <b>tirée au hasard par ordinateur</b>, placée "+
+    "selon la part de 6 obtenue. Sur soixante lancers, les points s'étalent loin du "+
+    "trait ; sur six cents, <b>ils se resserrent autour d'une chance sur six</b>, sans "+
+    "jamais tomber tous dessus."));
+};
+
+/* ─────────── CAP · la machine a pinces, sur cent parties ─────────── */
+SCHEMAS["machine-a-pinces"]=function(el){
+  var W=724,H=306,X0=60,X1=560,MAX=200,k=(X1-X0)/MAX;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Machine a pinces : 100 parties a 2 euros, 200 euros payes, 5 peluches a 15 euros, 75 euros recuperes"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "LA MACHINE À PINCES, SUR CENT PARTIES"));
+  var X=(W-(20*26-6))/2;
+  for(var i=0;i<20;i++){
+    var g=(i===6);
+    svg.appendChild(S("rect",{x:X+i*26,y:44,width:20,height:20,rx:"3",
+      fill:g?V("chaud"):"none",opacity:g?".85":"1",stroke:g?V("chaud"):V("trait2"),
+      "stroke-width":"1.5"}));
+  }
+  svg.appendChild(S("text",{x:W/2,y:86,"text-anchor":"middle","class":"s-nom"},
+    "en moyenne, une partie sur vingt attrape une peluche"));
+  /* ce qu'on paie */
+  svg.appendChild(S("text",{x:X0,y:118,"class":"s-lab"},"100 parties à 2 €"));
+  svg.appendChild(S("rect",{x:X0,y:126,width:200*k,height:30,rx:"4",fill:V("froid"),
+    opacity:".5",stroke:V("froid"),"stroke-width":"1.5"}));
+  svg.appendChild(S("text",{x:W-20,y:146,"text-anchor":"end","class":"s-lab",fill:V("froid")},
+    "200 € payés"));
+  /* ce qu'on recupere */
+  svg.appendChild(S("text",{x:X0,y:188,"class":"s-lab"},"5 peluches à 15 €"));
+  svg.appendChild(S("rect",{x:X0,y:196,width:75*k,height:30,rx:"4",fill:V("chaud"),
+    opacity:".5",stroke:V("chaud"),"stroke-width":"1.5"}));
+  svg.appendChild(S("rect",{x:X0+75*k,y:196,width:125*k,height:30,rx:"4",fill:"none",
+    stroke:V("encre2"),"stroke-width":"1.5","stroke-dasharray":"5 4"}));
+  svg.appendChild(S("text",{x:X0+137.5*k,y:216,"text-anchor":"middle","class":"s-nom"},
+    "125 € restent au forain"));
+  svg.appendChild(S("text",{x:W-20,y:216,"text-anchor":"end","class":"s-lab",fill:V("chaud")},
+    "75 € récupérés"));
+  svg.appendChild(S("line",{x1:X0,y1:246,x2:X1,y2:246,stroke:V("trait2"),"stroke-width":"1"}));
+  [0,50,100,150,200].forEach(function(e){
+    svg.appendChild(S("line",{x1:X0+e*k,y1:246,x2:X0+e*k,y2:252,stroke:V("trait2"),
+      "stroke-width":"1"}));
+    svg.appendChild(S("text",{x:X0+e*k,y:268,"text-anchor":"middle","class":"s-pet"},e+" €"));
+  });
+  svg.appendChild(S("text",{x:20,y:H-10,"class":"s-nom",fill:V("chaud")},
+    "Le forain ne compte pas sur la chance : il compte sur les cent parties."));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>Chaque joueur peut gagner, l'ensemble des joueurs perd.</b> Sur cent parties, on "+
+    "paie 200 € pour attraper en moyenne cinq peluches, qui en valent 75. "+
+    "<b>La différence reste dans la machine</b>, et elle se calcule avant de jouer."));
+};
+
+/* ─────────── CAP co-intervention · la verrerie de la paillasse ─────────── */
+SCHEMAS["verrerie-du-labo"]=function(el){
+  var W=724,H=334,B=232;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Cinq recipients de laboratoire : becher, erlenmeyer, eprouvette graduee, fiole jaugee, pipette, et le geste de chacun"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "CINQ RÉCIPIENTS, CINQ GESTES"));
+  function trace(d){
+    svg.appendChild(S("path",{d:d,fill:"none",stroke:V("encre2"),"stroke-width":"2",
+      "stroke-linejoin":"round"}));
+  }
+  function liquide(d){
+    svg.appendChild(S("path",{d:d,fill:V("froid"),opacity:".22"}));
+  }
+  function grad(x,y1,y2,n){
+    for(var i=0;i<=n;i++){
+      var y=y1+(y2-y1)*i/n;
+      svg.appendChild(S("line",{x1:x,y1:y,x2:x+(i%2?6:11),y2:y,stroke:V("encre2"),"stroke-width":"1.2"}));
+    }
+  }
+  function jauge(x,y,l){
+    svg.appendChild(S("line",{x1:x-l,y1:y,x2:x+l,y2:y,stroke:V("chaud"),"stroke-width":"2.5"}));
+  }
+  /* becher */
+  var x=82;
+  liquide("M "+(x-34)+" 190 L "+(x+34)+" 190 L "+(x+34)+" "+B+" L "+(x-34)+" "+B+" Z");
+  trace("M "+(x-42)+" 118 Q "+(x-34)+" 120 "+(x-34)+" 128 L "+(x-34)+" "+B+" L "+(x+34)+" "+B+" L "+(x+34)+" 120");
+  grad(x-30,140,210,4);
+  /* erlenmeyer */
+  x=222;
+  liquide("M "+(x-30)+" 200 L "+(x+30)+" 200 L "+(x+42)+" "+B+" L "+(x-42)+" "+B+" Z");
+  trace("M "+(x-9)+" 104 L "+(x-9)+" 146 L "+(x-42)+" "+B+" L "+(x+42)+" "+B+" L "+(x+9)+" 146 L "+(x+9)+" 104");
+  /* eprouvette graduee */
+  x=362;
+  liquide("M "+(x-12)+" 150 L "+(x+12)+" 150 L "+(x+12)+" 222 L "+(x-12)+" 222 Z");
+  trace("M "+(x-16)+" 86 L "+(x-12)+" 90 L "+(x-12)+" 222 L "+(x+12)+" 222 L "+(x+12)+" 90");
+  svg.appendChild(S("rect",{x:x-28,y:222,width:56,height:B-222,fill:V("trait"),stroke:V("encre2"),
+    "stroke-width":"1.5"}));
+  grad(x-12,100,214,10);
+  /* fiole jaugee */
+  x=502;
+  svg.appendChild(S("circle",{cx:x,cy:197,r:34,fill:V("froid"),opacity:".22"}));
+  svg.appendChild(S("rect",{x:x-7,y:112,width:14,height:56,fill:V("froid"),opacity:".22"}));
+  trace("M "+(x-7)+" 84 L "+(x-7)+" 162 A 36 36 0 1 0 "+(x+7)+" 162 L "+(x+7)+" 84");
+  jauge(x,112,14);
+  /* pipette jaugee */
+  x=642;
+  trace("M "+(x-3)+" 80 L "+(x-3)+" 128 Q "+(x-12)+" 134 "+(x-12)+" 150 Q "+(x-12)+" 166 "+(x-3)+" 172 L "+
+        (x-3)+" 218 L "+x+" "+B+" L "+(x+3)+" 218 L "+(x+3)+" 172 Q "+(x+12)+" 166 "+(x+12)+" 150 Q "+
+        (x+12)+" 134 "+(x+3)+" 128 L "+(x+3)+" 80");
+  liquide("M "+(x-3)+" 104 L "+(x+3)+" 104 L "+(x+3)+" 128 Q "+(x+12)+" 134 "+(x+12)+" 150 Q "+
+        (x+12)+" 166 "+(x+3)+" 172 L "+(x+3)+" 218 L "+x+" "+B+" L "+(x-3)+" 218 L "+(x-3)+" 172 Q "+
+        (x-12)+" 166 "+(x-12)+" 150 Q "+(x-12)+" 134 "+(x-3)+" 128 Z");
+  jauge(x,104,11);
+  svg.appendChild(S("line",{x1:30,y1:B+1,x2:W-30,y2:B+1,stroke:V("trait"),"stroke-width":"1.5"}));
+  /* noms et gestes */
+  var D=[[82,"bécher",["contenir,","mélanger"]],
+         [222,"erlenmeyer",["chauffer,","agiter"]],
+         [362,"éprouvette",["graduée : mesurer","un volume"]],
+         [502,"fiole jaugée",["préparer un","volume exact"]],
+         [642,"pipette",["jaugée : prélever","un volume exact"]]];
+  D.forEach(function(d){
+    svg.appendChild(S("text",{x:d[0],y:B+28,"text-anchor":"middle","class":"s-lab"},d[1]));
+    d[2].forEach(function(t,i){
+      svg.appendChild(S("text",{x:d[0],y:B+48+i*17,"text-anchor":"middle","class":"s-pet"},t));
+    });
+  });
+  svg.appendChild(S("text",{x:530,y:108,"class":"s-pet",fill:V("chaud")},"trait"));
+  svg.appendChild(S("text",{x:W/2,y:H-10,"text-anchor":"middle","class":"s-nom",fill:V("chaud")},
+    "en rouge, le trait de jauge : un seul trait, gravé sur un col étroit"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>Chaque récipient a son geste.</b> Plus le col est étroit à l'endroit où l'on "+
+    "lit, plus la lecture est précise : un millimètre de hauteur y représente très peu "+
+    "de liquide. C'est pour cela que la fiole et la pipette portent <b>un trait "+
+    "unique, sur un col fin</b>."));
+};
+
+/* ─────────── CAP co-intervention · des grammes par litre ─────────── */
+SCHEMAS["grammes-par-litre"]=function(el){
+  var W=724,H=346,YB=210,HP=150;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Trois flacons de 0,2 L, 0,4 L et 0,8 L avec 3 g, 6 g et 12 g de sel : la meme concentration, 15 grammes par litre"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "PLUS DE SEL DANS PLUS D'EAU : LA MÊME CONCENTRATION"));
+  var D=[[120,0.2,3,"200 mL = 0,2 L"],[362,0.4,6,"400 mL = 0,4 L"],[604,0.8,12,"800 mL = 0,8 L"]];
+  D.forEach(function(d){
+    var x=d[0],h=d[1]*HP,top=YB-h;
+    svg.appendChild(S("rect",{x:x-45,y:top,width:90,height:h,fill:V("froid"),opacity:".22"}));
+    svg.appendChild(S("path",{d:"M "+(x-45)+" "+(YB-HP)+" L "+(x-45)+" "+YB+" L "+(x+45)+" "+YB+" L "+(x+45)+" "+(YB-HP),
+      fill:"none",stroke:V("encre2"),"stroke-width":"2"}));
+    svg.appendChild(S("line",{x1:x-45,y1:top,x2:x+45,y2:top,stroke:V("froid"),"stroke-width":"1.5"}));
+    /* un grain par gramme */
+    for(var i=0;i<d[2];i++){
+      var c=i%4,r=Math.floor(i/4);
+      svg.appendChild(S("circle",{cx:x-27+c*18,cy:YB-10-r*14,r:"4",fill:V("tiede")}));
+    }
+    svg.appendChild(S("text",{x:x,y:YB+26,"text-anchor":"middle","class":"s-lab"},d[3]));
+    svg.appendChild(S("text",{x:x,y:YB+46,"text-anchor":"middle","class":"s-pet"},d[2]+" g de sel"));
+    svg.appendChild(S("text",{x:x,y:YB+68,"text-anchor":"middle","class":"s-lab",fill:V("vert")},
+      d[2]+" ÷ "+(d[1]+"").replace(".",",")+" = 15 g/L"));
+  });
+  svg.appendChild(S("text",{x:20,y:H-34,"class":"s-nom"},
+    "deux fois plus de sel dans deux fois plus d'eau : la concentration ne change pas"));
+  svg.appendChild(S("text",{x:20,y:H-14,"class":"s-nom",fill:V("chaud")},
+    "le piège : 3 ÷ 200 = 0,015 — le volume est resté en millilitres"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>Une concentration ne dépend pas de la taille du flacon</b> : elle dit combien "+
+    "de grammes il y a dans chaque litre. Doubler la masse et le volume ensemble, "+
+    "c'est la garder. <b>Le volume passe en litres avant la division</b>, sinon le "+
+    "résultat est mille fois trop petit."));
+};
+
+/* ─────────── CAP co-intervention · repos ou mouvement ─────────── */
+SCHEMAS["repos-ou-mouvement"]=function(el){
+  var W=724,H=318;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Une personne sur un escalier mecanique : au repos par rapport a la marche, en mouvement par rapport au sol"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "IMMOBILE OU EN MOUVEMENT : TOUT DÉPEND DU REPÈRE"));
+  /* l'escalier : de (60,250) a (330,90), en marches */
+  var X0=60,Y0=250,N=9,PX=30,PY=17.8;
+  var d="M "+X0+" "+Y0;
+  for(var i=0;i<N;i++){d+=" L "+(X0+i*PX)+" "+(Y0-(i+1)*PY)+" L "+(X0+(i+1)*PX)+" "+(Y0-(i+1)*PY);}
+  svg.appendChild(S("path",{d:d,fill:"none",stroke:V("encre2"),"stroke-width":"2"}));
+  svg.appendChild(S("line",{x1:X0-20,y1:Y0-44,x2:X0+N*PX+20,y2:Y0-N*PY-44,stroke:V("trait"),"stroke-width":"5",
+    "stroke-linecap":"round",opacity:".7"}));
+  svg.appendChild(S("text",{x:352,y:70,"class":"s-pet"},"main courante"));
+  svg.appendChild(S("line",{x1:20,y1:Y0+1,x2:X0,y2:Y0+1,stroke:V("encre"),"stroke-width":"2"}));
+  svg.appendChild(S("line",{x1:X0+N*PX,y1:Y0-N*PY,x2:370,y2:Y0-N*PY,stroke:V("encre"),"stroke-width":"2"}));
+  svg.appendChild(S("text",{x:24,y:Y0+22,"class":"s-pet"},"le sol"));
+  /* la personne, avant et apres */
+  function perso(k,op){
+    var px=X0+k*PX+PX/2, py=Y0-(k+1)*PY;
+    var g=S("g",{opacity:op});
+    g.appendChild(S("circle",{cx:px,cy:py-50,r:"7",fill:"none",stroke:V("chaud"),"stroke-width":"2.5"}));
+    g.appendChild(S("line",{x1:px,y1:py-43,x2:px,y2:py-20,stroke:V("chaud"),"stroke-width":"2.5"}));
+    g.appendChild(S("line",{x1:px,y1:py-20,x2:px-6,y2:py,stroke:V("chaud"),"stroke-width":"2.5"}));
+    g.appendChild(S("line",{x1:px,y1:py-20,x2:px+6,y2:py,stroke:V("chaud"),"stroke-width":"2.5"}));
+    g.appendChild(S("line",{x1:px,y1:py-36,x2:px+10,y2:py-26,stroke:V("chaud"),"stroke-width":"2.5"}));
+    svg.appendChild(g);
+    return [px,py];
+  }
+  var a=perso(1,".35"), b=perso(6,"1");
+  svg.appendChild(S("path",{d:"M "+(a[0]+22)+" "+(a[1]-58)+" L "+(b[0]-6)+" "+(b[1]-72),stroke:V("encre"),
+    "stroke-width":"1.8","stroke-dasharray":"5 4",fill:"none"}));
+  svg.appendChild(S("path",{d:"M "+(b[0]-16)+" "+(b[1]-72)+" L "+(b[0]-4)+" "+(b[1]-73)+" L "+(b[0]-11)+" "+(b[1]-63)+" Z",
+    fill:V("encre")}));
+  svg.appendChild(S("text",{x:110,y:100,"class":"s-pet"},"elle monte"));
+  /* le tableau */
+  var X=410,C=590;
+  svg.appendChild(S("text",{x:X,y:100,"class":"s-pet"},"par rapport à"));
+  svg.appendChild(S("text",{x:C,y:100,"class":"s-pet"},"la personne est"));
+  svg.appendChild(S("line",{x1:X,y1:110,x2:W-20,y2:110,stroke:V("trait2"),"stroke-width":"1"}));
+  [["la marche","au repos","vert"],["la main courante","au repos","vert"],
+   ["le sol","en mouvement","chaud"]].forEach(function(l,i){
+    svg.appendChild(S("text",{x:X,y:142+i*36,"class":"s-lab"},l[0]));
+    svg.appendChild(S("text",{x:C,y:142+i*36,"class":"s-lab",fill:V(l[2])},l[1]));
+  });
+  svg.appendChild(S("text",{x:X,y:262,"class":"s-nom"},"trois repères, deux réponses :"));
+  svg.appendChild(S("text",{x:X,y:280,"class":"s-nom"},"aucune n'est fausse"));
+  svg.appendChild(S("text",{x:20,y:H-12,"class":"s-nom",fill:V("chaud")},
+    "le référentiel s'écrit avant la description : « par rapport au sol, elle monte »"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>Avant de dire « ça bouge », on dit par rapport à quoi.</b> Sur l'escalier "+
+    "mécanique, la personne ne bouge pas par rapport à la marche qui la porte, et "+
+    "elle monte par rapport au magasin. <b>Les deux réponses sont justes</b> : c'est "+
+    "le référentiel qui a changé."));
+};
+
+/* ─────────── CAP co-intervention · deux forces, trois conditions ─────────── */
+SCHEMAS["deux-forces-trois-conditions"]=function(el){
+  var W=724,H=360,YH=145,YB=195;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Trois charges soumises a deux forces : une seule est en equilibre, celle ou les forces ont la meme droite, des sens opposes et la meme valeur"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "DEUX FORCES : LES TROIS CONDITIONS, OU RIEN"));
+  function fleche(x,y1,y2,c){
+    var s=y2>y1?1:-1;
+    svg.appendChild(S("line",{x1:x,y1:y1,x2:x,y2:y2-s*12,stroke:V(c),"stroke-width":"3.5"}));
+    svg.appendChild(S("path",{d:"M "+(x-7)+" "+(y2-s*14)+" L "+x+" "+y2+" L "+(x+7)+" "+(y2-s*14)+" Z",fill:V(c)}));
+  }
+  function caisse(x){
+    svg.appendChild(S("rect",{x:x-36,y:YH,width:72,height:YB-YH,rx:"3",fill:V("carte2"),
+      stroke:V("encre"),"stroke-width":"2"}));
+  }
+  var P=[
+    {x:121,dt:0,dp:0,ht:80,hp:80,ok:"oui : équilibre",l:["même droite, sens opposés,","même valeur"]},
+    {x:362,dt:-22,dp:22,ht:80,hp:80,ok:"non : elle tourne",l:["même valeur, sens opposés,","mais deux droites"]},
+    {x:603,dt:0,dp:0,ht:36,hp:80,ok:"non : elle descend",l:["même droite, sens opposés,","mais valeurs différentes"]}];
+  P.forEach(function(p,i){
+    caisse(p.x);
+    fleche(p.x+p.dt,YH,YH-p.ht,"froid");
+    fleche(p.x+p.dp,YB,YB+p.hp,"chaud");
+    svg.appendChild(S("text",{x:p.x+p.dt-12,y:YH-p.ht+14,"text-anchor":"end","class":"s-lab",fill:V("froid")},"T"));
+    svg.appendChild(S("text",{x:p.x+p.dp+12,y:YB+p.hp-4,"class":"s-lab",fill:V("chaud")},"P"));
+    svg.appendChild(S("text",{x:p.x,y:304,"text-anchor":"middle","class":"s-lab",
+      fill:V(i===0?"vert":"chaud")},p.ok));
+    p.l.forEach(function(t,j){
+      svg.appendChild(S("text",{x:p.x,y:324+j*17,"text-anchor":"middle","class":"s-pet"},t));
+    });
+  });
+  /* la rotation du cas du milieu */
+  svg.appendChild(S("path",{d:"M 416 150 A 34 34 0 0 1 416 190",fill:"none",stroke:V("encre2"),
+    "stroke-width":"2"}));
+  svg.appendChild(S("path",{d:"M 408 186 L 416 194 L 420 183 Z",fill:V("encre2")}));
+  svg.appendChild(S("text",{x:20,y:50,"class":"s-pet",fill:V("froid")},"T : la tension du câble"));
+  svg.appendChild(S("text",{x:230,y:50,"class":"s-pet",fill:V("chaud")},"P : le poids"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>Les trois conditions vont ensemble.</b> Deux forces de même valeur mais "+
+    "décalées font tourner la charge ; alignées mais inégales, elles la font monter "+
+    "ou descendre. <b>Sous un crochet, la charge s'aligne d'elle-même</b> : c'est "+
+    "pour cela qu'une charge suspendue et immobile vérifie toujours les trois."));
+};
+
+/* ─────────── CAP co-intervention · l'echelle des chances ─────────── */
+SCHEMAS["echelle-des-chances"]=function(el){
+  var W=724,H=290,X0=70,X1=654,Y=140;
+  function fx(p){return X0+p*(X1-X0);}
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Une regle de 0 a 1 : cinq evenements d'un de a six faces, de l'impossible au certain"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "UN DÉ À SIX FACES : DE L'IMPOSSIBLE AU CERTAIN"));
+  svg.appendChild(S("line",{x1:X0,y1:Y,x2:X1,y2:Y,stroke:V("encre"),"stroke-width":"2.5"}));
+  [[0,"0"],[0.5,"0,5"],[1,"1"]].forEach(function(t){
+    svg.appendChild(S("line",{x1:fx(t[0]),y1:Y-6,x2:fx(t[0]),y2:Y+6,stroke:V("encre"),"stroke-width":"2"}));
+    svg.appendChild(S("text",{x:fx(t[0]),y:Y+24,"text-anchor":"middle","class":"s-lab"},t[1]));
+  });
+  svg.appendChild(S("text",{x:fx(0),y:Y+44,"text-anchor":"middle","class":"s-pet",fill:V("chaud")},"impossible"));
+  svg.appendChild(S("text",{x:fx(1),y:Y+44,"text-anchor":"middle","class":"s-pet",fill:V("vert")},"certain"));
+  var E5=[[0,"obtenir 7","0 sur 6","chaud"],[1/6,"obtenir 6","1 sur 6","froid"],
+          [0.5,"un nombre pair","3 sur 6","encre"],[5/6,"pas de 6","5 sur 6","froid"],
+          [1,"de 1 à 6","6 sur 6","vert"]];
+  E5.forEach(function(e){
+    svg.appendChild(S("circle",{cx:fx(e[0]),cy:Y,r:"7",fill:V(e[3])}));
+    svg.appendChild(S("text",{x:fx(e[0]),y:Y-40,"text-anchor":"middle","class":"s-pet"},e[1]));
+    svg.appendChild(S("text",{x:fx(e[0]),y:Y-20,"text-anchor":"middle","class":"s-lab",fill:V(e[3])},e[2]));
+  });
+  /* les deux contraires */
+  var a=fx(1/6),b=fx(5/6);
+  svg.appendChild(S("path",{d:"M "+a+" "+(Y+32)+" L "+a+" "+(Y+72)+" L "+b+" "+(Y+72)+" L "+b+" "+(Y+32),
+    fill:"none",stroke:V("froid"),"stroke-width":"1.8","stroke-dasharray":"5 4"}));
+  svg.appendChild(S("text",{x:(a+b)/2,y:Y+96,"text-anchor":"middle","class":"s-lab",fill:V("froid")},
+    "contraires : 1 sur 6 + 5 sur 6 = 1"));
+  svg.appendChild(S("text",{x:20,y:H-12,"class":"s-nom"},
+    "une probabilité se place toujours sur cette règle : jamais sous 0, jamais au-delà de 1"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>Une probabilité se place sur une règle qui va de 0 à 1.</b> À 0, ce qui "+
+    "n'arrive jamais ; à 1, ce qui arrive à tous les coups. Un événement et son "+
+    "contraire se partagent la règle : <b>leurs deux probabilités font toujours 1</b>."));
+};
+
+/* ─────────── CAP co-intervention · le garage et sa goulotte ─────────── */
+SCHEMAS["garage-goulotte"]=function(el){
+  var W=724,H=352,K=70,X0=90,Y0=66,L=6*K,LA=3.5*K,P0=X0+1.8*K,P1=P0+2.4*K;
+  var X1=X0+L,Y1=Y0+LA;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Un garage de 6,00 m sur 3,50 m vu de dessus, avec une porte de 2,40 m : la goulotte longe les murs sauf devant la porte"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "LE GARAGE VU DE DESSUS : LA GOULOTTE LONGE LES MURS"));
+  /* les murs, la porte laissee ouverte */
+  svg.appendChild(S("rect",{x:X0,y:Y0,width:L,height:LA,fill:V("carte2"),stroke:"none"}));
+  svg.appendChild(S("path",{d:"M "+P0+" "+Y1+" L "+X0+" "+Y1+" L "+X0+" "+Y0+" L "+X1+" "+Y0+" L "+X1+" "+Y1+" L "+P1+" "+Y1,
+    fill:"none",stroke:V("encre"),"stroke-width":"5"}));
+  svg.appendChild(S("line",{x1:P0,y1:Y1,x2:P1,y2:Y1,stroke:V("encre2"),"stroke-width":"1.5",
+    "stroke-dasharray":"6 5"}));
+  /* la goulotte, a l'interieur des murs */
+  var g=9;
+  svg.appendChild(S("path",{d:"M "+P0+" "+(Y1-g)+" L "+(X0+g)+" "+(Y1-g)+" L "+(X0+g)+" "+(Y0+g)+" L "+(X1-g)+" "+(Y0+g)+
+    " L "+(X1-g)+" "+(Y1-g)+" L "+P1+" "+(Y1-g),fill:"none",stroke:V("chaud"),"stroke-width":"4"}));
+  /* le point lumineux et les deux prises */
+  var cx=X0+L/2,cy=Y0+LA/2;
+  svg.appendChild(S("circle",{cx:cx,cy:cy,r:"11",fill:"none",stroke:V("froid"),"stroke-width":"2"}));
+  svg.appendChild(S("path",{d:"M "+(cx-8)+" "+(cy-8)+" L "+(cx+8)+" "+(cy+8)+" M "+(cx+8)+" "+(cy-8)+" L "+(cx-8)+" "+(cy+8),
+    stroke:V("froid"),"stroke-width":"2"}));
+  svg.appendChild(S("text",{x:cx,y:cy+30,"text-anchor":"middle","class":"s-pet"},"point lumineux"));
+  [[X0+1.2*K,Y0+g],[X1-1.2*K,Y0+g]].forEach(function(p){
+    svg.appendChild(S("path",{d:"M "+(p[0]-9)+" "+(p[1]+2)+" A 9 9 0 0 0 "+(p[0]+9)+" "+(p[1]+2)+" Z",
+      fill:V("froid"),opacity:".5",stroke:V("froid"),"stroke-width":"1.5"}));
+  });
+  svg.appendChild(S("text",{x:X0+1.2*K,y:Y0+40,"text-anchor":"middle","class":"s-pet"},"prise"));
+  svg.appendChild(S("text",{x:X1-1.2*K,y:Y0+40,"text-anchor":"middle","class":"s-pet"},"prise"));
+  /* les cotes */
+  svg.appendChild(S("text",{x:X0+L/2,y:Y0-12,"text-anchor":"middle","class":"s-lab"},"6,00 m"));
+  svg.appendChild(S("text",{x:X0-10,y:Y0+LA/2+5,"text-anchor":"end","class":"s-lab"},"3,50 m"));
+  svg.appendChild(S("text",{x:(P0+P1)/2,y:Y1+24,"text-anchor":"middle","class":"s-lab",fill:V("encre2")},
+    "porte : 2,40 m"));
+  /* ce qu'il faut retenir, a droite */
+  var X=X1+26;
+  svg.appendChild(S("line",{x1:X,y1:Y0+6,x2:X+26,y2:Y0+6,stroke:V("chaud"),"stroke-width":"4"}));
+  svg.appendChild(S("text",{x:X,y:Y0+32,"class":"s-lab",fill:V("chaud")},"la goulotte"));
+  ["le tour du garage,","moins la porte"].forEach(function(t,i){
+    svg.appendChild(S("text",{x:X,y:Y0+52+i*18,"class":"s-pet"},t));
+  });
+  svg.appendChild(S("text",{x:X,y:Y0+124,"class":"s-lab"},"les barres"));
+  ["de 2 m : on","arrondit au-dessus"].forEach(function(t,i){
+    svg.appendChild(S("text",{x:X,y:Y0+144+i*18,"class":"s-pet"},t));
+  });
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>La goulotte suit les murs, et s'arrête à la porte.</b> Le tour du garage se "+
+    "compte comme celui du local à vélos, puis on retire la largeur de la porte. "+
+    "Les barres ne se coupent pas à la commande : <b>une barre entamée est une "+
+    "barre achetée</b>."));
+};
+
+/* ═══════════ CAP · cours V2, séquences 5, 6 et 7 — lot A ═══════════ */
+
+/* ─────────── CAP · deux échelles de température ─────────── */
+SCHEMAS["deux-echelles-temperature"]=function(el){
+  var W=724,H=320,TMIN=-273,TMAX=100,Y0=290,Y1=64,XC=250,XK=450;
+  function py(t){return Y0-(t-TMIN)/(TMAX-TMIN)*(Y0-Y1);}
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Les degres Celsius et les kelvins cote a cote : meme taille de degre, decalage de 273"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "UNE MÊME TEMPÉRATURE, DEUX NOMBRES : LES DEGRÉS ONT LA MÊME TAILLE"));
+  svg.appendChild(S("text",{x:XC,y:52,"text-anchor":"middle","class":"s-lab"},"en °C"));
+  svg.appendChild(S("text",{x:XK,y:52,"text-anchor":"middle","class":"s-lab"},"en K"));
+  [XC,XK].forEach(function(x){
+    svg.appendChild(S("line",{x1:x,y1:Y1-2,x2:x,y2:Y0,stroke:V("encre"),"stroke-width":"2"}));
+  });
+  [[90,"le café"],[40,"un bain chaud"],[-10,"un hiver froid"],[-273,"le zéro absolu"]]
+  .forEach(function(p){
+    var y=py(p[0]),k=p[0]+273,zero=(p[0]===-273);
+    svg.appendChild(S("line",{x1:XC-6,y1:y,x2:XC+6,y2:y,stroke:V("encre"),"stroke-width":"2"}));
+    svg.appendChild(S("line",{x1:XK-6,y1:y,x2:XK+6,y2:y,stroke:V("encre"),"stroke-width":"2"}));
+    svg.appendChild(S("line",{x1:XC+8,y1:y,x2:XK-8,y2:y,stroke:V("trait2"),
+      "stroke-width":"1.5","stroke-dasharray":"4 4"}));
+    svg.appendChild(S("text",{x:(XC+XK)/2,y:y-5,"text-anchor":"middle","class":"s-pet",
+      fill:V("violet")},"+ 273"));
+    svg.appendChild(S("text",{x:XC-12,y:y+5,"text-anchor":"end","class":"s-lab",
+      fill:zero?V("froid"):V("encre")},(p[0]<0?"−"+(-p[0]):p[0])+" °C"));
+    svg.appendChild(S("text",{x:XC-92,y:y+5,"text-anchor":"end","class":"s-pet"},p[1]));
+    svg.appendChild(S("text",{x:XK+12,y:y+5,"class":"s-lab",
+      fill:zero?V("froid"):V("encre")},k+" K"));
+  });
+  /* le même écart des deux côtés */
+  var ya=py(40),yb=py(-10),XB=548;
+  svg.appendChild(S("path",{d:"M "+(XB-6)+" "+ya+" L "+XB+" "+ya+" L "+XB+" "+yb+" L "+(XB-6)+" "+yb,
+    fill:"none",stroke:V("vert"),"stroke-width":"2"}));
+  svg.appendChild(S("text",{x:XB+12,y:ya-2,"class":"s-pet"},"de −10 à 40 °C :"));
+  svg.appendChild(S("text",{x:XB+12,y:ya+16,"class":"s-lab",fill:V("vert")},"50 degrés"));
+  svg.appendChild(S("text",{x:XB+12,y:ya+42,"class":"s-pet"},"de 263 à 313 K :"));
+  svg.appendChild(S("text",{x:XB+12,y:ya+60,"class":"s-lab",fill:V("vert")},"50 aussi"));
+  svg.appendChild(S("text",{x:XK+12,y:Y0-18,"class":"s-pet",fill:V("froid")},
+    "rien ne descend plus bas"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>Les deux échelles ont des degrés de la même taille</b> : seul le point de départ "+
+    "change. Le kelvin part du zéro absolu, 273 degrés sous la glace fondante. Pour passer "+
+    "des °C aux K, <b>on ajoute 273</b> ; pour revenir, on retire 273."));
+};
+
+/* ─────────── CAP · la chaleur va du chaud vers le froid ─────────── */
+SCHEMAS["du-chaud-vers-le-froid"]=function(el){
+  function capPointe(x1,y1,x2,y2,coul,t){var dx=x2-x1,dy=y2-y1,L=Math.sqrt(dx*dx+dy*dy),ux=dx/L,uy=dy/L,bx=x2-ux*t,by=y2-uy*t,px=-uy*t*0.55,py=ux*t*0.55;
+    return S("path",{d:"M "+x2+" "+y2+" L "+(bx+px)+" "+(by+py)+" L "+(bx-px)+" "+(by-py)+" Z",fill:coul});}
+  var W=724,H=270;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"La chaleur passe du verre chaud au verre froid, de la chambre vers le dehors, et ne passe plus entre deux corps a la meme temperature"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "LA CHALEUR VA TOUJOURS DU PLUS CHAUD VERS LE PLUS FROID"));
+  function verre(cx,coul,txt){
+    var w=62,top=120,h=70;
+    svg.appendChild(S("path",{d:"M "+(cx-w/2)+" "+top+" L "+(cx+w/2)+" "+top+" L "+(cx+w/2-7)+" "+
+      (top+h)+" L "+(cx-w/2+7)+" "+(top+h)+" Z",fill:V(coul),"fill-opacity":".18",
+      stroke:V(coul),"stroke-width":"2"}));
+    svg.appendChild(S("text",{x:cx,y:top+42,"text-anchor":"middle","class":"s-lab",fill:V(coul)},txt));
+  }
+  function fleche(x1,x2,y){
+    svg.appendChild(S("line",{x1:x1,y1:y,x2:x2-8,y2:y,stroke:V("chaud"),"stroke-width":"3"}));
+    svg.appendChild(capPointe(x1,y,x2,y,V("chaud"),12));
+  }
+  [243,481].forEach(function(x){
+    svg.appendChild(S("line",{x1:x,y1:48,x2:x,y2:250,stroke:V("trait2"),"stroke-width":"1",
+      "stroke-dasharray":"4 4"}));
+  });
+  /* 1. deux verres */
+  svg.appendChild(S("text",{x:125,y:66,"text-anchor":"middle","class":"s-nom"},"deux verres en contact"));
+  verre(80,"chaud","60 °C"); verre(170,"froid","20 °C");
+  fleche(86,166,102);
+  svg.appendChild(S("text",{x:125,y:92,"text-anchor":"middle","class":"s-pet",fill:V("chaud")},"chaleur"));
+  svg.appendChild(S("text",{x:125,y:222,"text-anchor":"middle","class":"s-pet"},"le chaud se refroidit,"));
+  svg.appendChild(S("text",{x:125,y:240,"text-anchor":"middle","class":"s-pet"},"le froid se réchauffe"));
+  /* 2. la chambre et le dehors */
+  svg.appendChild(S("text",{x:362,y:66,"text-anchor":"middle","class":"s-nom"},"la chambre et le dehors"));
+  svg.appendChild(S("rect",{x:352,y:86,width:20,height:114,fill:V("carte2"),stroke:V("encre2"),
+    "stroke-width":"1.5"}));
+  svg.appendChild(S("text",{x:300,y:150,"text-anchor":"middle","class":"s-lab",fill:V("chaud")},"19 °C"));
+  svg.appendChild(S("text",{x:300,y:170,"text-anchor":"middle","class":"s-pet"},"la chambre"));
+  svg.appendChild(S("text",{x:425,y:150,"text-anchor":"middle","class":"s-lab",fill:V("froid")},"3 °C"));
+  svg.appendChild(S("text",{x:425,y:170,"text-anchor":"middle","class":"s-pet"},"dehors"));
+  fleche(290,432,112);
+  svg.appendChild(S("text",{x:312,y:102,"text-anchor":"middle","class":"s-pet",fill:V("chaud")},"chaleur"));
+  svg.appendChild(S("text",{x:362,y:222,"text-anchor":"middle","class":"s-pet"},"la chaleur sort :"));
+  svg.appendChild(S("text",{x:362,y:240,"text-anchor":"middle","class":"s-pet"},"le froid n'entre pas"));
+  /* 3. même température */
+  svg.appendChild(S("text",{x:600,y:66,"text-anchor":"middle","class":"s-nom"},"même température"));
+  verre(555,"tiede","20 °C"); verre(645,"tiede","20 °C");
+  svg.appendChild(S("text",{x:600,y:166,"text-anchor":"middle","class":"s-lab"},"="));
+  svg.appendChild(S("text",{x:600,y:102,"text-anchor":"middle","class":"s-pet"},"aucune flèche"));
+  svg.appendChild(S("text",{x:600,y:222,"text-anchor":"middle","class":"s-pet"},"plus rien ne passe :"));
+  svg.appendChild(S("text",{x:600,y:240,"text-anchor":"middle","class":"s-pet",fill:V("vert")},
+    "l'équilibre thermique"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>Le froid ne se déplace pas : c'est la chaleur qui part.</b> Elle passe tant "+
+    "qu'il y a un écart de température, dans un seul sens, et s'arrête quand les deux "+
+    "corps sont au même niveau."));
+};
+
+/* ─────────── CAP · isoler ralentit la perte ─────────── */
+SCHEMAS["isoler-ralentit"]=function(el){
+  function capPointe(x1,y1,x2,y2,coul,t){var dx=x2-x1,dy=y2-y1,L=Math.sqrt(dx*dx+dy*dy),ux=dx/L,uy=dy/L,bx=x2-ux*t,by=y2-uy*t,px=-uy*t*0.55,py=ux*t*0.55;
+    return S("path",{d:"M "+x2+" "+y2+" L "+(bx+px)+" "+(by+py)+" L "+(bx-px)+" "+(by-py)+" Z",fill:coul});}
+  var W=724,H=324,XR=360,PH=13;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Sans isolant, beaucoup de chaleur traverse le mur et le radiateur tourne 5 heures ; avec isolant, moins de chaleur passe et il tourne 3 heures"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "ISOLER NE BOUCHE PAS LA SORTIE : ÇA LA RÉTRÉCIT"));
+  function rangee(y0,isole){
+    var coul=isole?"froid":"chaud",h=isole?3:5;
+    svg.appendChild(S("text",{x:30,y:y0+12,"class":"s-nom",fill:V(coul)},
+      isole?"avec isolation":"sans isolation"));
+    svg.appendChild(S("text",{x:60,y:y0+56,"text-anchor":"middle","class":"s-lab",fill:V("chaud")},"20 °C"));
+    svg.appendChild(S("text",{x:60,y:y0+74,"text-anchor":"middle","class":"s-pet"},"dedans"));
+    svg.appendChild(S("rect",{x:150,y:y0+22,width:22,height:74,fill:V("carte2"),
+      stroke:V("encre2"),"stroke-width":"1.5"}));
+    if(isole){
+      svg.appendChild(S("rect",{x:172,y:y0+22,width:30,height:74,fill:V("tiede"),
+        "fill-opacity":".35",stroke:V("tiede"),"stroke-width":"1.5"}));
+      svg.appendChild(S("text",{x:187,y:y0+16,"text-anchor":"middle","class":"s-pet",
+        fill:V("tiede")},"l'isolant"));
+    }
+    svg.appendChild(S("text",{x:290,y:y0+56,"text-anchor":"middle","class":"s-lab",fill:V("froid")},"5 °C"));
+    svg.appendChild(S("text",{x:290,y:y0+74,"text-anchor":"middle","class":"s-pet"},"dehors"));
+    var ys=isole?[y0+44,y0+72]:[y0+34,y0+58,y0+82],ep=isole?"2":"5";
+    ys.forEach(function(y){
+      svg.appendChild(S("line",{x1:98,y1:y,x2:240,y2:y,stroke:V("chaud"),"stroke-width":ep,
+        "stroke-opacity":".8"}));
+      svg.appendChild(capPointe(98,y,252,y,V("chaud"),isole?9:13));
+    });
+    svg.appendChild(S("text",{x:XR,y:y0+30,"class":"s-nom"},"le radiateur tourne"));
+    svg.appendChild(S("rect",{x:XR,y:y0+42,width:24*PH,height:22,rx:"3",fill:V("carte2"),
+      stroke:V("trait2"),"stroke-width":"1"}));
+    svg.appendChild(S("rect",{x:XR,y:y0+42,width:h*PH,height:22,rx:"3",fill:V("chaud"),
+      "fill-opacity":".6"}));
+    svg.appendChild(S("text",{x:XR+h*PH+10,y:y0+58,"class":"s-lab"},h+" h par jour"));
+    svg.appendChild(S("text",{x:XR,y:y0+82,"class":"s-pet"},"0 h"));
+    svg.appendChild(S("text",{x:XR+24*PH,y:y0+82,"text-anchor":"end","class":"s-pet"},"24 h"));
+  }
+  rangee(58,false);
+  rangee(178,true);
+  svg.appendChild(S("text",{x:30,y:H-26,"class":"s-nom"},
+    "Dans les deux cas la chaleur sort : l'isolant la fait passer moins vite,"));
+  svg.appendChild(S("text",{x:30,y:H-8,"class":"s-nom"},
+    "et le radiateur a moins à remplacer."));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "Tant que dehors est plus froid, <b>la chaleur traverse le mur, isolé ou non</b>. "+
+    "L'isolant la freine : il en passe moins à chaque heure, et <b>le radiateur tourne "+
+    "moins longtemps</b> pour garder la chambre à la même température."));
+};
+
+/* ─────────── CAP · les angles depuis la normale ─────────── */
+SCHEMAS["normale-d-abord"]=function(el){
+  function capPointe(x1,y1,x2,y2,coul,t){var dx=x2-x1,dy=y2-y1,L=Math.sqrt(dx*dx+dy*dy),ux=dx/L,uy=dy/L,bx=x2-ux*t,by=y2-uy*t,px=-uy*t*0.55,py=ux*t*0.55;
+    return S("path",{d:"M "+x2+" "+y2+" L "+(bx+px)+" "+(by+py)+" L "+(bx-px)+" "+(by-py)+" Z",fill:coul});}
+  var W=724,H=300,A=50*Math.PI/180,R=170,RA=56;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Un rayon a 50 degres de la normale : mesure depuis le miroir, on lit 40 degres, le complement a 90"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "LES ANGLES SE MESURENT DEPUIS LA NORMALE, PAS DEPUIS LE MIROIR"));
+  function panneau(cx,bon){
+    var Py=220,sa=Math.sin(A),ca=Math.cos(A);
+    svg.appendChild(S("line",{x1:cx-140,y1:Py,x2:cx+140,y2:Py,stroke:V("encre"),"stroke-width":"3"}));
+    for(var x=cx-132;x<=cx+140;x+=16){
+      svg.appendChild(S("line",{x1:x,y1:Py+2,x2:x-10,y2:Py+13,stroke:V("encre2"),"stroke-width":"1"}));
+    }
+    svg.appendChild(S("line",{x1:cx,y1:Py,x2:cx,y2:70,stroke:V("encre2"),"stroke-width":"1.5",
+      "stroke-dasharray":"5 4",opacity:bon?"1":".45"}));
+    svg.appendChild(S("text",{x:cx+6,y:80,"class":"s-pet",opacity:bon?"1":".6"},"la normale"));
+    var xi=cx-R*sa,yi=Py-R*ca,xr=cx+R*sa;
+    svg.appendChild(S("line",{x1:xi,y1:yi,x2:cx-3,y2:Py-3,stroke:V("tiede"),"stroke-width":"2.5"}));
+    svg.appendChild(capPointe(xi,yi,cx,Py,V("tiede"),12));
+    svg.appendChild(S("line",{x1:cx,y1:Py,x2:xr,y2:yi,stroke:V("tiede"),"stroke-width":"2.5"}));
+    svg.appendChild(capPointe(cx,Py,xr,yi,V("tiede"),12));
+    if(bon){
+      svg.appendChild(S("path",{d:"M "+cx+" "+(Py-RA)+" A "+RA+" "+RA+" 0 0 0 "+(cx-RA*sa)+" "+(Py-RA*ca),
+        fill:"none",stroke:V("vert"),"stroke-width":"2"}));
+      svg.appendChild(S("path",{d:"M "+cx+" "+(Py-RA)+" A "+RA+" "+RA+" 0 0 1 "+(cx+RA*sa)+" "+(Py-RA*ca),
+        fill:"none",stroke:V("vert"),"stroke-width":"2"}));
+      svg.appendChild(S("text",{x:cx-8,y:150,"text-anchor":"end","class":"s-lab",fill:V("vert")},"i = 50°"));
+      svg.appendChild(S("text",{x:cx+8,y:150,"class":"s-lab",fill:V("vert")},"r = 50°"));
+      svg.appendChild(S("text",{x:cx,y:56,"text-anchor":"middle","class":"s-nom",fill:V("vert")},
+        "depuis la normale : oui"));
+      svg.appendChild(S("text",{x:cx,y:264,"text-anchor":"middle","class":"s-lab",fill:V("vert")},
+        "i = r = 50°"));
+      svg.appendChild(S("text",{x:cx,y:284,"text-anchor":"middle","class":"s-pet"},
+        "la loi se vérifie"));
+    } else {
+      svg.appendChild(S("path",{d:"M "+(cx-RA)+" "+Py+" A "+RA+" "+RA+" 0 0 1 "+(cx-RA*sa)+" "+(Py-RA*ca),
+        fill:"none",stroke:V("chaud"),"stroke-width":"2"}));
+      svg.appendChild(S("text",{x:cx-64,y:212,"text-anchor":"end","class":"s-lab",fill:V("chaud")},"40°"));
+      svg.appendChild(S("text",{x:cx,y:56,"text-anchor":"middle","class":"s-nom",fill:V("chaud")},
+        "depuis le miroir : non"));
+      svg.appendChild(S("text",{x:cx,y:264,"text-anchor":"middle","class":"s-lab",fill:V("chaud")},
+        "on lit 40° au lieu de 50°"));
+      svg.appendChild(S("text",{x:cx,y:284,"text-anchor":"middle","class":"s-pet"},
+        "c'est le complément à 90°"));
+    }
+  }
+  svg.appendChild(S("line",{x1:362,y1:44,x2:362,y2:290,stroke:V("trait2"),"stroke-width":"1",
+    "stroke-dasharray":"4 4"}));
+  panneau(180,true);
+  panneau(542,false);
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>La normale se trace en premier</b>, perpendiculaire au miroir, au point où le "+
+    "rayon arrive. Posé sur le miroir, le rapporteur donne l'autre angle — celui qui "+
+    "complète jusqu'à 90° — et la loi de la réflexion paraît fausse alors qu'elle ne l'est pas."));
+};
+
+/* ─────────── CAP · un pas de côté ─────────── */
+SCHEMAS["un-pas-de-cote"]=function(el){
+  function capPointe(x1,y1,x2,y2,coul,t){var dx=x2-x1,dy=y2-y1,L=Math.sqrt(dx*dx+dy*dy),ux=dx/L,uy=dy/L,bx=x2-ux*t,by=y2-uy*t,px=-uy*t*0.55,py=ux*t*0.55;
+    return S("path",{d:"M "+x2+" "+y2+" L "+(bx+px)+" "+(by+py)+" L "+(bx-px)+" "+(by-py)+" Z",fill:coul});}
+  var W=724,H=310,Lx=80,Ly=84,Px=290,Py=260,Ax=500,Bx=640,Hy=84;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"La lumiere d'une lampe se reflechit sur une surface brillante : la personne sur le trajet du rayon est eblouie, celle d'a cote ne l'est pas"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "ÊTRE ÉBLOUI, C'EST ÊTRE SUR LE TRAJET DU RAYON RÉFLÉCHI"));
+  /* la surface */
+  svg.appendChild(S("line",{x1:130,y1:Py,x2:460,y2:Py,stroke:V("encre"),"stroke-width":"3"}));
+  for(var x=140;x<=460;x+=16){
+    svg.appendChild(S("line",{x1:x,y1:Py+2,x2:x-10,y2:Py+13,stroke:V("encre2"),"stroke-width":"1"}));
+  }
+  svg.appendChild(S("text",{x:295,y:292,"text-anchor":"middle","class":"s-pet"},
+    "une surface qui brille : vitre, écran, carrosserie"));
+  svg.appendChild(S("line",{x1:Px,y1:Py,x2:Px,y2:150,stroke:V("encre2"),"stroke-width":"1.5",
+    "stroke-dasharray":"5 4"}));
+  /* la lampe */
+  svg.appendChild(S("path",{d:"M 62 70 L 98 70 L 106 94 L 54 94 Z",fill:V("tiede"),
+    "fill-opacity":".5",stroke:V("tiede"),"stroke-width":"2"}));
+  svg.appendChild(S("line",{x1:80,y1:70,x2:80,y2:48,stroke:V("encre2"),"stroke-width":"2"}));
+  svg.appendChild(S("text",{x:80,y:130,"text-anchor":"middle","class":"s-pet"},"la lampe"));
+  /* les deux rayons */
+  var dx=Px-Lx,dy=Py-Ly,L=Math.sqrt(dx*dx+dy*dy),ux=dx/L,uy=dy/L;
+  var x0=Lx+ux*16,y0=Ly+uy*16;
+  svg.appendChild(S("line",{x1:x0,y1:y0,x2:Px-ux*3,y2:Py-uy*3,stroke:V("tiede"),"stroke-width":"2.5"}));
+  svg.appendChild(capPointe(x0,y0,Px,Py,V("tiede"),12));
+  var xe=Ax-ux*20,ye=Hy+uy*20;
+  svg.appendChild(S("line",{x1:Px,y1:Py,x2:xe,y2:ye,stroke:V("chaud"),"stroke-width":"2.5"}));
+  svg.appendChild(capPointe(Px,Py,xe,ye,V("chaud"),12));
+  /* les mêmes angles */
+  var RA=40,ca=Math.cos(Math.atan2(dx,dy)),sa=Math.sin(Math.atan2(dx,dy));
+  svg.appendChild(S("path",{d:"M "+Px+" "+(Py-RA)+" A "+RA+" "+RA+" 0 0 0 "+(Px-RA*sa)+" "+(Py-RA*ca),
+    fill:"none",stroke:V("violet"),"stroke-width":"2"}));
+  svg.appendChild(S("path",{d:"M "+Px+" "+(Py-RA)+" A "+RA+" "+RA+" 0 0 1 "+(Px+RA*sa)+" "+(Py-RA*ca),
+    fill:"none",stroke:V("violet"),"stroke-width":"2"}));
+  /* les deux personnes */
+  [[Ax,"chaud","ébloui","sur le trajet"],[Bx,"vert","pas ébloui","un pas à côté"]].forEach(function(p){
+    svg.appendChild(S("circle",{cx:p[0],cy:Hy,r:"16",fill:V(p[1]),"fill-opacity":".2",
+      stroke:V(p[1]),"stroke-width":"2"}));
+    svg.appendChild(S("circle",{cx:p[0]-6,cy:Hy-2,r:"2.5",fill:V("encre")}));
+    svg.appendChild(S("text",{x:p[0],y:128,"text-anchor":"middle","class":"s-lab",fill:V(p[1])},p[2]));
+    svg.appendChild(S("text",{x:p[0],y:146,"text-anchor":"middle","class":"s-pet"},p[3]));
+  });
+  svg.appendChild(S("line",{x1:522,y1:56,x2:610,y2:56,stroke:V("encre2"),"stroke-width":"1.5",
+    "stroke-dasharray":"4 3"}));
+  svg.appendChild(capPointe(522,56,620,56,V("encre2"),9));
+  svg.appendChild(S("text",{x:570,y:48,"text-anchor":"middle","class":"s-pet"},"un pas"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "La lumière de la lampe rebondit sur la surface et repart avec le même angle, de "+
+    "l'autre côté de la normale. <b>Seul l'œil posé sur ce trajet reçoit le rayon</b> : "+
+    "à un pas de là, la même lampe n'éblouit plus."));
+};
+
+/* ─────────── CAP · réflexion ou réfraction ─────────── */
+SCHEMAS["reflechi-ou-refracte"]=function(el){
+  function capPointe(x1,y1,x2,y2,coul,t){var dx=x2-x1,dy=y2-y1,L=Math.sqrt(dx*dx+dy*dy),ux=dx/L,uy=dy/L,bx=x2-ux*t,by=y2-uy*t,px=-uy*t*0.55,py=ux*t*0.55;
+    return S("path",{d:"M "+x2+" "+y2+" L "+(bx+px)+" "+(by+py)+" L "+(bx-px)+" "+(by-py)+" Z",fill:coul});}
+  var W=724,H=320,D=Math.PI/180;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"En reflexion la lumiere revient avec le meme angle ; en refraction elle passe de l'eau a l'air et l'angle change, 30 degres devient environ 42"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "LA LUMIÈRE REVIENT, OU ELLE TRAVERSE"));
+  svg.appendChild(S("line",{x1:362,y1:40,x2:362,y2:310,stroke:V("trait2"),"stroke-width":"1",
+    "stroke-dasharray":"4 4"}));
+  /* réflexion */
+  var P=180,Q=170,R=130,a=40*D;
+  svg.appendChild(S("text",{x:P,y:50,"text-anchor":"middle","class":"s-nom"},"réflexion : ça revient"));
+  svg.appendChild(S("line",{x1:40,y1:Q,x2:320,y2:Q,stroke:V("encre"),"stroke-width":"3"}));
+  for(var x=48;x<=320;x+=16){
+    svg.appendChild(S("line",{x1:x,y1:Q+2,x2:x-10,y2:Q+13,stroke:V("encre2"),"stroke-width":"1"}));
+  }
+  svg.appendChild(S("line",{x1:P,y1:Q,x2:P,y2:62,stroke:V("encre2"),"stroke-width":"1.5",
+    "stroke-dasharray":"5 4"}));
+  var xi=P-R*Math.sin(a),yi=Q-R*Math.cos(a),xr=P+R*Math.sin(a);
+  svg.appendChild(S("line",{x1:xi,y1:yi,x2:P-2,y2:Q-2,stroke:V("tiede"),"stroke-width":"2.5"}));
+  svg.appendChild(capPointe(xi,yi,P,Q,V("tiede"),12));
+  svg.appendChild(S("line",{x1:P,y1:Q,x2:xr,y2:yi,stroke:V("tiede"),"stroke-width":"2.5"}));
+  svg.appendChild(capPointe(P,Q,xr,yi,V("tiede"),12));
+  var r=40;
+  svg.appendChild(S("path",{d:"M "+P+" "+(Q-r)+" A "+r+" "+r+" 0 0 0 "+(P-r*Math.sin(a))+" "+(Q-r*Math.cos(a)),
+    fill:"none",stroke:V("vert"),"stroke-width":"2"}));
+  svg.appendChild(S("path",{d:"M "+P+" "+(Q-r)+" A "+r+" "+r+" 0 0 1 "+(P+r*Math.sin(a))+" "+(Q-r*Math.cos(a)),
+    fill:"none",stroke:V("vert"),"stroke-width":"2"}));
+  svg.appendChild(S("text",{x:P-6,y:112,"text-anchor":"end","class":"s-lab",fill:V("vert")},"40°"));
+  svg.appendChild(S("text",{x:P+6,y:112,"class":"s-lab",fill:V("vert")},"40°"));
+  svg.appendChild(S("text",{x:P,y:290,"text-anchor":"middle","class":"s-lab",fill:V("vert")},"i = r"));
+  svg.appendChild(S("text",{x:P,y:308,"text-anchor":"middle","class":"s-pet"},"même angle des deux côtés"));
+  /* réfraction, de l'eau vers l'air */
+  var P2=542,e=30*D,s=Math.asin(1.33*Math.sin(e));
+  svg.appendChild(S("text",{x:P2,y:50,"text-anchor":"middle","class":"s-nom"},"réfraction : ça traverse"));
+  svg.appendChild(S("rect",{x:402,y:Q,width:280,height:92,fill:V("froid"),"fill-opacity":".15"}));
+  svg.appendChild(S("line",{x1:402,y1:Q,x2:682,y2:Q,stroke:V("froid"),"stroke-width":"2"}));
+  svg.appendChild(S("text",{x:414,y:90,"class":"s-pet"},"air"));
+  svg.appendChild(S("text",{x:414,y:250,"class":"s-pet",fill:V("froid")},"eau"));
+  svg.appendChild(S("line",{x1:P2,y1:62,x2:P2,y2:262,stroke:V("encre2"),"stroke-width":"1.5",
+    "stroke-dasharray":"5 4"}));
+  var xa=P2-100*Math.sin(e),ya=Q+100*Math.cos(e);
+  svg.appendChild(S("line",{x1:xa,y1:ya,x2:P2-1,y2:Q+2,stroke:V("tiede"),"stroke-width":"2.5"}));
+  svg.appendChild(capPointe(xa,ya,P2,Q,V("tiede"),12));
+  svg.appendChild(S("line",{x1:P2,y1:Q,x2:P2+70*Math.sin(e),y2:Q-70*Math.cos(e),
+    stroke:V("encre2"),"stroke-width":"1.5","stroke-dasharray":"3 4",opacity:".7"}));
+  var xs=P2+120*Math.sin(s),ys=Q-120*Math.cos(s);
+  svg.appendChild(S("line",{x1:P2,y1:Q,x2:xs,y2:ys,stroke:V("tiede"),"stroke-width":"2.5"}));
+  svg.appendChild(capPointe(P2,Q,xs,ys,V("tiede"),12));
+  svg.appendChild(S("path",{d:"M "+P2+" "+(Q+r)+" A "+r+" "+r+" 0 0 1 "+(P2-r*Math.sin(e))+" "+(Q+r*Math.cos(e)),
+    fill:"none",stroke:V("violet"),"stroke-width":"2"}));
+  svg.appendChild(S("path",{d:"M "+P2+" "+(Q-r)+" A "+r+" "+r+" 0 0 1 "+(P2+r*Math.sin(s))+" "+(Q-r*Math.cos(s)),
+    fill:"none",stroke:V("violet"),"stroke-width":"2"}));
+  svg.appendChild(S("text",{x:P2-6,y:250,"text-anchor":"end","class":"s-lab",fill:V("violet")},"30°"));
+  svg.appendChild(S("text",{x:P2+6,y:96,"class":"s-lab",fill:V("violet")},"42°"));
+  svg.appendChild(S("text",{x:P2,y:290,"text-anchor":"middle","class":"s-lab",fill:V("violet")},
+    "l'angle change"));
+  svg.appendChild(S("text",{x:P2,y:308,"text-anchor":"middle","class":"s-pet"},
+    "30° dans l'eau, environ 42° dans l'air"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>Réflexion, ça revient ; réfraction, ça traverse.</b> Dans les deux cas, les angles "+
+    "se mesurent depuis la normale. En sortant de l'eau, le rayon s'écarte de la normale : "+
+    "le pointillé montre où il serait allé s'il avait continué tout droit."));
+};
+
+/* ─────────── CAP · grave ou aigu, fort ou faible ─────────── */
+SCHEMAS["grave-ou-fort"]=function(el){
+  function capPointe(x1,y1,x2,y2,coul,t){var dx=x2-x1,dy=y2-y1,L=Math.sqrt(dx*dx+dy*dy),ux=dx/L,uy=dy/L,bx=x2-ux*t,by=y2-uy*t,px=-uy*t*0.55,py=ux*t*0.55;
+    return S("path",{d:"M "+x2+" "+y2+" L "+(bx+px)+" "+(by+py)+" L "+(bx-px)+" "+(by-py)+" Z",fill:coul});}
+  var W=724,H=320,X0=110,X1=640,Y0=262,Y1=62,XM=375,YM=162;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Quatre sons ranges selon la frequence, du grave a l'aigu, et selon le niveau, du faible au fort"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "DEUX QUESTIONS DIFFÉRENTES : GRAVE OU AIGU, FORT OU FAIBLE"));
+  svg.appendChild(S("line",{x1:X0,y1:Y0,x2:X1,y2:Y0,stroke:V("encre"),"stroke-width":"2"}));
+  svg.appendChild(capPointe(X0,Y0,X1+10,Y0,V("encre"),10));
+  svg.appendChild(S("line",{x1:X0,y1:Y0,x2:X0,y2:Y1,stroke:V("encre"),"stroke-width":"2"}));
+  svg.appendChild(capPointe(X0,Y0,X0,Y1-10,V("encre"),10));
+  svg.appendChild(S("line",{x1:XM,y1:Y1,x2:XM,y2:Y0,stroke:V("trait2"),"stroke-dasharray":"4 4"}));
+  svg.appendChild(S("line",{x1:X0,y1:YM,x2:X1,y2:YM,stroke:V("trait2"),"stroke-dasharray":"4 4"}));
+  svg.appendChild(S("text",{x:X0+10,y:50,"class":"s-pet"},"le niveau, en dB"));
+  svg.appendChild(S("text",{x:X0-10,y:Y1+10,"text-anchor":"end","class":"s-lab",fill:V("chaud")},"fort"));
+  svg.appendChild(S("text",{x:X0-10,y:Y0,"text-anchor":"end","class":"s-lab",fill:V("froid")},"faible"));
+  svg.appendChild(S("text",{x:X0,y:Y0+24,"class":"s-lab"},"grave"));
+  svg.appendChild(S("text",{x:X1,y:Y0+24,"text-anchor":"end","class":"s-lab"},"aigu"));
+  svg.appendChild(S("text",{x:(X0+X1)/2,y:Y0+24,"text-anchor":"middle","class":"s-pet"},
+    "la fréquence, en Hz"));
+  [[190,92,"un moteur de camion","grave et fort","chaud"],
+   [500,92,"une alarme incendie","aigu et fort","chaud"],
+   [190,222,"le frigo qui ronronne","grave et faible","froid"],
+   [500,222,"un moustique","aigu et faible","froid"]].forEach(function(p){
+    svg.appendChild(S("circle",{cx:p[0],cy:p[1],r:"6",fill:V(p[4])}));
+    svg.appendChild(S("text",{x:p[0]+12,y:p[1]+5,"class":"s-lab",fill:V(p[4])},p[2]));
+    svg.appendChild(S("text",{x:p[0]+12,y:p[1]+23,"class":"s-pet"},p[3]));
+  });
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>La fréquence et le niveau ne se mélangent pas.</b> Un son grave peut être très fort "+
+    "— le moteur —, un son aigu très faible — le moustique. <b>C'est le niveau, en décibels, "+
+    "que regarde le seuil de risque</b>, pas la fréquence."));
+};
+
+/* ─────────── CAP · trois décibels de plus, la moitié du temps ─────────── */
+SCHEMAS["trois-db-la-moitie"]=function(el){
+  var W=724,H=320,X0=130,K=0.75;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Duree d'ecoute admise : 8 heures a 85 dB, puis divisee par deux a chaque palier de 3 dB, jusqu'a 15 minutes a 100 dB"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "TROIS DÉCIBELS DE PLUS, DEUX FOIS MOINS DE TEMPS"));
+  [[85,480,"8 h"],[88,240,"4 h"],[91,120,"2 h"],[94,60,"1 h"],[97,30,"30 min"],[100,15,"15 min"]]
+  .forEach(function(p,i){
+    var y=52+i*38,prem=(i===0);
+    svg.appendChild(S("text",{x:X0-12,y:y+17,"text-anchor":"end","class":"s-lab",
+      fill:prem?V("tiede"):V("encre")},p[0]+" dB"));
+    svg.appendChild(S("rect",{x:X0,y:y,width:p[1]*K,height:24,rx:"3",
+      fill:prem?V("tiede"):V("chaud"),"fill-opacity":".55",stroke:prem?V("tiede"):V("chaud"),
+      "stroke-width":"1.5"}));
+    svg.appendChild(S("text",{x:X0+p[1]*K+10,y:y+17,"class":"s-lab"},p[2]));
+  });
+  svg.appendChild(S("text",{x:440,y:176,"class":"s-nom"},"d'une ligne à la suivante :"));
+  svg.appendChild(S("text",{x:440,y:200,"class":"s-lab",fill:V("violet")},"3 dB de plus"));
+  svg.appendChild(S("text",{x:440,y:222,"class":"s-lab",fill:V("violet")},"durée divisée par 2"));
+  svg.appendChild(S("text",{x:20,y:H-14,"class":"s-nom"},
+    "La durée d'écoute admise par jour, selon le niveau."));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>Chaque fois que le niveau monte de 3 dB, la durée admise est divisée par deux.</b> "+
+    "De 85 à 100 dB, on divise cinq fois de suite : la barre du bas est trente-deux fois "+
+    "plus courte que celle du haut."));
+};
+
+/* ─────────── CAP · le casque fermé dans le métro ─────────── */
+SCHEMAS["casque-ferme"]=function(el){
+  var W=724,H=330,X0=110,X1=600,Y0=262,Y1=62,DMIN=40,DMAX=110;
+  function py(d){return Y0-(d-DMIN)/(DMAX-DMIN)*(Y0-Y1);}
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Dans le metro a 90 dB, un casque ouvert oblige a monter la musique a 95 dB ; un casque ferme laisse 70 dB de bruit et la musique suffit a 75 dB"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "DANS LE MÉTRO À 90 dB : CE QUE LE CASQUE CHANGE AU VOLUME"));
+  [40,60,80,100].forEach(function(d){
+    svg.appendChild(S("line",{x1:X0,y1:py(d),x2:X1,y2:py(d),stroke:V("trait2"),
+      "stroke-width":"1",opacity:".5"}));
+    svg.appendChild(S("text",{x:X0-10,y:py(d)+4,"text-anchor":"end","class":"s-pet"},d+" dB"));
+  });
+  svg.appendChild(S("line",{x1:X0,y1:Y0,x2:X1,y2:Y0,stroke:V("encre"),"stroke-width":"2"}));
+  svg.appendChild(S("line",{x1:X0,y1:Y0,x2:X0,y2:Y1,stroke:V("encre"),"stroke-width":"2"}));
+  function barre(x,d,nom,coul){
+    svg.appendChild(S("rect",{x:x,y:py(d),width:60,height:Y0-py(d),fill:V(coul),
+      "fill-opacity":".45",stroke:V(coul),"stroke-width":"1.5"}));
+    svg.appendChild(S("text",{x:x+30,y:py(d)-8,"text-anchor":"middle","class":"s-lab"},d+" dB"));
+    svg.appendChild(S("text",{x:x+30,y:Y0-10,"text-anchor":"middle","class":"s-pet"},nom));
+  }
+  barre(170,90,"bruit","froid");  barre(240,95,"musique","chaud");
+  barre(400,70,"bruit","froid");  barre(470,75,"musique","vert");
+  svg.appendChild(S("line",{x1:X0,y1:py(85),x2:X1,y2:py(85),stroke:V("tiede"),"stroke-width":"2",
+    "stroke-dasharray":"6 4"}));
+  svg.appendChild(S("text",{x:X1,y:py(85)-7,"text-anchor":"end","class":"s-lab",fill:V("tiede")},
+    "seuil de risque : 85 dB"));
+  svg.appendChild(S("text",{x:235,y:Y0+24,"text-anchor":"middle","class":"s-lab"},"casque ouvert"));
+  svg.appendChild(S("text",{x:235,y:Y0+42,"text-anchor":"middle","class":"s-pet"},"tout le bruit passe"));
+  svg.appendChild(S("text",{x:500,y:Y0+24,"text-anchor":"middle","class":"s-lab"},"casque fermé"));
+  svg.appendChild(S("text",{x:500,y:Y0+42,"text-anchor":"middle","class":"s-pet"},"20 dB de bruit en moins"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "Pour entendre sa musique, on la règle un peu au-dessus du bruit qui arrive à l'oreille. "+
+    "Avec un casque ouvert, <b>c'est le métro qui fixe le volume</b>, et il pousse au-delà "+
+    "du seuil de risque. Le casque fermé retire 20 dB de bruit <b>avant même qu'on touche au "+
+    "volume</b>."));
+};
+
+/* ═══════════════════════════════════════════════════════════════════
+   CAP · co-intervention, sequences 4 a 7 (creneaux J11 a J20)
+   Lot de schemas a verser dans kit.js, apres les schemas CAP existants.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ─────────── CAP co-int · S4 · la tension est le coefficient ─────────── */
+SCHEMAS["tension-coefficient"]=function(el){
+  var W=724,H=300;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"A tension fixe de 230 V, la puissance est proportionnelle a l'intensite, et le coefficient est la tension"});
+  var defs=S("defs",{});
+  var mk=S("marker",{id:"tc-fl",viewBox:"0 0 10 10",refX:"9",refY:"5",markerWidth:"6",
+    markerHeight:"6",orient:"auto-start-reverse"});
+  mk.appendChild(S("path",{d:"M 0 0 L 10 5 L 0 10 z",fill:V("chaud")}));
+  defs.appendChild(mk);svg.appendChild(defs);
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "À TENSION FIXE, LA PUISSANCE SUIT L'INTENSITÉ"));
+  /* le tableau */
+  var XL=30,XC=210,CW=76,Y1=62,RH=46;
+  var lignes=[["intensité I (A)",["1","2","4"],"froid"],
+              ["puissance P (W)",["230","460","920"],"chaud"]];
+  lignes.forEach(function(L,r){
+    var y=Y1+r*RH;
+    svg.appendChild(S("rect",{x:XL,y:y,width:XC-XL,height:RH,fill:V("carte2"),
+      stroke:V("trait"),"stroke-width":"1"}));
+    svg.appendChild(S("text",{x:XL+12,y:y+28,"class":"s-nom",fill:V(L[2])},L[0]));
+    L[1].forEach(function(v,k){
+      svg.appendChild(S("rect",{x:XC+k*CW,y:y,width:CW,height:RH,fill:"none",
+        stroke:V("trait"),"stroke-width":"1"}));
+      svg.appendChild(S("text",{x:XC+k*CW+CW/2,y:y+29,"text-anchor":"middle",
+        "class":"s-lab",fill:V(L[2])},v));
+    });
+  });
+  /* la fleche du coefficient, a droite du tableau */
+  var XA=XC+3*CW+14;
+  svg.appendChild(S("path",{d:"M "+XA+" "+(Y1+RH/2)+" C "+(XA+40)+" "+(Y1+RH/2)+" "+
+    (XA+40)+" "+(Y1+RH*1.5)+" "+(XA+4)+" "+(Y1+RH*1.5),fill:"none",stroke:V("chaud"),
+    "stroke-width":"2","marker-end":"url(#tc-fl)"}));
+  svg.appendChild(S("text",{x:XA+46,y:Y1+RH+6,"class":"s-sym",fill:V("chaud")},"× 230"));
+  /* la plaque */
+  var PX=560,PY=50,PW=140,PH=132;
+  svg.appendChild(S("rect",{x:PX,y:PY,width:PW,height:PH,rx:"6",fill:V("carte2"),
+    stroke:V("encre"),"stroke-width":"2"}));
+  svg.appendChild(S("text",{x:PX+PW/2,y:PY+22,"text-anchor":"middle","class":"s-tit"},"PLAQUE"));
+  svg.appendChild(S("rect",{x:PX+12,y:PY+38,width:PW-24,height:28,rx:"4",fill:V("chaud"),
+    opacity:".18",stroke:V("chaud"),"stroke-width":"1.5"}));
+  svg.appendChild(S("text",{x:PX+22,y:PY+57,"class":"s-lab",fill:V("chaud")},"230 V ~"));
+  svg.appendChild(S("text",{x:PX+22,y:PY+90,"class":"s-lab",fill:V("encre2")},"50 Hz"));
+  svg.appendChild(S("text",{x:PX+22,y:PY+118,"class":"s-lab",fill:V("encre2")},"IP 20"));
+  svg.appendChild(S("line",{x1:XA+96,y1:Y1+RH+2,x2:PX+10,y2:PY+52,stroke:V("chaud"),
+    "stroke-width":"1.2","stroke-dasharray":"4 3"}));
+  /* ce qu'on en tire */
+  svg.appendChild(S("text",{x:30,y:196,"class":"s-nom"},
+    "Quand l'intensité double, la puissance double : le tableau est proportionnel."));
+  svg.appendChild(S("text",{x:30,y:220,"class":"s-nom"},
+    "Le nombre qui multiplie l'intensité n'a rien de nouveau : c'est la tension."));
+  svg.appendChild(S("text",{x:30,y:256,"class":"s-sym",fill:V("chaud")},"P = U × I"));
+  svg.appendChild(S("text",{x:150,y:256,"class":"s-pet"},
+    "P en watts, U en volts, I en ampères — jamais en milliampères"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>À tension fixe, doubler l'intensité double la puissance.</b> Le coefficient du "+
+    "tableau est écrit sur la plaque : c'est la tension. La relation se lit donc "+
+    "<b>P = U × I</b>, à condition d'avoir l'intensité en ampères."));
+};
+
+/* ─────────── CAP co-int · S4 · une question, trois reponses ─────────── */
+SCHEMAS["trois-facons-de-repondre"]=function(el){
+  var W=724,H=320,PW=216,PY=46,PH=210;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Le tableau, le graphique et l'equation repondent a la meme question, chacun avec sa force et sa limite"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "UNE MÊME QUESTION, TROIS FAÇONS D'Y RÉPONDRE"));
+  var P=[["LE TABLEAU","froid"],["LE GRAPHIQUE","violet"],["L'ÉQUATION","chaud"]];
+  P.forEach(function(p,k){
+    var x=20+k*(PW+12);
+    svg.appendChild(S("rect",{x:x,y:PY,width:PW,height:PH,rx:"8",fill:V("carte2"),
+      stroke:V(p[1]),"stroke-width":"1.6"}));
+    svg.appendChild(S("text",{x:x+14,y:PY+24,"class":"s-tit",fill:V(p[1])},p[0]));
+  });
+  /* 1. un petit tableau : des colonnes espacees */
+  var x0=34,y0=PY+40,cw=38,rh=22,i,j;
+  for(j=0;j<3;j++)for(i=0;i<5;i++){
+    svg.appendChild(S("rect",{x:x0+i*cw,y:y0+j*rh,width:cw,height:rh,
+      fill:j===0?V("carte"):"none",stroke:V("trait"),"stroke-width":"1"}));
+  }
+  ["kWh","A","B"].forEach(function(t,j){
+    svg.appendChild(S("text",{x:x0+cw/2,y:y0+j*rh+15,"text-anchor":"middle","class":"s-pet"},t));
+  });
+  for(j=1;j<3;j++)for(i=1;i<5;i++){
+    svg.appendChild(S("circle",{cx:x0+i*cw+cw/2,cy:y0+j*rh+rh/2,r:"2.5",fill:V("froid")}));
+  }
+  /* 2. un petit graphique : deux droites qui se croisent */
+  var gx=262,gy=PY+130,gw=180,gh=86;
+  svg.appendChild(S("line",{x1:gx,y1:gy,x2:gx+gw,y2:gy,stroke:V("encre2"),"stroke-width":"1.5"}));
+  svg.appendChild(S("line",{x1:gx,y1:gy,x2:gx,y2:gy-gh,stroke:V("encre2"),"stroke-width":"1.5"}));
+  svg.appendChild(S("line",{x1:gx,y1:gy,x2:gx+gw,y2:gy-gh+6,stroke:V("froid"),"stroke-width":"2.2"}));
+  svg.appendChild(S("line",{x1:gx,y1:gy-30,x2:gx+gw,y2:gy-gh+26,stroke:V("chaud"),"stroke-width":"2.2"}));
+  /* croisement : 0,4444 x = 30 - ... calcule sur les deux droites ci-dessus */
+  var ta=(gh-6)/gw,tb=(gh-26-30)/gw,xc=30/(ta-tb),yc=gy-ta*xc;
+  svg.appendChild(S("circle",{cx:gx+xc,cy:yc,r:"5",fill:"none",stroke:V("violet"),"stroke-width":"2"}));
+  svg.appendChild(S("line",{x1:gx+xc,y1:yc+5,x2:gx+xc,y2:gy,stroke:V("violet"),
+    "stroke-width":"1.2","stroke-dasharray":"3 3"}));
+  svg.appendChild(S("text",{x:gx+xc,y:gy+16,"text-anchor":"middle","class":"s-pet",
+    fill:V("violet")},"≈ ?"));
+  /* 3. l'equation */
+  svg.appendChild(S("text",{x:476+PW/2,y:PY+82,"text-anchor":"middle","class":"s-sym",
+    style:"font-size:19px"},"a x + b = c"));
+  svg.appendChild(S("text",{x:476+PW/2,y:PY+118,"text-anchor":"middle","class":"s-sym",
+    fill:V("chaud"),style:"font-size:19px"},"x = …"));
+  /* force et limite de chacun, sous le dessin */
+  var T=[["des valeurs sûres,","mais espacées : le croisement","peut tomber entre deux"],
+         ["on voit le croisement,","mais la lecture","n'est qu'approchée"],
+         ["la valeur exacte,","mais on ne voit rien","de ce qui se passe"]];
+  T.forEach(function(t,k){
+    var x=20+k*(PW+12)+14;
+    svg.appendChild(S("text",{x:x,y:PY+160,"class":"s-nom",fill:V("vert")},t[0]));
+    svg.appendChild(S("text",{x:x,y:PY+178,"class":"s-nom",fill:V("encre2")},t[1]));
+    svg.appendChild(S("text",{x:x,y:PY+196,"class":"s-nom",fill:V("encre2")},t[2]));
+  });
+  svg.appendChild(S("text",{x:20,y:H-24,"class":"s-nom"},
+    "Les trois se contrôlent : s'ils ne disent pas la même chose, l'un des trois est faux."));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>Aucune des trois n'est meilleure que les autres.</b> Le tableau donne des "+
+    "valeurs sûres mais espacées, le graphique montre le croisement sans le donner "+
+    "exactement, l'équation donne la valeur exacte sans rien montrer. "+
+    "<b>C'est leur accord qui fait la preuve.</b>"));
+};
+
+/* ─────────── CAP co-int · S5 · l'infrarouge lit une surface ─────────── */
+SCHEMAS["infrarouge-vise-une-surface"]=function(el){
+  var W=724,H=300;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Le thermometre infrarouge lit la surface qu'il vise : le mur, ou le plafond, jamais l'air"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "LE THERMOMÈTRE INFRAROUGE LIT LA SURFACE QU'IL VISE"));
+  /* le mur et le plafond */
+  svg.appendChild(S("rect",{x:40,y:44,width:640,height:12,fill:V("trait"),opacity:".55"}));
+  svg.appendChild(S("rect",{x:40,y:44,width:16,height:230,fill:V("trait"),opacity:".55"}));
+  svg.appendChild(S("text",{x:600,y:74,"text-anchor":"end","class":"s-nom"},"le plafond"));
+  svg.appendChild(S("text",{x:64,y:268,"class":"s-nom"},"le mur"));
+  /* l'appareil */
+  var GX=470,GY=196;
+  svg.appendChild(S("rect",{x:GX,y:GY-12,width:74,height:24,rx:"6",fill:V("carte2"),
+    stroke:V("encre"),"stroke-width":"1.8"}));
+  svg.appendChild(S("path",{d:"M "+(GX+44)+" "+(GY+12)+" L "+(GX+56)+" "+(GY+44)+" L "+
+    (GX+70)+" "+(GY+44)+" L "+(GX+64)+" "+(GY+12)+" Z",fill:V("carte2"),stroke:V("encre"),
+    "stroke-width":"1.8"}));
+  svg.appendChild(S("text",{x:GX+84,y:GY+5,"class":"s-pet"},"thermomètre"));
+  svg.appendChild(S("text",{x:GX+84,y:GY+20,"class":"s-pet"},"infrarouge"));
+  /* visee 1 : sur le mur */
+  svg.appendChild(S("path",{d:"M "+GX+" "+(GY-4)+" L 56 "+(GY-30)+" L 56 "+(GY+22)+" L "+GX+" "+(GY+4)+" Z",
+    fill:V("froid"),opacity:".14",stroke:"none"}));
+  svg.appendChild(S("line",{x1:GX,y1:GY,x2:56,y2:GY-4,stroke:V("froid"),"stroke-width":"1.6",
+    "stroke-dasharray":"6 4"}));
+  svg.appendChild(S("rect",{x:52,y:GY-30,width:8,height:52,fill:V("froid"),opacity:".8"}));
+  svg.appendChild(S("text",{x:80,y:112,"class":"s-lab",fill:V("froid")},"visé sur le mur :"));
+  svg.appendChild(S("text",{x:80,y:130,"class":"s-nom",fill:V("froid")},"il lit le mur, presque"));
+  svg.appendChild(S("text",{x:80,y:146,"class":"s-nom",fill:V("froid")},"à la température de la salle"));
+  /* visee 2 : en l'air, il atteint le plafond */
+  var PXa=300,PXb=360;
+  svg.appendChild(S("path",{d:"M "+GX+" "+(GY-10)+" L "+PXa+" 56 L "+PXb+" 56 L "+(GX+6)+" "+(GY-12)+" Z",
+    fill:V("chaud"),opacity:".14",stroke:"none"}));
+  svg.appendChild(S("line",{x1:GX+3,y1:GY-11,x2:(PXa+PXb)/2,y2:56,stroke:V("chaud"),
+    "stroke-width":"1.6","stroke-dasharray":"6 4"}));
+  svg.appendChild(S("rect",{x:PXa,y:52,width:PXb-PXa,height:8,fill:V("chaud"),opacity:".8"}));
+  svg.appendChild(S("text",{x:440,y:100,"class":"s-lab",fill:V("chaud")},"visé « en l'air » :"));
+  svg.appendChild(S("text",{x:440,y:118,"class":"s-nom",fill:V("chaud")},"il lit le plafond,"));
+  svg.appendChild(S("text",{x:440,y:134,"class":"s-nom",fill:V("chaud")},"plus chaud ou plus froid"));
+  /* l'air traverse */
+  svg.appendChild(S("text",{x:120,y:282,"class":"s-nom",fill:V("encre2")},
+    "l'air de la salle laisse passer l'infrarouge : l'appareil ne le lit jamais"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>L'infrarouge ne mesure pas l'air</b>, il mesure la première surface que touche "+
+    "sa visée. Visé sur un mur, il donne presque la température de la salle ; visé "+
+    "« dans le vide », il donne celle du plafond. <b>La visée fait partie de la mesure.</b>"));
+};
+
+/* ─────────── CAP co-int · S5 · deux temperatures qui se rejoignent ─────────── */
+SCHEMAS["deux-temperatures-se-rejoignent"]=function(el){
+  var W=724,H=320,X0=86,X1=520,Y0=262,Y1=52,TM=30,TH=70;
+  function px(t){return X0+t/TM*(X1-X0);}
+  function py(T){return Y0-T/TH*(Y0-Y1);}
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"L'eau chaude descend, l'eau froide monte, et les deux finissent a la meme temperature"});
+  var defs=S("defs",{});
+  var mk=S("marker",{id:"dt-fl",viewBox:"0 0 10 10",refX:"9",refY:"5",markerWidth:"6",
+    markerHeight:"6",orient:"auto-start-reverse"});
+  mk.appendChild(S("path",{d:"M 0 0 L 10 5 L 0 10 z",fill:V("encre")}));
+  defs.appendChild(mk);svg.appendChild(defs);
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "DEUX GOBELETS L'UN CONTRE L'AUTRE"));
+  [0,20,40,60].forEach(function(T){
+    svg.appendChild(S("line",{x1:X0,y1:py(T),x2:X1,y2:py(T),stroke:V("trait2"),"stroke-width":"1"}));
+    svg.appendChild(S("text",{x:X0-10,y:py(T)+4,"text-anchor":"end","class":"s-pet"},T+" °C"));
+  });
+  svg.appendChild(S("line",{x1:X0,y1:Y0,x2:X1+10,y2:Y0,stroke:V("encre"),"stroke-width":"1.8"}));
+  svg.appendChild(S("line",{x1:X0,y1:Y0,x2:X0,y2:Y1-8,stroke:V("encre"),"stroke-width":"1.8"}));
+  svg.appendChild(S("text",{x:X1,y:Y0+22,"text-anchor":"end","class":"s-nom"},"le temps passe →"));
+  /* 37,5 + ou - 22,5 exp(-t/8) : ecart divise par e toutes les 8 minutes */
+  var dC="",dF="",k,t;
+  for(k=0;k<=120;k++){
+    t=k/120*TM;
+    var e=22.5*Math.exp(-t/8);
+    dC+=(k?" L ":"M ")+px(t).toFixed(1)+" "+py(37.5+e).toFixed(1);
+    dF+=(k?" L ":"M ")+px(t).toFixed(1)+" "+py(37.5-e).toFixed(1);
+  }
+  svg.appendChild(S("line",{x1:X0,y1:py(37.5),x2:X1,y2:py(37.5),stroke:V("vert"),
+    "stroke-width":"1.5","stroke-dasharray":"6 4"}));
+  svg.appendChild(S("path",{d:dC,fill:"none",stroke:V("chaud"),"stroke-width":"2.6"}));
+  svg.appendChild(S("path",{d:dF,fill:"none",stroke:V("froid"),"stroke-width":"2.6"}));
+  svg.appendChild(S("circle",{cx:px(0),cy:py(60),r:"5",fill:V("chaud")}));
+  svg.appendChild(S("circle",{cx:px(0),cy:py(15),r:"5",fill:V("froid")}));
+  /* la fleche de la chaleur, entre les deux courbes, a 3 min */
+  var ta=3,eA=22.5*Math.exp(-ta/8);
+  svg.appendChild(S("line",{x1:px(ta),y1:py(37.5+eA)+8,x2:px(ta),y2:py(37.5-eA)-8,
+    stroke:V("encre"),"stroke-width":"1.8","marker-end":"url(#dt-fl)"}));
+  svg.appendChild(S("text",{x:px(ta)+10,y:py(37.5)-9,"class":"s-nom"},"la chaleur"));
+  /* libelles a droite */
+  svg.appendChild(S("text",{x:px(6),y:py(55),"class":"s-lab",fill:V("chaud")},"l'eau chaude descend"));
+  svg.appendChild(S("text",{x:px(6),y:py(18),"class":"s-lab",fill:V("froid")},"l'eau froide monte"));
+  svg.appendChild(S("text",{x:X1+14,y:py(37.5)-8,"class":"s-lab",fill:V("vert")},"l'équilibre :"));
+  svg.appendChild(S("text",{x:X1+14,y:py(37.5)+10,"class":"s-nom",fill:V("vert")},"la même température"));
+  svg.appendChild(S("text",{x:X1+14,y:py(37.5)+26,"class":"s-nom",fill:V("vert")},"pour les deux"));
+  svg.appendChild(S("text",{x:20,y:H-12,"class":"s-pet"},
+    "l'écart se réduit vite au début, puis de plus en plus lentement"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>La chaleur va du chaud vers le froid</b>, jamais l'inverse : l'eau chaude "+
+    "cède de l'énergie, l'eau froide en reçoit. Le transfert ralentit à mesure que "+
+    "l'écart se réduit, et s'arrête quand <b>les deux sont à la même température</b>."));
+};
+
+/* ─────────── CAP co-int · S5 · image ou antecedent : le geste ─────────── */
+SCHEMAS["image-ou-antecedent"]=function(el){
+  var W=724,H=340,X0=80,X1=470,Y0=270,Y1=56,TM=6,TH=25;
+  function px(t){return X0+t/TM*(X1-X0);}
+  function py(T){return Y0-T/TH*(Y0-Y1);}
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Une piece chauffee : on lit l'image en partant de l'axe horizontal, l'antecedent en partant de l'axe vertical"});
+  var defs=S("defs",{});
+  [["ia-v","vert"],["ia-c","chaud"]].forEach(function(m){
+    var mk=S("marker",{id:m[0],viewBox:"0 0 10 10",refX:"9",refY:"5",markerWidth:"6",
+      markerHeight:"6",orient:"auto-start-reverse"});
+    mk.appendChild(S("path",{d:"M 0 0 L 10 5 L 0 10 z",fill:V(m[1])}));
+    defs.appendChild(mk);
+  });
+  svg.appendChild(defs);
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "L'IMAGE SE LIT EN MONTANT, L'ANTÉCÉDENT EN PARTANT DU CÔTÉ"));
+  [0,5,10,15,20,25].forEach(function(T){
+    svg.appendChild(S("line",{x1:X0,y1:py(T),x2:X1,y2:py(T),stroke:V("trait2"),"stroke-width":"1"}));
+    svg.appendChild(S("text",{x:X0-10,y:py(T)+4,"text-anchor":"end","class":"s-pet"},String(T)));
+  });
+  for(var h=0;h<=TM;h++){
+    svg.appendChild(S("line",{x1:px(h),y1:Y0,x2:px(h),y2:Y1,stroke:V("trait2"),"stroke-width":"1"}));
+    svg.appendChild(S("text",{x:px(h),y:Y0+18,"text-anchor":"middle","class":"s-pet"},String(h)));
+  }
+  svg.appendChild(S("line",{x1:X0,y1:Y0,x2:X1+10,y2:Y0,stroke:V("encre"),"stroke-width":"1.8"}));
+  svg.appendChild(S("line",{x1:X0,y1:Y0,x2:X0,y2:Y1-10,stroke:V("encre"),"stroke-width":"1.8"}));
+  svg.appendChild(S("text",{x:X1,y:Y0+40,"text-anchor":"end","class":"s-nom"},"temps (h) : la variable"));
+  svg.appendChild(S("text",{x:X0-10,y:Y1-16,"class":"s-nom"},"température (°C)"));
+  /* la piece : 11 °C, +4 °C par heure jusqu'a 19 °C, puis le thermostat tient */
+  svg.appendChild(S("path",{d:"M "+px(0)+" "+py(11)+" L "+px(2)+" "+py(19)+" L "+px(6)+" "+py(19),
+    fill:"none",stroke:V("froid"),"stroke-width":"2.8"}));
+  svg.appendChild(S("text",{x:px(3.1),y:py(19)-10,"class":"s-nom",fill:V("froid")},
+    "le thermostat tient 19 °C"));
+  /* image de 1 h : on monte, puis on va a gauche -> 15 */
+  svg.appendChild(S("path",{d:"M "+px(1)+" "+Y0+" L "+px(1)+" "+(py(15)+3),fill:"none",
+    stroke:V("vert"),"stroke-width":"2","marker-end":"url(#ia-v)"}));
+  svg.appendChild(S("path",{d:"M "+(px(1)-3)+" "+py(15)+" L "+(X0+3)+" "+py(15),fill:"none",
+    stroke:V("vert"),"stroke-width":"2","stroke-dasharray":"5 3","marker-end":"url(#ia-v)"}));
+  /* antecedent de 17 : on part de l'axe vertical, puis on descend -> 1,5 */
+  svg.appendChild(S("path",{d:"M "+X0+" "+py(17)+" L "+(px(1.5)-3)+" "+py(17),fill:"none",
+    stroke:V("chaud"),"stroke-width":"2","marker-end":"url(#ia-c)"}));
+  svg.appendChild(S("path",{d:"M "+px(1.5)+" "+(py(17)+3)+" L "+px(1.5)+" "+(Y0-3),fill:"none",
+    stroke:V("chaud"),"stroke-width":"2","stroke-dasharray":"5 3","marker-end":"url(#ia-c)"}));
+  svg.appendChild(S("text",{x:X0-10,y:py(17)+4,"text-anchor":"end","class":"s-pet",fill:V("chaud")},"17"));
+  svg.appendChild(S("text",{x:px(1.5),y:Y0+18,"text-anchor":"middle","class":"s-pet",fill:V("chaud")},"1,5"));
+  /* explications a droite */
+  var XR=500;
+  svg.appendChild(S("text",{x:XR,y:84,"class":"s-lab",fill:V("vert")},"L'IMAGE DE 1 H"));
+  svg.appendChild(S("text",{x:XR,y:104,"class":"s-nom"},"je pars du temps, en bas,"));
+  svg.appendChild(S("text",{x:XR,y:120,"class":"s-nom"},"je monte jusqu'à la courbe,"));
+  svg.appendChild(S("text",{x:XR,y:136,"class":"s-nom"},"je lis à gauche : 15 °C"));
+  svg.appendChild(S("text",{x:XR,y:178,"class":"s-lab",fill:V("chaud")},"UN ANTÉCÉDENT"));
+  svg.appendChild(S("text",{x:XR,y:196,"class":"s-lab",fill:V("chaud")},"DE 17 °C"));
+  svg.appendChild(S("text",{x:XR,y:216,"class":"s-nom"},"je pars de la température,"));
+  svg.appendChild(S("text",{x:XR,y:232,"class":"s-nom"},"je vais jusqu'à la courbe,"));
+  svg.appendChild(S("text",{x:XR,y:248,"class":"s-nom"},"je descends : 1,5 h"));
+  svg.appendChild(S("text",{x:20,y:H-10,"class":"s-pet"},
+    "19 °C, lui, a une infinité d'antécédents : tous les instants du palier"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "Une pièce chauffée, puis tenue à 19 °C. <b>Partir de l'axe horizontal et monter, "+
+    "c'est chercher une image</b> ; partir de l'axe vertical et aller jusqu'à la "+
+    "courbe, c'est chercher un <b>antécédent</b>. Le geste décide du mot."));
+};
+
+/* ─────────── CAP co-int · S6 · le rayon qui rebondit, le rayon qui plie ─────────── */
+SCHEMAS["rebondit-ou-plie"]=function(el){
+  var W=724,H=340,D=Math.PI/180;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Reflexion : l'angle de reflexion egale l'angle d'incidence. Refraction dans l'eau : le rayon se rapproche de la normale"});
+  var defs=S("defs",{});
+  [["rp-t","tiede"],["rp-c","chaud"],["rp-f","froid"]].forEach(function(m){
+    var mk=S("marker",{id:m[0],viewBox:"0 0 10 10",refX:"9",refY:"5",markerWidth:"7",
+      markerHeight:"7",orient:"auto-start-reverse"});
+    mk.appendChild(S("path",{d:"M 0 0 L 10 5 L 0 10 z",fill:V(m[1])}));
+    defs.appendChild(mk);
+  });
+  svg.appendChild(defs);
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "LES ANGLES SE MESURENT DEPUIS LA NORMALE"));
+  function arc(cx,cy,r,a1,a2,coul,pointille){
+    /* angles comptes depuis la verticale montante, positifs vers la droite */
+    var x1=cx+r*Math.sin(a1*D),y1=cy-r*Math.cos(a1*D),
+        x2=cx+r*Math.sin(a2*D),y2=cy-r*Math.cos(a2*D);
+    var p={d:"M "+x1.toFixed(1)+" "+y1.toFixed(1)+" A "+r+" "+r+" 0 0 "+(a2>a1?1:0)+" "+
+      x2.toFixed(1)+" "+y2.toFixed(1),fill:"none",stroke:V(coul),"stroke-width":"1.8"};
+    if(pointille)p["stroke-dasharray"]="3 3";
+    svg.appendChild(S("path",p));
+  }
+  /* ── reflexion ── */
+  var CX=200,CY=238,L=170,I=40;
+  svg.appendChild(S("text",{x:40,y:60,"class":"s-lab"},"au miroir : i = r = 40°"));
+  svg.appendChild(S("line",{x1:60,y1:CY,x2:340,y2:CY,stroke:V("encre"),"stroke-width":"3"}));
+  for(var h=66;h<340;h+=16){
+    svg.appendChild(S("line",{x1:h,y1:CY+2,x2:h-9,y2:CY+11,stroke:V("encre2"),"stroke-width":"1.2"}));
+  }
+  svg.appendChild(S("line",{x1:CX,y1:CY,x2:CX,y2:CY-160,stroke:V("encre2"),"stroke-width":"1.4",
+    "stroke-dasharray":"5 4"}));
+  svg.appendChild(S("text",{x:CX+6,y:CY-148,"class":"s-pet"},"normale"));
+  var xa=CX-L*Math.sin(I*D),ya=CY-L*Math.cos(I*D);
+  svg.appendChild(S("line",{x1:xa,y1:ya,x2:CX-2,y2:CY-2,stroke:V("tiede"),"stroke-width":"2.4",
+    "marker-end":"url(#rp-t)"}));
+  svg.appendChild(S("line",{x1:CX,y1:CY,x2:CX+L*Math.sin(I*D),y2:CY-L*Math.cos(I*D),
+    stroke:V("chaud"),"stroke-width":"2.4","marker-end":"url(#rp-c)"}));
+  arc(CX,CY,52,-I,0,"tiede");arc(CX,CY,52,0,I,"chaud");
+  svg.appendChild(S("text",{x:CX-23,y:CY-60,"text-anchor":"middle","class":"s-lab",fill:V("tiede")},"i"));
+  svg.appendChild(S("text",{x:CX+23,y:CY-60,"text-anchor":"middle","class":"s-lab",fill:V("chaud")},"r"));
+  /* l'angle avec le miroir, celui qu'on ne prend pas : 90 - 40 = 50 */
+  arc(CX,CY,86,-90,-I,"encre2",true);
+  svg.appendChild(S("text",{x:CX-104,y:CY-20,"text-anchor":"middle","class":"s-pet"},"50°"));
+  svg.appendChild(S("text",{x:40,y:CY+36,"class":"s-pet"},"50° : l'angle avec le miroir,"));
+  svg.appendChild(S("text",{x:40,y:CY+52,"class":"s-pet"},"celui qu'on ne mesure pas"));
+  /* ── refraction, de l'air vers l'eau ── */
+  var RX=560,RY=200,n=1.33,R=Math.asin(Math.sin(I*D)/n)/D;
+  svg.appendChild(S("text",{x:400,y:60,"class":"s-lab"},"dans l'eau : i = 40°, r ≈ 29°"));
+  svg.appendChild(S("rect",{x:400,y:RY,width:300,height:110,fill:V("froid"),opacity:".13"}));
+  svg.appendChild(S("line",{x1:400,y1:RY,x2:700,y2:RY,stroke:V("froid"),"stroke-width":"2.4"}));
+  svg.appendChild(S("text",{x:410,y:RY-10,"class":"s-nom"},"air"));
+  svg.appendChild(S("text",{x:410,y:RY+22,"class":"s-nom",fill:V("froid")},"eau"));
+  svg.appendChild(S("line",{x1:RX,y1:RY-124,x2:RX,y2:RY+104,stroke:V("encre2"),"stroke-width":"1.4",
+    "stroke-dasharray":"5 4"}));
+  var L2=150,xb=RX-L2*Math.sin(I*D),yb=RY-L2*Math.cos(I*D);
+  svg.appendChild(S("line",{x1:xb,y1:yb,x2:RX-2,y2:RY-2,stroke:V("tiede"),"stroke-width":"2.4",
+    "marker-end":"url(#rp-t)"}));
+  /* le trajet qu'il aurait suivi sans plier */
+  svg.appendChild(S("line",{x1:RX,y1:RY,x2:RX+100*Math.sin(I*D),y2:RY+100*Math.cos(I*D),
+    stroke:V("encre2"),"stroke-width":"1.2","stroke-dasharray":"3 4"}));
+  svg.appendChild(S("line",{x1:RX,y1:RY,x2:RX+100*Math.sin(R*D),y2:RY+100*Math.cos(R*D),
+    stroke:V("froid"),"stroke-width":"2.6","marker-end":"url(#rp-f)"}));
+  arc(RX,RY,48,-I,0,"tiede");
+  /* angle de refraction, sous la surface : depuis la normale descendante */
+  var ra=46,xr1=RX,yr1=RY+ra,xr2=RX+ra*Math.sin(R*D),yr2=RY+ra*Math.cos(R*D);
+  svg.appendChild(S("path",{d:"M "+xr1+" "+yr1+" A "+ra+" "+ra+" 0 0 0 "+xr2.toFixed(1)+" "+yr2.toFixed(1),
+    fill:"none",stroke:V("froid"),"stroke-width":"1.8"}));
+  svg.appendChild(S("text",{x:RX-22,y:RY-58,"text-anchor":"middle","class":"s-lab",fill:V("tiede")},"i"));
+  svg.appendChild(S("text",{x:RX+12,y:RY+80,"text-anchor":"middle","class":"s-lab",fill:V("froid")},"r"));
+  svg.appendChild(S("text",{x:400,y:H-12,"class":"s-nom",fill:V("froid")},
+    "il se rapproche de la normale"));
+  svg.appendChild(S("text",{x:40,y:H-12,"class":"s-nom",fill:V("chaud")},
+    "il repart avec le même angle"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>Tout se mesure depuis la normale</b>, la perpendiculaire à la surface. Au "+
+    "miroir, le rayon repart avec le même angle. En entrant dans l'eau, il continue "+
+    "mais change de direction : le pointillé gris montre où il serait allé tout droit."));
+};
+
+/* ─────────── CAP co-int · S6 · le spectre et ses deux voisins invisibles ─────────── */
+SCHEMAS["spectre-et-invisibles"]=function(el){
+  var W=724,H=300,BY=78,BH=62,BX=196,BW=336;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Le spectre visible du violet au rouge ; l'ultraviolet au-dela du violet, l'infrarouge en dessous du rouge"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "CE QUI SE TROUVE DE PART ET D'AUTRE DU SPECTRE"));
+  /* couleurs reelles : un spectre ne suit pas le theme */
+  var C=["#7b1fa2","#1e40d8","#1b9e4b","#e8d40c","#f28c0f","#d62a1e"];
+  var cw=BW/C.length;
+  C.forEach(function(c,k){
+    svg.appendChild(S("rect",{x:BX+k*cw,y:BY,width:cw+0.5,height:BH,fill:c}));
+  });
+  svg.appendChild(S("rect",{x:BX,y:BY,width:BW,height:BH,fill:"none",stroke:V("encre"),"stroke-width":"2"}));
+  /* les deux boites invisibles */
+  [[26,"violet","ULTRAVIOLET"],[554,"chaud","INFRAROUGE"]].forEach(function(b){
+    svg.appendChild(S("rect",{x:b[0],y:BY,width:144,height:BH,rx:"6",fill:"none",
+      stroke:V(b[1]),"stroke-width":"2","stroke-dasharray":"7 5"}));
+    svg.appendChild(S("text",{x:b[0]+72,y:BY+36,"text-anchor":"middle","class":"s-lab",
+      fill:V(b[1])},b[2]));
+  });
+  svg.appendChild(S("text",{x:98,y:BY-12,"text-anchor":"middle","class":"s-pet"},"l'œil ne le voit pas"));
+  svg.appendChild(S("text",{x:BX+BW/2,y:BY-12,"text-anchor":"middle","class":"s-pet"},"l'œil le voit"));
+  svg.appendChild(S("text",{x:626,y:BY-12,"text-anchor":"middle","class":"s-pet"},"l'œil ne le voit pas"));
+  svg.appendChild(S("text",{x:BX+4,y:BY+BH+20,"class":"s-nom"},"violet"));
+  svg.appendChild(S("text",{x:BX+BW-4,y:BY+BH+20,"text-anchor":"end","class":"s-nom"},"rouge"));
+  /* sous chaque boite : ou il est, ce qu'il fait */
+  var U=[["au-delà du violet","violet"],["il brûle l'œil :","encre2"],["le coup d'arc","encre2"]],
+      I=[["en dessous du rouge","chaud"],["on le sent sur","encre2"],["la peau : la chaleur","encre2"]];
+  U.forEach(function(t,k){svg.appendChild(S("text",{x:34,y:BY+BH+26+k*18,"class":"s-nom",fill:V(t[1])},t[0]));});
+  I.forEach(function(t,k){svg.appendChild(S("text",{x:562,y:BY+BH+26+k*18,"class":"s-nom",fill:V(t[1])},t[0]));});
+  svg.appendChild(S("text",{x:BX+BW/2,y:BY+BH+46,"text-anchor":"middle","class":"s-lab"},
+    "le spectre visible"));
+  svg.appendChild(S("text",{x:20,y:H-44,"class":"s-nom"},
+    "Le nom dit le côté : ultra = au-delà, infra = en dessous."));
+  svg.appendChild(S("text",{x:20,y:H-22,"class":"s-nom"},
+    "L'ultraviolet touche le violet, l'infrarouge touche le rouge — jamais l'inverse."));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "L'œil ne voit que la bande du milieu. <b>De part et d'autre, deux rayonnements "+
+    "invisibles</b>, qu'on ne connaît que par leurs effets. L'arc de soudage émet "+
+    "beaucoup d'ultraviolet : <b>c'est lui que le masque arrête</b>, pas la lumière qu'on voit."));
+};
+
+/* ─────────── CAP co-int · S6 · trois lampes sur un ecran ─────────── */
+SCHEMAS["trois-lumieres"]=function(el){
+  var W=724,H=340,RX=170,RY=44,RW=384,RH=258;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Trois lampes rouge, verte et bleue superposees sur un ecran blanc dans le noir"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "TROIS LAMPES, UN ÉCRAN BLANC, UNE SALLE SOMBRE"));
+  /* le melange se fait par addition : fond noir, disques en mode « screen » */
+  var g=S("g",{style:"isolation:isolate"});
+  g.appendChild(S("rect",{x:RX,y:RY,width:RW,height:RH,rx:"6",fill:"#000"}));
+  var M=[[320,138,"#ff0000"],[404,138,"#00ff00"],[362,211,"#0000ff"]];
+  M.forEach(function(m){
+    g.appendChild(S("circle",{cx:m[0],cy:m[1],r:"80",fill:m[2],style:"mix-blend-mode:screen"}));
+  });
+  svg.appendChild(g);
+  svg.appendChild(S("rect",{x:RX,y:RY,width:RW,height:RH,rx:"6",fill:"none",
+    stroke:V("encre"),"stroke-width":"1.5"}));
+  /* les lampes, hors de l'ecran */
+  function lampe(x,y,xt,anc,nom,coul,xl){
+    svg.appendChild(S("line",{x1:xl,y1:y,x2:x,y2:y,stroke:V("encre2"),"stroke-width":"1.2",
+      "stroke-dasharray":"3 3"}));
+    svg.appendChild(S("rect",{x:(anc==="end"?xt+6:xt-18),y:y-7,width:12,height:12,rx:"2",fill:coul}));
+    svg.appendChild(S("text",{x:(anc==="end"?xt:xt),y:y+4,"text-anchor":anc==="end"?"end":"start",
+      "class":"s-lab"},nom));
+  }
+  lampe(250,112,140,"end","lampe rouge","#e53935",RX);
+  lampe(474,112,588,"start","lampe verte","#2e9e4f",RX+RW);
+  lampe(300,262,140,"end","lampe bleue","#1e40d8",RX);
+  svg.appendChild(S("text",{x:20,y:H-14,"class":"s-nom"},
+    "Là où deux lampes se recouvrent, l'écran prend une couleur qu'aucune des deux n'avait."));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "<b>En lumière, les couleurs s'ajoutent</b> : chaque zone de recouvrement est plus "+
+    "claire que les lampes qui la font. Regardez le centre, où les trois se "+
+    "rencontrent, et comparez-le à la lumière qui entrait dans le prisme."));
+};
+
+/* ─────────── CAP co-int · S7 · grave ou aigu : compter les vibrations ─────────── */
+SCHEMAS["grave-ou-aigu"]=function(el){
+  var W=724,H=320,X0=140,LW=440;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Trois sons purs sur la meme duree : 200 Hz fait 1 vibration, 1 000 Hz en fait 5, 4 000 Hz en fait 20"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "SUR LA MÊME DURÉE : PLUS DE VIBRATIONS, SON PLUS AIGU"));
+  /* fenetre de 5 ms : 200 Hz -> 1 periode, 1 000 Hz -> 5, 4 000 Hz -> 20 */
+  [["200 Hz",1,"froid","grave","1 vibration"],["1 000 Hz",5,"violet","","5 vibrations"],
+   ["4 000 Hz",20,"chaud","aigu","20 vibrations"]].forEach(function(s,k){
+    var y=86+k*74,A=22,d="",N=900;
+    for(var j=0;j<=N;j++){
+      d+=(j?" L ":"M ")+(X0+j/N*LW).toFixed(1)+" "+(y-A*Math.sin(2*Math.PI*s[1]*j/N)).toFixed(1);
+    }
+    svg.appendChild(S("line",{x1:X0,y1:y,x2:X0+LW,y2:y,stroke:V("trait"),"stroke-width":"1"}));
+    svg.appendChild(S("path",{d:d,fill:"none",stroke:V(s[2]),"stroke-width":"2.2"}));
+    svg.appendChild(S("text",{x:20,y:y-2,"class":"s-lab",fill:V(s[2])},s[0]));
+    if(s[3])svg.appendChild(S("text",{x:20,y:y+16,"class":"s-pet"},s[3]));
+    svg.appendChild(S("text",{x:X0+LW+16,y:y+5,"class":"s-pet"},s[4]));
+  });
+  /* la duree commune */
+  var yb=86+2*74+38;
+  svg.appendChild(S("line",{x1:X0,y1:yb,x2:X0+LW,y2:yb,stroke:V("encre2"),"stroke-width":"1.4"}));
+  svg.appendChild(S("line",{x1:X0,y1:yb-5,x2:X0,y2:yb+5,stroke:V("encre2"),"stroke-width":"1.4"}));
+  svg.appendChild(S("line",{x1:X0+LW,y1:yb-5,x2:X0+LW,y2:yb+5,stroke:V("encre2"),"stroke-width":"1.4"}));
+  svg.appendChild(S("text",{x:X0+LW/2,y:yb+18,"text-anchor":"middle","class":"s-pet"},
+    "la même durée pour les trois"));
+  svg.appendChild(S("text",{x:20,y:H-12,"class":"s-nom"},
+    "La fréquence, en hertz, compte les vibrations en une seconde : 1 kHz = 1 000 Hz."));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "Les trois vagues ont la même hauteur : les trois sons ont le même niveau, en "+
+    "décibels. <b>Ce qui change, c'est le nombre de vibrations</b> sur la même durée. "+
+    "Plus il y en a, plus la fréquence est grande, <b>plus le son est aigu</b>."));
+};
+
+/* ─────────── CAP co-int · S7 · ou agit chaque protection ─────────── */
+SCHEMAS["ou-agit-la-protection"]=function(el){
+  var W=724,H=300,BW=200,BY=52,BH=76,GAP=32;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Emetteur, milieu, recepteur : on peut arreter le son sur chacun des trois"});
+  var defs=S("defs",{});
+  var mk=S("marker",{id:"oa-fl",viewBox:"0 0 10 10",refX:"9",refY:"5",markerWidth:"6",
+    markerHeight:"6",orient:"auto-start-reverse"});
+  mk.appendChild(S("path",{d:"M 0 0 L 10 5 L 0 10 z",fill:V("encre2")}));
+  defs.appendChild(mk);svg.appendChild(defs);
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "ON PEUT ARRÊTER LE SON SUR CHACUN DES TROIS"));
+  var B=[["L'ÉMETTEUR","la meuleuse","chaud",["un capot sur la machine,","une machine moins bruyante"]],
+         ["LE MILIEU","l'air de l'atelier","vert",["une cloison, de la mousse","qui absorbe, la distance"]],
+         ["LE RÉCEPTEUR","l'oreille","froid",["le casque, les bouchons :","pour celui qui les porte"]]];
+  B.forEach(function(b,k){
+    var x=24+k*(BW+GAP);
+    svg.appendChild(S("rect",{x:x,y:BY,width:BW,height:BH,rx:"8",fill:V("carte2"),
+      stroke:V(b[2]),"stroke-width":"2"}));
+    svg.appendChild(S("text",{x:x+BW/2,y:BY+30,"text-anchor":"middle","class":"s-lab",
+      fill:V(b[2])},b[0]));
+    svg.appendChild(S("text",{x:x+BW/2,y:BY+54,"text-anchor":"middle","class":"s-nom"},b[1]));
+    if(k<2)svg.appendChild(S("line",{x1:x+BW+4,y1:BY+BH/2,x2:x+BW+GAP-4,y2:BY+BH/2,
+      stroke:V("encre2"),"stroke-width":"2","marker-end":"url(#oa-fl)"}));
+    /* ce qu'on y fait */
+    svg.appendChild(S("rect",{x:x,y:BY+BH+30,width:BW,height:78,rx:"8",fill:"none",
+      stroke:V(b[2]),"stroke-width":"1.4","stroke-dasharray":"6 4"}));
+    svg.appendChild(S("line",{x1:x+BW/2,y1:BY+BH+4,x2:x+BW/2,y2:BY+BH+26,stroke:V(b[2]),
+      "stroke-width":"1.4"}));
+    svg.appendChild(S("text",{x:x+12,y:BY+BH+52,"class":"s-pet"},"on l'arrête par :"));
+    svg.appendChild(S("text",{x:x+12,y:BY+BH+72,"class":"s-nom"},b[3][0]));
+    svg.appendChild(S("text",{x:x+12,y:BY+BH+90,"class":"s-nom"},b[3][1]));
+  });
+  svg.appendChild(S("text",{x:24,y:H-18,"class":"s-nom"},
+    "Le plus efficace est d'agir à la source ; la protection de l'oreille vient en dernier."));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "Le son a besoin des trois maillons : <b>en couper un suffit à l'arrêter</b>. Un "+
+    "bon isolant phonique, dans le milieu, <b>absorbe</b> une partie de l'énergie du "+
+    "son au lieu de la laisser passer."));
+};
+
+/* ─────────── CAP co-int · S7 · la moyenne egalise ─────────── */
+SCHEMAS["moyenne-on-egalise"]=function(el){
+  var W=724,H=300,YB=246,K=5,BW=64;
+  function py(v){return YB-v*K;}
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"10, 20 et 30 : on prend 10 a la plus haute pour le donner a la plus basse, et les trois valent 20"});
+  var defs=S("defs",{});
+  var mk=S("marker",{id:"me-fl",viewBox:"0 0 10 10",refX:"9",refY:"5",markerWidth:"6",
+    markerHeight:"6",orient:"auto-start-reverse"});
+  mk.appendChild(S("path",{d:"M 0 0 L 10 5 L 0 10 z",fill:V("chaud")}));
+  defs.appendChild(mk);svg.appendChild(defs);
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "LA MOYENNE : CE QUE CHACUN AURAIT SI L'ON PARTAGEAIT"));
+  var X=[70,180,290],Vv=[10,20,30];
+  svg.appendChild(S("line",{x1:40,y1:YB,x2:390,y2:YB,stroke:V("encre"),"stroke-width":"1.8"}));
+  X.forEach(function(x,k){
+    var v=Math.min(Vv[k],20);
+    svg.appendChild(S("rect",{x:x,y:py(v),width:BW,height:v*K,fill:V("froid"),opacity:".55",
+      stroke:V("froid"),"stroke-width":"1.5"}));
+    svg.appendChild(S("text",{x:x+BW/2,y:YB+20,"text-anchor":"middle","class":"s-lab"},String(Vv[k])));
+  });
+  /* le surplus de la troisieme, et le manque de la premiere */
+  svg.appendChild(S("rect",{x:X[2],y:py(30),width:BW,height:10*K,fill:V("chaud"),opacity:".35",
+    stroke:V("chaud"),"stroke-width":"1.5"}));
+  svg.appendChild(S("rect",{x:X[0],y:py(20),width:BW,height:10*K,fill:"none",
+    stroke:V("chaud"),"stroke-width":"1.5","stroke-dasharray":"5 4"}));
+  svg.appendChild(S("path",{d:"M "+(X[2]+BW/2)+" "+(py(30)-6)+" C "+(X[2]+BW/2)+" "+(py(30)-44)+" "+
+    (X[0]+BW/2)+" "+(py(30)-44)+" "+(X[0]+BW/2)+" "+(py(20)-6),fill:"none",stroke:V("chaud"),
+    "stroke-width":"2","marker-end":"url(#me-fl)"}));
+  svg.appendChild(S("text",{x:X[1]+BW/2,y:108,"text-anchor":"middle","class":"s-nom",
+    fill:V("chaud")},"ce qu'elle a en trop"));
+  /* la ligne de la moyenne */
+  svg.appendChild(S("line",{x1:40,y1:py(20),x2:390,y2:py(20),stroke:V("vert"),"stroke-width":"2",
+    "stroke-dasharray":"7 4"}));
+  svg.appendChild(S("text",{x:396,y:py(20)+4,"class":"s-lab",fill:V("vert")},"20"));
+  /* le calcul */
+  var XR=460;
+  svg.appendChild(S("text",{x:XR,y:96,"class":"s-pet"},"1. on additionne"));
+  svg.appendChild(S("text",{x:XR,y:120,"class":"s-sym"},"10 + 20 + 30 = 60"));
+  svg.appendChild(S("text",{x:XR,y:160,"class":"s-pet"},"2. on partage en 3"));
+  svg.appendChild(S("text",{x:XR,y:184,"class":"s-sym",fill:V("vert")},"60 ÷ 3 = 20"));
+  svg.appendChild(S("text",{x:XR,y:226,"class":"s-nom"},"le trop-plein de l'une"));
+  svg.appendChild(S("text",{x:XR,y:242,"class":"s-nom"},"comble le manque de l'autre"));
+  svg.appendChild(S("text",{x:20,y:H-12,"class":"s-pet"},
+    "la moyenne tombe toujours entre la plus petite et la plus grande valeur"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "Additionner puis diviser, c'est <b>partager également</b> : ce que la plus haute "+
+    "a en trop comble ce qui manque à la plus basse. <b>La somme d'abord, le nombre "+
+    "de valeurs ensuite</b> — l'ordre inverse donne un nombre sans aucun sens."));
+};
+
 /* --------- dispersion d'une serie de releves ---------
    Ajoute le 3 septembre 2026, sequence 1 de maths-PC. C'est la statistique
    descriptive du CCF de mathematiques, sur des donnees de chaufferie. */
