@@ -349,6 +349,142 @@ function bulbeH(t,r){                                              /* dichotomie
 }
 function tDeH(h,r){return (h-2.501*r)/(1.006+0.00183*r);}          /* adiabatique */
 
+/* ═══════════════════════════════════════════════════ LA REMISE
+   « ::: {.remise} » — l'eleve tape l'identifiant donne en classe et produit un
+   FICHIER TEXTE de ses reponses. Tout se fabrique dans le navigateur : rien
+   n'est envoye, rien n'est enregistre. Le fichier atterrit dans ses
+   telechargements, et c'est lui qui le remet.
+
+   Ce qui est collecte : les series et les exercices qui se trouvent entre le
+   dernier titre de niveau 1 AVANT le bloc, et le bloc lui-meme. Un bilan pose
+   sous « # Exercices bilan de sequence » ne ramasse donc pas les exercices de
+   la seance qui le precede. */
+[].forEach.call(document.querySelectorAll(".remise"),function(bl){
+
+  /* --- la portee : du dernier h1 qui precede, jusqu'ici --- */
+  function portee(){
+    var tous=[].slice.call(document.querySelectorAll("h1, .serie, .exo"));
+    var fin=tous.indexOf(bl), debut=0;
+    if(fin<0){
+      /* le bloc n'est pas dans la liste : on se repere sur sa position */
+      fin=tous.length;
+      for(var k=0;k<tous.length;k++){
+        if(bl.compareDocumentPosition(tous[k])&Node.DOCUMENT_POSITION_PRECEDING)continue;
+        fin=k;break;
+      }
+    }
+    for(var i=fin-1;i>=0;i--){ if(tous[i].tagName==="H1"){debut=i+1;break;} }
+    return tous.slice(debut,fin).filter(function(n){return n.tagName!=="H1";});
+  }
+
+  function titreDe(n){
+    /* le titre d'un exercice et celui d'une serie sont des h4 ; le repli sur
+       un <strong> attrapait le premier mot gras de l'enonce. */
+    var t=n.querySelector("h3, h4, .titre-exo");
+    return t?t.textContent.trim():"(sans titre)";
+  }
+
+  function lignesSerie(se){
+    var out=["SÉRIE — "+titreDe(se),""];
+    [].forEach.call(se.querySelectorAll("ol.items > li"),function(li,i){
+      var inp=li.querySelector("input");
+      var lib=li.cloneNode(true);
+      var rep=lib.querySelector(".rep"); if(rep)rep.parentNode.removeChild(rep);
+      var etat=li.classList.contains("juste")?"juste"
+              :li.classList.contains("faux") ?"faux":"non vérifié";
+      out.push("  "+(i+1)+". "+lib.textContent.replace(/\s+/g," ").trim());
+      out.push("     réponse : "+((inp&&inp.value.trim())||"(vide)")+"   ["+etat+"]");
+    });
+    out.push("");
+    return out;
+  }
+
+  function lignesExo(ex){
+    var out=["EXERCICE — "+titreDe(ex),""];
+    var champ=ex.querySelector("textarea, .saisie input");
+    out.push("  réponse : "+((champ&&champ.value.trim())||"(vide)"));
+    var liste=ex.querySelector(".verifier");
+    if(liste&&!liste.hidden){
+      var pts=[].slice.call(liste.children), n=0;
+      pts.forEach(function(li){
+        var cb=li.querySelector("input[type=checkbox]");
+        var coche=cb&&cb.checked; if(coche)n++;
+        var txt=li.cloneNode(true);
+        var c=txt.querySelector("input"); if(c)c.parentNode.removeChild(c);
+        out.push("     ["+(coche?"x":" ")+"] "+txt.textContent.replace(/\s+/g," ").trim());
+      });
+      out.splice(2,0,"  points retrouvés : "+n+" sur "+pts.length);
+    }
+    var v=ex.querySelector(".verdict");
+    if(v&&v.textContent.trim())out.push("  verdict : "+v.textContent.trim());
+    out.push("");
+    return out;
+  }
+
+  function fabriquer(id){
+    var titre=(document.querySelector("h1")||{textContent:"Bilan"}).textContent.trim();
+    var onglet=document.title||titre;
+    var d=new Date(), deux=function(n){return (n<10?"0":"")+n;};
+    var out=["BILAN DE SÉQUENCE",
+             "Page       : "+onglet,
+             "Identifiant: "+id,
+             "Date       : "+deux(d.getDate())+"/"+deux(d.getMonth()+1)+"/"+d.getFullYear()
+                            +" à "+deux(d.getHours())+"h"+deux(d.getMinutes()),
+             new Array(64).join("="), ""];
+    var n=0;
+    portee().forEach(function(el){
+      if(el.classList.contains("serie")){out=out.concat(lignesSerie(el));n++;}
+      else if(el.classList.contains("exo")){out=out.concat(lignesExo(el));n++;}
+    });
+    if(!n)out.push("(aucune réponse trouvée sur cette page)","");
+    out.push(new Array(64).join("-"));
+    out.push("Fichier produit dans le navigateur de l'élève.");
+    out.push("Rien n'a été envoyé, rien n'a été enregistré ailleurs.");
+    return out.join("\r\n");
+  }
+
+  function nettoie(s){
+    return (s.normalize?s.normalize("NFD").replace(/[̀-ͯ]/g,""):s)
+           .replace(/[^A-Za-z0-9]+/g,"-").replace(/^-|-$/g,"").toLowerCase()
+           || "sans-identifiant";
+  }
+
+  /* --- l'interface --- */
+  bl.appendChild(E("p",{"class":"remise-quoi"},
+    "Tapez l’<b>identifiant donné en classe</b>, puis produisez le fichier. "+
+    "Il se fabrique <b>dans votre navigateur</b> : rien n’est envoyé, rien n’est "+
+    "enregistré. Le fichier part dans vos téléchargements, et c’est vous qui le remettez."));
+  var ligne=E("div",{"class":"saisie"});
+  var ident=E("input",{type:"text",autocomplete:"off","aria-label":"Identifiant",
+    placeholder:"identifiant donné en classe"});
+  var bouton=E("button",{type:"button","class":"btn"},"Produire mon fichier");
+  var dit=E("p",{"class":"verdict"},"");
+  ligne.appendChild(ident);ligne.appendChild(bouton);
+  bl.appendChild(ligne);bl.appendChild(dit);
+
+  bouton.addEventListener("click",function(){
+    var id=ident.value.trim();
+    if(!id){dit.className="verdict";dit.textContent="Tapez d’abord votre identifiant.";
+      ident.focus();return;}
+    var texte=fabriquer(id);
+    try{
+      var b=new Blob([texte],{type:"text/plain;charset=utf-8"});
+      var u=URL.createObjectURL(b), a=E("a",{href:u,download:"bilan-"+nettoie(id)+".txt"});
+      document.body.appendChild(a);a.click();
+      document.body.removeChild(a);setTimeout(function(){URL.revokeObjectURL(u);},2000);
+      dit.className="verdict juste";
+      dit.textContent="Fichier produit : bilan-"+nettoie(id)+".txt";
+    }catch(e){
+      dit.className="verdict faux";
+      dit.textContent="Le navigateur a refusé le téléchargement. Recopiez vos réponses à la main.";
+    }
+  });
+  ident.addEventListener("keydown",function(ev){
+    if(ev.key==="Enter"){ev.preventDefault();bouton.click();}
+  });
+});
+
+
 /* ═══════════════════════════════════════════════════ SCHEMAS
    Dessines ici, pas repris du polycopie : vectoriels, ils suivent le theme
    sombre, et « paroi-coupe » se redessine avec le composeur de paroi. */

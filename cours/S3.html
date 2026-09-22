@@ -3,11 +3,11 @@
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta name="robots" content="noindex, nofollow">
 <title>Séquence 3 — loi d'Ohm</title>
-<link rel="stylesheet" href="../assets/kit.css?v=5b4b026f">
-<link rel="stylesheet" href="../assets/site.css?v=5b4b026f">
-<link rel="stylesheet" href="../assets/cablage.css?v=5b4b026f">
-<link rel="stylesheet" href="../assets/vivant.css?v=5b4b026f">
-<link rel="stylesheet" href="../assets/doc.css?v=5b4b026f">
+<link rel="stylesheet" href="../assets/kit.css?v=128d2e10">
+<link rel="stylesheet" href="../assets/site.css?v=128d2e10">
+<link rel="stylesheet" href="../assets/cablage.css?v=128d2e10">
+<link rel="stylesheet" href="../assets/vivant.css?v=128d2e10">
+<link rel="stylesheet" href="../assets/doc.css?v=128d2e10">
 
 <div class="page" data-site="ciel2" data-page="cours/S3">
 <div class="jauge-lecture" id="jauge-lecture"><i></i></div><div class="barre-site"><a class="accueil" href="../index.html">Maths et physique-chimie — 2de Bac Pro CIEL</a><span class="fleches"><a class="fleche" href="S2.html" rel="prev" title="Séquence 2 — sécurité et mesures" aria-label="Séquence 2 — sécurité et mesures">&lsaquo;</a></span><button type="button" class="lu" data-lu="cours/S3">Marquer comme lu</button></div>
@@ -18,11 +18,11 @@
     <h1>Loi d'Ohm<span>et diviseur de tension</span></h1>
   </div>
   <p class="accroche">Une LED qui ne supporte que 2 V, branchée sur du 5 V. Le technicien a mis une résistance en série. Pourquoi, et comment on la choisit, avec un calculateur pour essayer dix valeurs en dix secondes.</p>
-  <p class="contenu">1 outil · 3 exercices · 1 repli · 2 figures</p>
+  <p class="contenu">1 outil · 4 exercices · 5 items d'entraînement · 1 repli · 2 figures</p>
   <p class="k-savoirs">Savoirs travaillés</p><div class="savoirs"><span class="tag">ELEC Électricité — U, I, R, montages</span><span class="tag">PREM Résolution d'un problème du premier degré</span><span class="tag">AU Automatismes</span></div>
 </header>
 <aside class="prerequis"><p class="chapeau-p">Avant de commencer</p><ul><li><b><a href="../aide/FICHE-01-isoler-et-convertir.html">Isoler une inconnue et convertir</a></b><span class="ou">Fiche 1 — isoler et convertir</span><span class="car">U = R × I se retourne dans les deux sens, et les milliampères sont le piège de la LED.</span></li><li><b><a href="../aide/FICHE-03-mettre-en-equation.html">Mettre un problème en équation</a></b><span class="ou">Fiche 3 — mettre en équation</span><span class="car">choisir la résistance de la LED, c'est écrire une équation avant de la résoudre.</span></li><li><b><a href="../aide/AUTO-01-puissances-de-dix.html">Les puissances de 10</a></b><span class="ou">Auto 01 — puissances de 10</span><span class="car">20 mA et 4,7 kΩ ne se multiplient pas sans passer par 10⁻³ et 10³.</span></li></ul></aside>
-<nav class="somm"><div class="in"><a href="#la-situation">La situation</a><a href="#la-loi-d-ohm">La loi d’Ohm</a><a href="#deux-dipoles-en-serie-la-tension-se-partage">Deux dipôles en série : la tension se partage</a><a href="#essayez-c-est-plus-rapide-que-de-lire">Essayez, c’est plus rapide que de lire</a><a href="#choisir-la-resistance-de-la-led">Choisir la résistance de la LED</a><a href="#vous-verifier">Vous vérifier</a><a href="#pour-aller-plus-loin">Pour aller plus loin</a></div></nav>
+<nav class="somm"><div class="in"><a href="#la-situation">La situation</a><a href="#la-loi-d-ohm">La loi d’Ohm</a><a href="#deux-dipoles-en-serie-la-tension-se-partage">Deux dipôles en série : la tension se partage</a><a href="#essayez-c-est-plus-rapide-que-de-lire">Essayez, c’est plus rapide que de lire</a><a href="#choisir-la-resistance-de-la-led">Choisir la résistance de la LED</a><a href="#vous-verifier">Vous vérifier</a><a href="#pour-aller-plus-loin">Pour aller plus loin</a><a href="#la-led-du-capteur">La LED du capteur</a></div></nav>
 <h2 id="la-situation">La situation</h2>
 <p>Sur une carte, une <strong>LED témoin</strong> doit s’allumer sous <strong>5 V</strong>. Elle ne supporte que <strong>2 V</strong> à ses bornes et <strong>20 mA</strong> au maximum.</p>
 <p>Le technicien a placé une <strong>résistance en série</strong> avec elle. Un stagiaire demande : <em>« pourquoi ? on ne peut pas brancher la LED directement ? »</em></p>
@@ -96,11 +96,54 @@
 <p>Ce qui change, en revanche, c’est le <strong>sens de la LED</strong>. Elle ne laisse passer le courant que dans un sens, montée à l’envers, elle reste éteinte, sans être abîmée. C’est le premier réflexe de dépannage sur une carte.</p>
 </div>
 <p><strong>Et si l’on met deux LED en série sous 5 V ?</strong> Elles gardent 2 V chacune, soit 4 V ; il ne reste qu’<strong>un volt</strong> pour la résistance. Le calcul se refait, et la résistance devient trois fois plus petite. Essayez-le dans le calculateur en mettant l’alimentation à 5 V et en réfléchissant à ce qui reste.</p></div></details>
-</div><nav class="suite"><p class="chapeau-s">La suite</p><div class="pas-a-pas"><a class="av" href="S2.html" rel="prev"><span class="k">&lsaquo; Précédent</span><span class="t">Séquence 2 — sécurité et mesures</span></a></div></nav>
+</div><h1 id="exercices-bilan-de-séquence">Exercices bilan de séquence</h1>
+<p><em>Un seul problème, qui reprend toute la séquence. On le fait d’un bout à l’autre, comme un vrai : il n’y a pas d’indication de méthode en cours de route. À la fin, on produit son fichier de réponses.</em></p>
+<h2 id="la-led-du-capteur">La LED du capteur</h2>
+<p>Une carte capteur est alimentée en <strong>12 V</strong>. Elle doit porter une LED témoin qui signale sa mise sous tension. Le constructeur donne deux valeurs, et deux seulement.</p>
+<div class="enveloppe-tbl"><table>
+<tbody>
+<tr>
+<td>Tension aux bornes de la LED</td>
+<td><strong>2,1 V</strong></td>
+</tr>
+<tr>
+<td>Courant maximal admis</td>
+<td><strong>15 mA</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>Les résistances disponibles à l’atelier : <strong>560 Ω · 620 Ω · 680 Ω · 750 Ω</strong>.</p>
+<blockquote>
+<p><strong>La question</strong> : « <em>Quelle résistance monter en série avec la LED ?</em> »</p>
+</blockquote>
+<p><strong>Lire la situation</strong></p>
+<p><strong>a)</strong> Relever les tensions et le courant donnés, avec leurs unités.</p>
+<p><strong>b)</strong> Dire pourquoi on ne peut pas brancher la LED directement sur les 12 V.</p>
+<p><strong>Choisir la méthode</strong></p>
+<p><strong>c)</strong> Dire quelle tension se retrouve aux bornes de la <strong>résistance</strong>, et sur quelle loi vous vous appuyez.</p>
+<p><strong>d)</strong> Donner la relation qui donne la valeur de la résistance.</p>
+<p><strong>Calculer</strong></p>
+<p><strong>e)</strong> Calculer la tension aux bornes de la résistance.</p>
+<p><strong>f)</strong> Calculer la valeur qui donnerait <strong>exactement</strong> 15 mA.</p>
+<p><strong>g)</strong> Choisir, dans la liste de l’atelier, la résistance à monter, puis calculer le courant réel obtenu.</p>
+<p><strong>Conclure</strong></p>
+<p><strong>h)</strong> Expliquer pourquoi on ne prend <strong>pas</strong> la valeur immédiatement inférieure, même si elle est plus proche du résultat calculé.</p>
+<p><strong>i)</strong> Répondre à la question par une phrase complète.</p>
+<section class="serie" id="S3-s1" data-serie="S3-s1" data-savoir="ELEC" data-a="IXgveGB4eHZ4LjU2eGBpdGp2eDN4YAEheCx4YGp0amtvJ3YheCx4YGN0Yyd2IXgseGBsbGp0aid2IXgseGBsYmp0aid2IXgseGBrbnRsJwcn"><p class="k">Série · ELEC</p><h4>Les cinq calculs du bilan</h4><div class="enonce">
+
+</div><ol class="items larges"><li><span class="q">le courant maximal, en ampères</span></li><li><span class="q">la tension aux bornes de la résistance, en volts</span></li><li><span class="q">la résistance donnant exactement 15 mA, en ohms</span></li><li><span class="q">la résistance à monter, en ohms</span></li><li><span class="q">le courant réel avec cette résistance, en milliampères</span></li></ol><div class="indice" hidden>La loi des mailles donne la tension de la résistance, la loi d’Ohm retournée donne sa valeur. Le courant réel se recalcule avec la vraie résistance, pas avec celle du calcul.</div></section>
+<section class="exo" id="S3-e4" data-exo="S3-e4" data-type="justification" data-savoir="ELEC" data-a="IXgueGB4MC8pLjM8Mzk7LjM1NHgn"><p class="k">Exercice · ELEC</p><h4>Le sens de l’arrondi</h4><div class="enonce">
+
+<p>620 Ω est plus proche de 660 que 680. Expliquer en deux phrases pourquoi on monte quand même la 680.</p>
+</div><div class="indice" hidden>Calculez le courant que donnerait la 620 Ω, et comparez-le aux 15 mA annoncés par le constructeur.</div><ul class="verifier" hidden><li>J’ai dit que 15 mA est un maximum, pas une cible</li><li>J’ai dit qu’une résistance plus petite ferait passer plus de courant</li><li>J’ai dit qu’on arrondit du côté qui protège le composant</li></ul></section>
+<div class="remise">
+
+</div>
+<nav class="suite"><p class="chapeau-s">La suite</p><div class="pas-a-pas"><a class="av" href="S2.html" rel="prev"><span class="k">&lsaquo; Précédent</span><span class="t">Séquence 2 — sécurité et mesures</span></a></div></nav>
 <p class="pied">Cette page rappelle la séquence. Elle ne remplace pas les documents distribués et ne donne aucun corrigé. Tous les calculs se font dans votre tablette ; rien n'est enregistré.</p><p class="pied-site"><a class="mentions" href="../mentions-legales.html">Mentions légales</a></p>
 </div>
-<script src="../assets/kit.js?v=5b4b026f"></script>
-<script src="../assets/site.js?v=5b4b026f"></script>
-<script src="../assets/vivant.js?v=5b4b026f"></script>
-<script src="../assets/plan.js?v=5b4b026f"></script>
-<script src="../assets/doc.js?v=5b4b026f"></script>
+<script src="../assets/kit.js?v=128d2e10"></script>
+<script src="../assets/site.js?v=128d2e10"></script>
+<script src="../assets/vivant.js?v=128d2e10"></script>
+<script src="../assets/plan.js?v=128d2e10"></script>
+<script src="../assets/doc.js?v=128d2e10"></script>
