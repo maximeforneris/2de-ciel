@@ -1,13 +1,21 @@
+<!DOCTYPE html>
+<html lang="fr">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta name="robots" content="noindex, nofollow">
 <title>Auto 15 — aires et périmètres</title>
-<link rel="stylesheet" href="../assets/kit.css?v=78435e4c">
-<link rel="stylesheet" href="../assets/site.css?v=78435e4c">
-<link rel="stylesheet" href="../assets/cablage.css?v=78435e4c">
-<link rel="stylesheet" href="../assets/vivant.css?v=78435e4c">
-<link rel="stylesheet" href="../assets/doc.css?v=78435e4c">
+<link rel="stylesheet" href="../assets/kit.css?v=840a6d2b">
+<link rel="stylesheet" href="../assets/site.css?v=840a6d2b">
+<link rel="stylesheet" href="../assets/cablage.css?v=840a6d2b">
+<link rel="stylesheet" href="../assets/vivant.css?v=840a6d2b">
+<link rel="stylesheet" href="../assets/doc.css?v=840a6d2b">
+<link rel="stylesheet" href="../assets/impression.css?v=840a6d2b">
+<script src="../assets/kit.js?v=840a6d2b-3200eb" defer></script>
+<script src="../assets/site.js?v=840a6d2b" defer></script>
+<script src="../assets/vivant.js?v=840a6d2b" defer></script>
+<script src="../assets/plan.js?v=840a6d2b" defer></script>
+<script src="../assets/doc.js?v=840a6d2b" defer></script>
 
 <div class="page" data-site="ciel2" data-page="aide/AUTO-15-aires">
 <div class="jauge-lecture" id="jauge-lecture"><i></i></div><div class="barre-site"><a class="accueil" href="../index.html">Maths et physique-chimie — 2de Bac Pro CIEL</a><span class="fleches"><a class="fleche" href="AUTO-14-resoudre-graphiquement.html" rel="prev" title="Auto 14 — résoudre graphiquement" aria-label="Auto 14 — résoudre graphiquement">&lsaquo;</a><a class="fleche" href="AUTO-16-pythagore-thales.html" rel="next" title="Auto 16 — Pythagore et Thalès" aria-label="Auto 16 — Pythagore et Thalès">&rsaquo;</a></span><button type="button" class="lu" data-lu="aide/AUTO-15-aires">Marquer comme lu</button></div>
@@ -23,105 +31,195 @@
 </header>
 <aside class="prerequis"><p class="chapeau-p">Avant de commencer</p><ul><li><b><a href="AUTO-07-conversions.html">Les unités d'aire</a></b><span class="ou">Auto 07 — les conversions</span><span class="car">une aire en m² se convertit avec un facteur cent, et une réponse dans la mauvaise unité est fausse.</span></li><li><b><a href="AUTO-08-arrondir.html">Arrondir</a></b><span class="ou">Auto 08 — arrondir</span><span class="car">π donne des décimales sans fin, et l'aire d'un disque s'arrondit selon l'unité choisie.</span></li></ul></aside>
 <nav class="somm"><div class="in"><a href="#ce-qui-doit-sortir-sans-reflechir">Ce qui doit sortir sans réfléchir</a><a href="#les-trois-formules">Les trois formules</a><a href="#aire-ou-perimetre">Aire ou périmètre ?</a><a href="#je-m-entraine">Je m’entraîne</a><a href="#le-quiz">Le quiz</a><a href="#a-retenir-en-trois-lignes">À retenir en trois lignes</a></div></nav>
-<h2 id="ce-qui-doit-sortir-sans-reflechir">Ce qui doit sortir sans réfléchir</h2>
-<p>Les trois aires et les trois périmètres. Passer du diamètre au rayon. Décider, d’après l’énoncé, si l’on cherche une aire ou un périmètre.</p>
-<h2 id="les-trois-formules">Les trois formules</h2>
-<div class="formule">
-<p><strong>Carré</strong> de côté c → aire <strong>c × c</strong> · périmètre <strong>4 × c</strong></p>
-<p><strong>Rectangle</strong> L par l → aire <strong>L × l</strong> · périmètre <strong>2 × (L + l)</strong></p>
-<p><strong>Disque</strong> de rayon r → aire <strong>π × r × r</strong> · périmètre <strong>2 × π × r</strong></p>
-</div>
-<div class="cle">
-<p><strong>Une aire est en unités au carré, un périmètre en unités simples.</strong> L’unité du résultat suffit à savoir si l’on s’est trompé de formule : des m² pour une clôture, c’est une erreur.</p>
-</div>
-<h2 id="aire-ou-perimetre">Aire ou périmètre ?</h2>
-<div class="enveloppe-tbl"><table>
-<thead>
-<tr>
-<th>Le verbe de l’énoncé</th>
-<th>Ce qu’on cherche</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>clôturer, entourer, border, poser une plinthe</td>
-<td><strong>périmètre</strong></td>
-</tr>
-<tr>
-<td>peindre, carreler, couvrir, tapisser</td>
-<td><strong>aire</strong></td>
-</tr>
-<tr>
-<td>acheter du grillage, du ruban, une baguette</td>
-<td><strong>périmètre</strong></td>
-</tr>
-<tr>
-<td>acheter de la peinture, du carrelage, de la moquette</td>
-<td><strong>aire</strong></td>
-</tr>
-</tbody>
-</table></div>
-<div class="piege">
-<p><strong>Le rayon, pas le diamètre.</strong> Un disque de 10 cm de diamètre a un rayon de 5 cm, et son aire vaut π × 5 × 5 ≈ 78,5 cm². Prendre 10 au lieu de 5 <strong>multiplie le résultat par quatre</strong>, pas par deux.</p>
-</div>
-<div class="replis"><p class="chapeau">Pour aller plus loin</p><details class="appro"><summary><span class="niv"></span><span class="titre-appro">Doubler un côté ne double pas l&#39;aire</span><span class="etiq">Pour aller plus loin</span><span class="chev">&rsaquo;</span></summary><div class="corps"><p>Un carré de 3 cm de côté a une aire de 9 cm². Doublez le côté : 6 cm, et l’aire passe à <strong>36 cm²</strong>. Elle est multipliée par <strong>quatre</strong>, pas par deux.</p>
-<p>C’est le même mécanisme que l’échelle : une longueur a une dimension, une aire en a deux. Un facteur k sur les longueurs devient <strong>k × k</strong> sur les aires.</p>
-<div class="cle">
-<p>La question à se poser devant tout agrandissement : <strong>combien de dimensions ?</strong> Une longueur, une fois. Une aire, deux fois. Un volume, trois fois.</p>
-</div></div></details>
-</div><h2 id="je-m-entraine">Je m’entraîne</h2>
-<p><em>On remplit chaque case, puis on vérifie la série entière d’un coup. On prendra π ≈ 3,14.</em></p>
-<section class="serie" id="AUTO-15-aires-s1" data-serie="AUTO-15-aires-s1" data-savoir="AU" data-a="IXgveGB4eHZ4LjU2eGBrdGp2eDN4YAEheCx4YGhvdGondiF4LHhga25udGondiF4LHhganRobyd2IXgseGBuamp0aid2IXgseGBraHRobyd2IXgseGBrampqanRqJwcn"><p class="k">Série · AU</p><h4>Série 1 — l’aire d’un carré, en unités carrées</h4><div class="enonce">
-
-</div><ol class="items"><li><span class="q">côté 5</span></li><li><span class="q">côté 12</span></li><li><span class="q">côté 0,5</span></li><li><span class="q">côté 20</span></li><li><span class="q">côté 3,5</span></li><li><span class="q">côté 100</span></li></ol><div class="indice" hidden>Le côté multiplié par lui-même. Rien d’autre.</div></section>
-<section class="serie" id="AUTO-15-aires-s2" data-serie="AUTO-15-aires-s2" data-savoir="AU" data-a="IXgveGB4eHZ4LjU2eGBrdGp2eDN4YAEheCx4YGhudGondiF4LHhgaWp0aid2IXgseGBudGondiF4LHhgaWpqdGondiF4LHhga2x0aid2IXgseGBob3RqJwcn"><p class="k">Série · AU</p><h4>Série 2 — l’aire d’un rectangle, en unités carrées</h4><div class="enonce">
-
-</div><ol class="items"><li><span class="q">6 sur 4</span></li><li><span class="q">12 sur 2,5</span></li><li><span class="q">0,5 sur 8</span></li><li><span class="q">15 sur 20</span></li><li><span class="q">3,2 sur 5</span></li><li><span class="q">100 sur 0,25</span></li></ol><div class="indice" hidden>Longueur multipliée par largeur. Les deux dans la même unité.</div></section>
-<section class="serie" id="AUTO-15-aires-s3" data-serie="AUTO-15-aires-s3" data-savoir="AU" data-a="IXgveGB4eHZ4LjU2eGBodGp2eDN4YAEheCx4YGl0a24ndiF4LHhga2h0b2wndiF4LHhgbWJ0byd2IXgseGBpa250aid2IXgseGBraHRvbCd2IXgseGBtYnRvJwcn"><p class="k">Série · AU</p><h4>Série 3 — l’aire d’un disque, en unités carrées</h4><div class="enonce">
-
-</div><ol class="items"><li><span class="q">rayon 1</span></li><li><span class="q">rayon 2</span></li><li><span class="q">rayon 5</span></li><li><span class="q">rayon 10</span></li><li><span class="q">diamètre 4</span></li><li><span class="q">diamètre 10</span></li></ol><div class="indice" hidden>π multiplié par le rayon, deux fois. Quand on donne le diamètre, on le divise d’abord par deux.</div></section>
-<section class="serie" id="AUTO-15-aires-s4" data-serie="AUTO-15-aires-s4" data-savoir="AU" data-a="IXgveGB4eHZ4LjU2eGBodGp2eDN4YAEheCx4YGhidGondiF4LHhgaGp0aid2IXgseGBraHRvbCd2IXgseGBpa3RuJ3YheCx4YGtqdGondiF4LHhgaWp0aicHJw=="><p class="k">Série · AU</p><h4>Série 4 — les périmètres</h4><div class="enonce">
-
-</div><ol class="items"><li><span class="q">carré de côté 7</span></li><li><span class="q">rectangle 6 sur 4</span></li><li><span class="q">cercle de rayon 2</span></li><li><span class="q">cercle de diamètre 10</span></li><li><span class="q">carré de côté 2,5</span></li><li><span class="q">rectangle 12 sur 3</span></li></ol><div class="indice" hidden>Le tour de la figure. Pour un cercle, deux fois π fois le rayon.</div></section>
-<section class="serie" id="AUTO-15-aires-s5" data-serie="AUTO-15-aires-s5" data-savoir="AU" data-a="IXgveGB4eHZ4LjU2eGBrdGp2eDN4YAEheDt4YAF4KgYvamo/YygzNwYvamo/Yi4oP3h2eCo/KDM3Py4oP3gHJ3YheDt4YAF4OzMoP3gHJ3YheDt4YAF4KgYvamo/YygzNwYvamo/Yi4oP3h2eCo/KDM3Py4oP3gHJ3YheDt4YAF4OzMoP3gHJ3YheDt4YAF4KgYvamo/YygzNwYvamo/Yi4oP3h2eCo/KDM3Py4oP3gHJ3YheDt4YAF4OzMoP3gHJwcn"><p class="k">Série · AU</p><h4>Série 5 — aire ou périmètre</h4><div class="enonce">
-
-</div><ol class="items"><li><span class="q">je clôture un terrain</span></li><li><span class="q">je peins un mur</span></li><li><span class="q">j’achète une plinthe</span></li><li><span class="q">je pose du carrelage</span></li><li><span class="q">j’entoure d’un ruban</span></li><li><span class="q">je calcule en m²</span></li></ol><div class="indice" hidden>Ce qui entoure est un périmètre, ce qui remplit est une aire. L’unité tranche toujours.</div></section>
-<h2 id="le-quiz">Le quiz</h2>
-<div class="quiz">
-<ul>
-<li>L’aire d’un disque de diamètre 10 vaut environ : 31,4 | 314 | <strong>78,5</strong></li>
-<li>Doubler le côté d’un carré multiplie son aire par : 2 | 3 | <strong>4</strong></li>
-<li>Une aire s’exprime en : m | m³ | <strong>m²</strong></li>
-<li>Pour acheter une plinthe, je calcule : l’aire | le volume | <strong>le périmètre</strong></li>
-<li>Le périmètre d’un cercle de rayon 2 vaut environ : 6,28 | 3,14 | <strong>12,56</strong></li>
-</ul>
-</div>
-<h2 id="a-retenir-en-trois-lignes">À retenir en trois lignes</h2>
-<div class="enveloppe-tbl"><table>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
-<tbody>
-<tr>
-<td><strong>Aire</strong> en unités <strong>carrées</strong>, périmètre en unités simples</td>
-<td>l’unité vérifie la formule</td>
-</tr>
-<tr>
-<td>Un disque se calcule sur le <strong>rayon</strong></td>
-<td>le diamètre se divise par deux</td>
-</tr>
-<tr>
-<td>Doubler une longueur <strong>quadruple</strong> l’aire</td>
-<td>deux dimensions, deux fois le facteur</td>
-</tr>
-</tbody>
-</table></div>
+<h2 id="ce-qui-doit-sortir-sans-reflechir">Ce qui doit sortir sans réfléchir</h2>
+
+<p>Les trois aires et les trois périmètres. Passer du diamètre au rayon. Décider, d’après l’énoncé, si l’on cherche une aire ou un périmètre.</p>
+
+<h2 id="les-trois-formules">Les trois formules</h2>
+
+<div class="formule">
+
+<p><strong>Carré</strong> de côté c → aire <strong>c × c</strong> · périmètre <strong>4 × c</strong></p>
+
+<p><strong>Rectangle</strong> L par l → aire <strong>L × l</strong> · périmètre <strong>2 × (L + l)</strong></p>
+
+<p><strong>Disque</strong> de rayon r → aire <strong>π × r × r</strong> · périmètre <strong>2 × π × r</strong></p>
+
+</div>
+
+<div class="cle">
+
+<p><strong>Une aire est en unités au carré, un périmètre en unités simples.</strong> L’unité du résultat suffit à savoir si l’on s’est trompé de formule : des m² pour une clôture, c’est une erreur.</p>
+
+</div>
+
+<h2 id="aire-ou-perimetre">Aire ou périmètre ?</h2>
+
+<div class="enveloppe-tbl"><table>
+
+<thead>
+
+<tr>
+
+<th>Le verbe de l’énoncé</th>
+
+<th>Ce qu’on cherche</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>clôturer, entourer, border, poser une plinthe</td>
+
+<td><strong>périmètre</strong></td>
+
+</tr>
+
+<tr>
+
+<td>peindre, carreler, couvrir, tapisser</td>
+
+<td><strong>aire</strong></td>
+
+</tr>
+
+<tr>
+
+<td>acheter du grillage, du ruban, une baguette</td>
+
+<td><strong>périmètre</strong></td>
+
+</tr>
+
+<tr>
+
+<td>acheter de la peinture, du carrelage, de la moquette</td>
+
+<td><strong>aire</strong></td>
+
+</tr>
+
+</tbody>
+
+</table></div>
+
+<div class="piege">
+
+<p><strong>Le rayon, pas le diamètre.</strong> Un disque de 10 cm de diamètre a un rayon de 5 cm, et son aire vaut π × 5 × 5 ≈ 78,5 cm². Prendre 10 au lieu de 5 <strong>multiplie le résultat par quatre</strong>, pas par deux.</p>
+
+</div>
+
+<div class="replis"><p class="chapeau">Pour aller plus loin</p><details class="appro"><summary><span class="niv"></span><span class="titre-appro">Doubler un côté ne double pas l&#39;aire</span><span class="etiq">Pour aller plus loin</span><span class="chev">&rsaquo;</span></summary><div class="corps"><p>Un carré de 3 cm de côté a une aire de 9 cm². Doublez le côté : 6 cm, et l’aire passe à <strong>36 cm²</strong>. Elle est multipliée par <strong>quatre</strong>, pas par deux.</p>
+
+<p>C’est le même mécanisme que l’échelle : une longueur a une dimension, une aire en a deux. Un facteur k sur les longueurs devient <strong>k × k</strong> sur les aires.</p>
+
+<div class="cle">
+
+<p>La question à se poser devant tout agrandissement : <strong>combien de dimensions ?</strong> Une longueur, une fois. Une aire, deux fois. Un volume, trois fois.</p>
+
+</div></div></details>
+
+</div><h2 id="je-m-entraine">Je m’entraîne</h2>
+
+<p><em>On remplit chaque case, puis on vérifie la série entière d’un coup. On prendra π ≈ 3,14.</em></p>
+
+<section class="serie" id="AUTO-15-aires-s1" data-serie="AUTO-15-aires-s1" data-savoir="AU" data-a="IXgveGB4eHZ4LjU2eGBrdGp2eDN4YAEheCx4YGhvdGondiF4LHhga25udGondiF4LHhganRobyd2IXgseGBuamp0aid2IXgseGBraHRobyd2IXgseGBrampqanRqJwcn"><p class="k">Série · AU</p><h4>Série 1 — l’aire d’un carré, en unités carrées</h4><div class="enonce">
+
+
+
+</div><ol class="items"><li><span class="q">côté 5</span></li><li><span class="q">côté 12</span></li><li><span class="q">côté 0,5</span></li><li><span class="q">côté 20</span></li><li><span class="q">côté 3,5</span></li><li><span class="q">côté 100</span></li></ol><div class="indice" hidden>Le côté multiplié par lui-même. Rien d’autre.</div></section>
+
+<section class="serie" id="AUTO-15-aires-s2" data-serie="AUTO-15-aires-s2" data-savoir="AU" data-a="IXgveGB4eHZ4LjU2eGBrdGp2eDN4YAEheCx4YGhudGondiF4LHhgaWp0aid2IXgseGBudGondiF4LHhgaWpqdGondiF4LHhga2x0aid2IXgseGBob3RqJwcn"><p class="k">Série · AU</p><h4>Série 2 — l’aire d’un rectangle, en unités carrées</h4><div class="enonce">
+
+
+
+</div><ol class="items"><li><span class="q">6 sur 4</span></li><li><span class="q">12 sur 2,5</span></li><li><span class="q">0,5 sur 8</span></li><li><span class="q">15 sur 20</span></li><li><span class="q">3,2 sur 5</span></li><li><span class="q">100 sur 0,25</span></li></ol><div class="indice" hidden>Longueur multipliée par largeur. Les deux dans la même unité.</div></section>
+
+<section class="serie" id="AUTO-15-aires-s3" data-serie="AUTO-15-aires-s3" data-savoir="AU" data-a="IXgveGB4eHZ4LjU2eGBodGp2eDN4YAEheCx4YGl0a24ndiF4LHhga2h0b2wndiF4LHhgbWJ0byd2IXgseGBpa250aid2IXgseGBraHRvbCd2IXgseGBtYnRvJwcn"><p class="k">Série · AU</p><h4>Série 3 — l’aire d’un disque, en unités carrées</h4><div class="enonce">
+
+
+
+</div><ol class="items"><li><span class="q">rayon 1</span></li><li><span class="q">rayon 2</span></li><li><span class="q">rayon 5</span></li><li><span class="q">rayon 10</span></li><li><span class="q">diamètre 4</span></li><li><span class="q">diamètre 10</span></li></ol><div class="indice" hidden>π multiplié par le rayon, deux fois. Quand on donne le diamètre, on le divise d’abord par deux.</div></section>
+
+<section class="serie" id="AUTO-15-aires-s4" data-serie="AUTO-15-aires-s4" data-savoir="AU" data-a="IXgveGB4eHZ4LjU2eGBodGp2eDN4YAEheCx4YGhidGondiF4LHhgaGp0aid2IXgseGBraHRvbCd2IXgseGBpa3RuJ3YheCx4YGtqdGondiF4LHhgaWp0aicHJw=="><p class="k">Série · AU</p><h4>Série 4 — les périmètres</h4><div class="enonce">
+
+
+
+</div><ol class="items"><li><span class="q">carré de côté 7</span></li><li><span class="q">rectangle 6 sur 4</span></li><li><span class="q">cercle de rayon 2</span></li><li><span class="q">cercle de diamètre 10</span></li><li><span class="q">carré de côté 2,5</span></li><li><span class="q">rectangle 12 sur 3</span></li></ol><div class="indice" hidden>Le tour de la figure. Pour un cercle, deux fois π fois le rayon.</div></section>
+
+<section class="serie" id="AUTO-15-aires-s5" data-serie="AUTO-15-aires-s5" data-savoir="AU" data-a="IXgveGB4eHZ4LjU2eGBrdGp2eDN4YAEheDt4YAF4KgYvamo/YygzNwYvamo/Yi4oP3h2eCo/KDM3Py4oP3gHJ3YheDt4YAF4OzMoP3gHJ3YheDt4YAF4KgYvamo/YygzNwYvamo/Yi4oP3h2eCo/KDM3Py4oP3gHJ3YheDt4YAF4OzMoP3gHJ3YheDt4YAF4KgYvamo/YygzNwYvamo/Yi4oP3h2eCo/KDM3Py4oP3gHJ3YheDt4YAF4OzMoP3gHJwcn"><p class="k">Série · AU</p><h4>Série 5 — aire ou périmètre</h4><div class="enonce">
+
+
+
+</div><ol class="items"><li><span class="q">je clôture un terrain</span></li><li><span class="q">je peins un mur</span></li><li><span class="q">j’achète une plinthe</span></li><li><span class="q">je pose du carrelage</span></li><li><span class="q">j’entoure d’un ruban</span></li><li><span class="q">je calcule en m²</span></li></ol><div class="indice" hidden>Ce qui entoure est un périmètre, ce qui remplit est une aire. L’unité tranche toujours.</div></section>
+
+<h2 id="le-quiz">Le quiz</h2>
+
+<div class="quiz">
+
+<ul>
+
+<li>L’aire d’un disque de diamètre 10 vaut environ : 31,4 | 314 | <strong>78,5</strong></li>
+
+<li>Doubler le côté d’un carré multiplie son aire par : 2 | 3 | <strong>4</strong></li>
+
+<li>Une aire s’exprime en : m | m³ | <strong>m²</strong></li>
+
+<li>Pour acheter une plinthe, je calcule : l’aire | le volume | <strong>le périmètre</strong></li>
+
+<li>Le périmètre d’un cercle de rayon 2 vaut environ : 6,28 | 3,14 | <strong>12,56</strong></li>
+
+</ul>
+
+</div>
+
+<h2 id="a-retenir-en-trois-lignes">À retenir en trois lignes</h2>
+
+<div class="enveloppe-tbl"><table>
+
+<colgroup>
+
+<col style="width: 50%" />
+
+<col style="width: 50%" />
+
+</colgroup>
+
+<tbody>
+
+<tr>
+
+<td><strong>Aire</strong> en unités <strong>carrées</strong>, périmètre en unités simples</td>
+
+<td>l’unité vérifie la formule</td>
+
+</tr>
+
+<tr>
+
+<td>Un disque se calcule sur le <strong>rayon</strong></td>
+
+<td>le diamètre se divise par deux</td>
+
+</tr>
+
+<tr>
+
+<td>Doubler une longueur <strong>quadruple</strong> l’aire</td>
+
+<td>deux dimensions, deux fois le facteur</td>
+
+</tr>
+
+</tbody>
+
+</table></div>
+
 <nav class="suite"><p class="chapeau-s">La suite</p><div class="pas-a-pas"><a class="av" href="AUTO-14-resoudre-graphiquement.html" rel="prev"><span class="k">&lsaquo; Précédent</span><span class="t">Auto 14 — résoudre graphiquement</span></a><a class="ap" href="AUTO-16-pythagore-thales.html" rel="next"><span class="k">Suivant &rsaquo;</span><span class="t">Auto 16 — Pythagore et Thalès</span></a></div></nav>
 <p class="pied">Fiche d'automatismes. Aucun corrigé ; rien n'est enregistré, rien n'est noté.</p><p class="pied-site"><a class="mentions" href="../mentions-legales.html">Mentions légales</a></p>
 </div>
-<script src="../assets/kit.js?v=78435e4c"></script>
-<script src="../assets/site.js?v=78435e4c"></script>
-<script src="../assets/vivant.js?v=78435e4c"></script>
-<script src="../assets/plan.js?v=78435e4c"></script>
-<script src="../assets/doc.js?v=78435e4c"></script>
+

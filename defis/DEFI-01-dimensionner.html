@@ -1,13 +1,21 @@
+<!DOCTYPE html>
+<html lang="fr">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta name="robots" content="noindex, nofollow">
 <title>Défi 1 — dimensionner</title>
-<link rel="stylesheet" href="../assets/kit.css?v=78435e4c">
-<link rel="stylesheet" href="../assets/site.css?v=78435e4c">
-<link rel="stylesheet" href="../assets/cablage.css?v=78435e4c">
-<link rel="stylesheet" href="../assets/vivant.css?v=78435e4c">
-<link rel="stylesheet" href="../assets/doc.css?v=78435e4c">
+<link rel="stylesheet" href="../assets/kit.css?v=840a6d2b">
+<link rel="stylesheet" href="../assets/site.css?v=840a6d2b">
+<link rel="stylesheet" href="../assets/cablage.css?v=840a6d2b">
+<link rel="stylesheet" href="../assets/vivant.css?v=840a6d2b">
+<link rel="stylesheet" href="../assets/doc.css?v=840a6d2b">
+<link rel="stylesheet" href="../assets/impression.css?v=840a6d2b">
+<script src="../assets/kit.js?v=840a6d2b-3200eb" defer></script>
+<script src="../assets/site.js?v=840a6d2b" defer></script>
+<script src="../assets/vivant.js?v=840a6d2b" defer></script>
+<script src="../assets/plan.js?v=840a6d2b" defer></script>
+<script src="../assets/doc.js?v=840a6d2b" defer></script>
 
 <div class="page" data-site="ciel2" data-page="defis/DEFI-01-dimensionner">
 <div class="jauge-lecture" id="jauge-lecture"><i></i></div><div class="barre-site"><a class="accueil" href="../index.html">Maths et physique-chimie — 2de Bac Pro CIEL</a><button type="button" class="lu" data-lu="defis/DEFI-01-dimensionner">Marquer comme lu</button></div>
@@ -23,122 +31,229 @@
 </header>
 <aside class="prerequis"><p class="chapeau-p">Avant de commencer</p><ul><li><b><a href="../cours/S3.html">La loi d'Ohm et la puissance</a></b><span class="ou">S 3 · Loi d'Ohm et diviseur de tension</span><span class="car">l'onduleur se dimensionne en watts et en ampères, et la séquence 3 a fixé les relations entre les deux.</span></li><li><b><a href="../aide/FICHE-01-isoler-et-convertir.html">Isoler et convertir</a></b><span class="ou">Fiche 1 — isoler et convertir</span><span class="car">le calcul retourné de la série C isole une inconnue dans une formule à trois termes.</span></li><li><b><a href="../aide/FICHE-02-pourcentages-de-tete.html">Les pourcentages de tête</a></b><span class="ou">Fiche 2 — pourcentages de tête</span><span class="car">la marge de 20 % et le rendement de 90 % se prennent sans calculatrice.</span></li></ul></aside>
 <nav class="somm"><div class="in"><a href="#avant-de-commencer">Avant de commencer</a><a href="#la-situation">La situation</a><a href="#serie-a-la-puissance">Série A. La puissance</a><a href="#serie-b-l-autonomie">Série B. L’autonomie</a><a href="#serie-c-le-calcul-retourne">Série C. Le calcul retourné</a><a href="#carte-blanche">Carte blanche</a></div></nav>
-<h2 id="avant-de-commencer">Avant de commencer</h2>
-<div class="mission">
-<p><strong>Ce n’est pas une fiche de rattrapage.</strong> Aucune méthode n’est rappelée et aucun exemple n’est fait. Si vous cherchez la méthode, rouvrez la séquence.</p>
-<p><strong>Comptez quarante-cinq minutes.</strong> La dernière question n’a pas de réponse unique, et c’est voulu.</p>
-</div>
-<h2 id="la-situation">La situation</h2>
-<p>Une baie de brassage doit être secourue par un <strong>onduleur</strong>. Elle contient :</p>
-<div class="enveloppe-tbl"><table>
-<thead>
-<tr>
-<th>Équipement</th>
-<th style="text-align: right;">Nombre</th>
-<th style="text-align: right;">Puissance chacun</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Commutateur 24 ports</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">65 W</td>
-</tr>
-<tr>
-<td>Routeur</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">40 W</td>
-</tr>
-<tr>
-<td>Serveur de sauvegarde</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">210 W</td>
-</tr>
-<tr>
-<td>Boîtier de vidéosurveillance</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">85 W</td>
-</tr>
-</tbody>
-</table></div>
-<p>Le cahier des charges impose <strong>deux</strong> choses : l’onduleur doit tenir la puissance de l’ensemble <strong>avec 30 % de marge</strong>, et il doit assurer <strong>20 minutes</strong> d’autonomie en cas de coupure.</p>
-<p>Le fournisseur propose trois modèles.</p>
-<div class="enveloppe-tbl"><table>
-<thead>
-<tr>
-<th>Modèle</th>
-<th style="text-align: right;">Puissance annoncée</th>
-<th style="text-align: right;">Énergie stockée</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>A</strong></td>
-<td style="text-align: right;">600 W</td>
-<td style="text-align: right;">180 W·h</td>
-</tr>
-<tr>
-<td><strong>B</strong></td>
-<td style="text-align: right;">800 W</td>
-<td style="text-align: right;">200 W·h</td>
-</tr>
-<tr>
-<td><strong>C</strong></td>
-<td style="text-align: right;">1 000 W</td>
-<td style="text-align: right;">340 W·h</td>
-</tr>
-</tbody>
-</table></div>
-<h2 id="serie-a-la-puissance">Série A. La puissance</h2>
-<section class="exo" id="DEFI-01-dimensionner-e1" data-exo="DEFI-01-dimensionner-e1" data-type="calcul" data-savoir="ELEC" data-a="IXgueGB4OTs2OS82eHZ4LHhgbmxvdGp2eC41Nnhga3RqdngveGB4DXgn"><p class="k">Exercice · ELEC</p><h4>a) La puissance de la baie</h4><div class="enonce">
-
-<p>Quelle puissance totale la baie consomme-t-elle ?</p>
-</div><div class="indice" hidden>Additionnez, en n’oubliant pas qu’il y a deux commutateurs.</div></section>
-<section class="exo" id="DEFI-01-dimensionner-e2" data-exo="DEFI-01-dimensionner-e2" data-type="calcul" data-savoir="PREM" data-a="IXgueGB4OTs2OS82eHZ4LHhgbGpudG92eC41Nnhga3RqdngveGB4DXgn"><p class="k">Exercice · PREM</p><h4>b) Avec la marge</h4><div class="enonce">
-
-<p>Quelle puissance l’onduleur doit-il au minimum annoncer, marge de 30 % comprise ?</p>
-</div><div class="indice" hidden>Ajouter 30 %, c’est multiplier par un coefficient. Ce n’est pas ajouter 30.</div></section>
-<section class="exo" id="DEFI-01-dimensionner-e3" data-exo="DEFI-01-dimensionner-e3" data-type="lecture" data-savoir="PREM" data-a="IXgueGB4Nj85Li8oP3h2eDt4YAF4ODl4dng4ejl4dng4ej8uejl4dng2Pyl6NzU+PzY/KXo4ej8uejl4dng4OXR4Byc="><p class="k">Exercice · PREM</p><h4>c) Le premier tri</h4><div class="enonce">
-
-<p>Quels modèles restent en course <strong>sur le seul critère de puissance</strong> ? Répondez par leurs lettres, sans espace ni virgule, par exemple <code>AB</code>.</p>
-</div><div class="indice" hidden>Comparez la puissance annoncée de chacun au minimum que vous venez de calculer. Un modèle qui l’atteint tout juste ne convient pas : il faut l’atteindre ou la dépasser.</div></section>
-<h2 id="serie-b-l-autonomie">Série B. L’autonomie</h2>
-<section class="exo" id="DEFI-01-dimensionner-e4" data-exo="DEFI-01-dimensionner-e4" data-type="calcul" data-savoir="ELEC" data-a="IXgueGB4OTs2OS82eHZ4LHhga29vdGp2eC41NnhgaHRqdngveGB4DQYvamo4bTJ4Jw=="><p class="k">Exercice · ELEC</p><h4>d) L’énergie qu’il faut</h4><div class="enonce">
-
-<p>Quelle énergie faut-il stocker pour alimenter la baie pendant <strong>20 minutes</strong> ?</p>
-</div><div class="indice" hidden>Une énergie est une puissance multipliée par une durée. Attention : la durée doit être en heures, pas en minutes.</div></section>
-<section class="exo" id="DEFI-01-dimensionner-e5" data-exo="DEFI-01-dimensionner-e5" data-type="lecture" data-savoir="PREM" data-a="IXgueGB4Nj85Li8oP3h2eDt4YAF4Ozg5eHZ4LjUvKXh2eDY/KXouKDUzKXh2eDt6OHo5eHZ4O3Z6OHo/Lno5eHZ4Ozg5dHgHJw=="><p class="k">Exercice · PREM</p><h4>e) Le second tri</h4><div class="enonce">
-
-<p>Quels modèles conviennent <strong>sur le seul critère d’autonomie</strong> ?</p>
-</div><div class="indice" hidden>Comparez l’énergie stockée de chacun à celle que vous venez de calculer. Ne présumez pas du résultat : vérifiez les trois.</div></section>
-<section class="exo" id="DEFI-01-dimensionner-e6" data-exo="DEFI-01-dimensionner-e6" data-type="justification" data-savoir="PREM" data-a="IXgueGB4MC8pLjM8Mzk7LjM1NHgn"><p class="k">Exercice · PREM</p><h4>f) Laquelle des deux décide</h4><div class="enonce">
-
-<p>Dites quel modèle vous retenez, et <strong>laquelle des deux contraintes</strong> a fait le choix. Expliquez pourquoi l’autre n’a servi à rien ici.</p>
-</div><div class="indice" hidden>Les deux critères ne suppriment pas les mêmes modèles. Regardez lequel des deux tris est le plus dur, et ce qu’il reste après les deux.</div><ul class="verifier" hidden><li>J’ai nommé le modèle retenu</li><li>J’ai dit quelle contrainte est la plus sévère, et je l’ai justifiée par des nombres</li><li>J’ai dit ce que l’autre contrainte éliminait, et si cela changeait quelque chose</li><li>J’ai dit ce qu’on risque à ne vérifier qu’une seule des deux</li></ul></section>
-<h2 id="serie-c-le-calcul-retourne">Série C. Le calcul retourné</h2>
-<section class="exo" id="DEFI-01-dimensionner-e7" data-exo="DEFI-01-dimensionner-e7" data-type="calcul" data-savoir="PREM" data-a="IXgueGB4OTs2OS82eHZ4LHhgaG90YnZ4LjU2eGBpdGp2eC94YHg3MzR4Jw=="><p class="k">Exercice · PREM</p><h4>g) Combien de temps tient le modèle retenu ?</h4><div class="enonce">
-
-<p>Avec le modèle que vous avez retenu, combien de temps la baie tient-elle réellement en cas de coupure ?</p>
-</div><div class="indice" hidden>Une énergie divisée par une puissance donne une durée : en heures. Convertissez ensuite.</div></section>
-<section class="exo" id="DEFI-01-dimensionner-e8" data-exo="DEFI-01-dimensionner-e8" data-type="calcul" data-savoir="PREM" data-a="IXgueGB4OTs2OS82eHZ4LHhga2lvdGp2eC41NnhgaXRqdngveGB4DXgn"><p class="k">Exercice · PREM</p><h4>h) Ce qu’on peut encore ajouter</h4><div class="enonce">
-
-<p>L’entreprise veut ajouter un équipement dans la baie <strong>sans changer d’onduleur</strong>, et sans descendre sous les 20 minutes d’autonomie. Quelle puissance maximale cet équipement peut-il avoir ?</p>
-</div><div class="indice" hidden>Repartez de l’énergie stockée et de la durée à tenir : cela donne une puissance totale admissible. Ce que vous cherchez est la différence.</div></section>
-<h2 id="carte-blanche">Carte blanche</h2>
-<div class="mission">
-<p><strong>i) Le devis qu’on vous demande de défendre</strong></p>
-<p>Le service achats propose de prendre le <strong>modèle A</strong>, moins cher, en arguant que « de toute façon les coupures durent rarement plus de dix minutes ».</p>
-<p><strong>Écrivez la réponse que vous feriez remonter.</strong> Elle doit tenir en quelques lignes, s’appuyer sur au moins un nombre, et <strong>ne pas se contenter de dire que le cahier des charges impose 20 minutes</strong>.</p>
-<p>Il n’y a pas de réponse unique. Ce qu’on regarde, c’est si votre argument tient face à quelqu’un qui n’a pas envie de vous croire.</p>
-</div>
-<div class="piege">
-<p>Si votre réponse ne parle que de l’autonomie, relisez la série A. Le modèle A a un problème <strong>plus grave</strong> que sa durée, et celui-là ne se rattrape pas en espérant que les coupures soient courtes.</p>
-</div>
+<h2 id="avant-de-commencer">Avant de commencer</h2>
+
+<div class="mission">
+
+<p><strong>Ce n’est pas une fiche de rattrapage.</strong> Aucune méthode n’est rappelée et aucun exemple n’est fait. Si vous cherchez la méthode, rouvrez la séquence.</p>
+
+<p><strong>Comptez quarante-cinq minutes.</strong> La dernière question n’a pas de réponse unique, et c’est voulu.</p>
+
+</div>
+
+<h2 id="la-situation">La situation</h2>
+
+<p>Une baie de brassage doit être secourue par un <strong>onduleur</strong>. Elle contient :</p>
+
+<div class="enveloppe-tbl"><table>
+
+<thead>
+
+<tr>
+
+<th>Équipement</th>
+
+<th style="text-align: right;">Nombre</th>
+
+<th style="text-align: right;">Puissance chacun</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Commutateur 24 ports</td>
+
+<td style="text-align: right;">2</td>
+
+<td style="text-align: right;">65 W</td>
+
+</tr>
+
+<tr>
+
+<td>Routeur</td>
+
+<td style="text-align: right;">1</td>
+
+<td style="text-align: right;">40 W</td>
+
+</tr>
+
+<tr>
+
+<td>Serveur de sauvegarde</td>
+
+<td style="text-align: right;">1</td>
+
+<td style="text-align: right;">210 W</td>
+
+</tr>
+
+<tr>
+
+<td>Boîtier de vidéosurveillance</td>
+
+<td style="text-align: right;">1</td>
+
+<td style="text-align: right;">85 W</td>
+
+</tr>
+
+</tbody>
+
+</table></div>
+
+<p>Le cahier des charges impose <strong>deux</strong> choses : l’onduleur doit tenir la puissance de l’ensemble <strong>avec 30 % de marge</strong>, et il doit assurer <strong>20 minutes</strong> d’autonomie en cas de coupure.</p>
+
+<p>Le fournisseur propose trois modèles.</p>
+
+<div class="enveloppe-tbl"><table>
+
+<thead>
+
+<tr>
+
+<th>Modèle</th>
+
+<th style="text-align: right;">Puissance annoncée</th>
+
+<th style="text-align: right;">Énergie stockée</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td><strong>A</strong></td>
+
+<td style="text-align: right;">600 W</td>
+
+<td style="text-align: right;">180 W·h</td>
+
+</tr>
+
+<tr>
+
+<td><strong>B</strong></td>
+
+<td style="text-align: right;">800 W</td>
+
+<td style="text-align: right;">200 W·h</td>
+
+</tr>
+
+<tr>
+
+<td><strong>C</strong></td>
+
+<td style="text-align: right;">1 000 W</td>
+
+<td style="text-align: right;">340 W·h</td>
+
+</tr>
+
+</tbody>
+
+</table></div>
+
+<h2 id="serie-a-la-puissance">Série A. La puissance</h2>
+
+<section class="exo" id="DEFI-01-dimensionner-e1" data-exo="DEFI-01-dimensionner-e1" data-type="calcul" data-savoir="ELEC" data-a="IXgueGB4OTs2OS82eHZ4LHhgbmxvdGp2eC41Nnhga3RqdngveGB4DXgn"><p class="k">Exercice · ELEC</p><h4>a) La puissance de la baie</h4><div class="enonce">
+
+
+
+<p>Quelle puissance totale la baie consomme-t-elle ?</p>
+
+</div><div class="indice" hidden>Additionnez, en n’oubliant pas qu’il y a deux commutateurs.</div></section>
+
+<section class="exo" id="DEFI-01-dimensionner-e2" data-exo="DEFI-01-dimensionner-e2" data-type="calcul" data-savoir="PREM" data-a="IXgueGB4OTs2OS82eHZ4LHhgbGpudG92eC41Nnhga3RqdngveGB4DXgn"><p class="k">Exercice · PREM</p><h4>b) Avec la marge</h4><div class="enonce">
+
+
+
+<p>Quelle puissance l’onduleur doit-il au minimum annoncer, marge de 30 % comprise ?</p>
+
+</div><div class="indice" hidden>Ajouter 30 %, c’est multiplier par un coefficient. Ce n’est pas ajouter 30.</div></section>
+
+<section class="exo" id="DEFI-01-dimensionner-e3" data-exo="DEFI-01-dimensionner-e3" data-type="lecture" data-savoir="PREM" data-a="IXgueGB4Nj85Li8oP3h2eDt4YAF4ODl4dng4ejl4dng4ej8uejl4dng2Pyl6NzU+PzY/KXo4ej8uejl4dng4OXR4Byc="><p class="k">Exercice · PREM</p><h4>c) Le premier tri</h4><div class="enonce">
+
+
+
+<p>Quels modèles restent en course <strong>sur le seul critère de puissance</strong> ? Répondez par leurs lettres, sans espace ni virgule, par exemple <code>AB</code>.</p>
+
+</div><div class="indice" hidden>Comparez la puissance annoncée de chacun au minimum que vous venez de calculer. Un modèle qui l’atteint tout juste ne convient pas : il faut l’atteindre ou la dépasser.</div></section>
+
+<h2 id="serie-b-l-autonomie">Série B. L’autonomie</h2>
+
+<section class="exo" id="DEFI-01-dimensionner-e4" data-exo="DEFI-01-dimensionner-e4" data-type="calcul" data-savoir="ELEC" data-a="IXgueGB4OTs2OS82eHZ4LHhga29vdGp2eC41NnhgaHRqdngveGB4DQYvamo4bTJ4Jw=="><p class="k">Exercice · ELEC</p><h4>d) L’énergie qu’il faut</h4><div class="enonce">
+
+
+
+<p>Quelle énergie faut-il stocker pour alimenter la baie pendant <strong>20 minutes</strong> ?</p>
+
+</div><div class="indice" hidden>Une énergie est une puissance multipliée par une durée. Attention : la durée doit être en heures, pas en minutes.</div></section>
+
+<section class="exo" id="DEFI-01-dimensionner-e5" data-exo="DEFI-01-dimensionner-e5" data-type="lecture" data-savoir="PREM" data-a="IXgueGB4Nj85Li8oP3h2eDt4YAF4Ozg5eHZ4LjUvKXh2eDY/KXouKDUzKXh2eDt6OHo5eHZ4O3Z6OHo/Lno5eHZ4Ozg5dHgHJw=="><p class="k">Exercice · PREM</p><h4>e) Le second tri</h4><div class="enonce">
+
+
+
+<p>Quels modèles conviennent <strong>sur le seul critère d’autonomie</strong> ?</p>
+
+</div><div class="indice" hidden>Comparez l’énergie stockée de chacun à celle que vous venez de calculer. Ne présumez pas du résultat : vérifiez les trois.</div></section>
+
+<section class="exo" id="DEFI-01-dimensionner-e6" data-exo="DEFI-01-dimensionner-e6" data-type="justification" data-savoir="PREM" data-a="IXgueGB4MC8pLjM8Mzk7LjM1NHgn"><p class="k">Exercice · PREM</p><h4>f) Laquelle des deux décide</h4><div class="enonce">
+
+
+
+<p>Dites quel modèle vous retenez, et <strong>laquelle des deux contraintes</strong> a fait le choix. Expliquez pourquoi l’autre n’a servi à rien ici.</p>
+
+</div><div class="indice" hidden>Les deux critères ne suppriment pas les mêmes modèles. Regardez lequel des deux tris est le plus dur, et ce qu’il reste après les deux.</div><ul class="verifier" hidden><li>J’ai nommé le modèle retenu</li><li>J’ai dit quelle contrainte est la plus sévère, et je l’ai justifiée par des nombres</li><li>J’ai dit ce que l’autre contrainte éliminait, et si cela changeait quelque chose</li><li>J’ai dit ce qu’on risque à ne vérifier qu’une seule des deux</li></ul></section>
+
+<h2 id="serie-c-le-calcul-retourne">Série C. Le calcul retourné</h2>
+
+<section class="exo" id="DEFI-01-dimensionner-e7" data-exo="DEFI-01-dimensionner-e7" data-type="calcul" data-savoir="PREM" data-a="IXgueGB4OTs2OS82eHZ4LHhgaG90YnZ4LjU2eGBpdGp2eC94YHg3MzR4Jw=="><p class="k">Exercice · PREM</p><h4>g) Combien de temps tient le modèle retenu ?</h4><div class="enonce">
+
+
+
+<p>Avec le modèle que vous avez retenu, combien de temps la baie tient-elle réellement en cas de coupure ?</p>
+
+</div><div class="indice" hidden>Une énergie divisée par une puissance donne une durée : en heures. Convertissez ensuite.</div></section>
+
+<section class="exo" id="DEFI-01-dimensionner-e8" data-exo="DEFI-01-dimensionner-e8" data-type="calcul" data-savoir="PREM" data-a="IXgueGB4OTs2OS82eHZ4LHhga2lvdGp2eC41NnhgaXRqdngveGB4DXgn"><p class="k">Exercice · PREM</p><h4>h) Ce qu’on peut encore ajouter</h4><div class="enonce">
+
+
+
+<p>L’entreprise veut ajouter un équipement dans la baie <strong>sans changer d’onduleur</strong>, et sans descendre sous les 20 minutes d’autonomie. Quelle puissance maximale cet équipement peut-il avoir ?</p>
+
+</div><div class="indice" hidden>Repartez de l’énergie stockée et de la durée à tenir : cela donne une puissance totale admissible. Ce que vous cherchez est la différence.</div></section>
+
+<h2 id="carte-blanche">Carte blanche</h2>
+
+<div class="mission">
+
+<p><strong>i) Le devis qu’on vous demande de défendre</strong></p>
+
+<p>Le service achats propose de prendre le <strong>modèle A</strong>, moins cher, en arguant que « de toute façon les coupures durent rarement plus de dix minutes ».</p>
+
+<p><strong>Écrivez la réponse que vous feriez remonter.</strong> Elle doit tenir en quelques lignes, s’appuyer sur au moins un nombre, et <strong>ne pas se contenter de dire que le cahier des charges impose 20 minutes</strong>.</p>
+
+<p>Il n’y a pas de réponse unique. Ce qu’on regarde, c’est si votre argument tient face à quelqu’un qui n’a pas envie de vous croire.</p>
+
+</div>
+
+<div class="piege">
+
+<p>Si votre réponse ne parle que de l’autonomie, relisez la série A. Le modèle A a un problème <strong>plus grave</strong> que sa durée, et celui-là ne se rattrape pas en espérant que les coupures soient courtes.</p>
+
+</div>
+
 
 <p class="pied">Défi de dépassement. Aucune méthode rappelée, aucun corrigé. À prendre quand la séquence est pliée.</p><p class="pied-site"><a class="mentions" href="../mentions-legales.html">Mentions légales</a></p>
 </div>
-<script src="../assets/kit.js?v=78435e4c"></script>
-<script src="../assets/site.js?v=78435e4c"></script>
-<script src="../assets/vivant.js?v=78435e4c"></script>
-<script src="../assets/plan.js?v=78435e4c"></script>
-<script src="../assets/doc.js?v=78435e4c"></script>
+

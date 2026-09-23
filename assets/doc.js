@@ -157,6 +157,62 @@
     plan.appendChild(d);
   });
 
+  /* ─── 3 bis. ou suis-je : le fil d'Ariane, et la jauge de la rubrique ─
+     Deux reponses que la page ne donnait pas : dans quelle sequence on se
+     trouve, et combien de pages de la rubrique on a deja lues. Tout se
+     deduit du plan et des coches locales ; rien de plus n'est ecrit. */
+  var ouEsp = null, ouGrp = null, ouPage = null;
+  (window.PLAN.espaces || []).forEach(function (esp) {
+    (esp.groupes || []).forEach(function (g) {
+      (g.pages || []).forEach(function (p) {
+        if (p.id === ici) { ouEsp = esp; ouGrp = g; ouPage = p; }
+      });
+    });
+  });
+  if (ouEsp) {
+    var fil = document.createElement("nav");
+    fil.className = "doc-fil";
+    fil.setAttribute("aria-label", "Fil d'Ariane");
+    var cran = function (txt, href, courant) {
+      if (fil.children.length) {
+        var s = document.createElement("span");
+        s.className = "sep"; s.setAttribute("aria-hidden", "true"); s.textContent = "›";
+        fil.appendChild(s);
+      }
+      var el = document.createElement(href ? "a" : "span");
+      if (href) el.href = href;
+      if (courant) { el.className = "ici"; el.setAttribute("aria-current", "page"); }
+      el.textContent = txt;
+      fil.appendChild(el);
+    };
+    cran(window.PLAN.site, racine + "index.html");
+    cran(ouEsp.nom, racine + "index.html#" + ouEsp.id);
+    if (ouGrp && ouGrp.titre) cran(ouGrp.titre);
+    cran(ouPage.k || ouPage.t, null, true);
+    zone.insertBefore(fil, page);
+
+    var aLire = [];
+    (ouEsp.groupes || []).forEach(function (g) {
+      (g.pages || []).forEach(function (p) { if (!p.tenue) aLire.push(p); });
+    });
+    var jauge = document.createElement("div");
+    jauge.className = "doc-jauge";
+    jauge.title = "Pages lues dans « " + ouEsp.nom + " », sur cet appareil";
+    jauge.innerHTML = '<span class="piste"><i></i></span><span class="txt"></span>';
+    var jt = jauge.querySelector(".txt"), ji = jauge.querySelector("i");
+    var remplir = function () {
+      var l = {};
+      try { l = JSON.parse(localStorage.getItem(cle) || "{}") || {}; } catch (e) {}
+      var n = aLire.filter(function (p) { return l[p.id]; }).length;
+      jt.textContent = n + " / " + aLire.length + " lues";
+      ji.style.width = (aLire.length ? 100 * n / aLire.length : 0) + "%";
+    };
+    droite.insertBefore(jauge, droite.firstChild);
+    remplir();
+    /* le bouton « Marquer comme lu » ecrit, puis on relit */
+    if (lu) lu.addEventListener("click", function () { setTimeout(remplir, 30); });
+  }
+
   /* ─── 4. le sommaire de la page, avec suivi de la lecture ────────── */
   var titres = [].slice.call(page.querySelectorAll("h2[id]"));
   if (titres.length > 1) {

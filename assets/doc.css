@@ -233,6 +233,26 @@
   .doc-barre button,.doc-barre .bouton{font-size:12.5px;padding:8px 10px}
 }
 
+/* ─── ou suis-je : le fil d'Ariane et la jauge de la rubrique ───────── */
+.doc-fil{
+  display:flex;flex-wrap:wrap;align-items:center;gap:4px 7px;
+  max-width:var(--doc-texte);margin:0 auto;padding:12px 20px 0;
+  font-size:12.5px;line-height:1.35;color:var(--encre2);
+}
+.doc-fil a{color:var(--encre2);text-decoration:none;border-bottom:1px solid transparent}
+.doc-fil a:hover{color:var(--encre);border-bottom-color:var(--trait)}
+.doc-fil .sep{opacity:.45}
+.doc-fil .ici{color:var(--encre);font-weight:600}
+.doc-jauge{display:flex;align-items:center;gap:8px;flex:none;
+  font-size:12.5px;color:var(--encre2);white-space:nowrap}
+.doc-jauge .piste{width:84px;height:6px;border-radius:99px;
+  background:var(--trait2,var(--trait));overflow:hidden}
+.doc-jauge .piste i{display:block;height:100%;width:0;border-radius:99px;
+  background:var(--encre);transition:width .6s cubic-bezier(.2,.7,.3,1)}
+/* la barre n'a plus la place : le plan porte deja le meme compte */
+@media (max-width:760px){.doc-jauge{display:none}}
+
 @media (prefers-reduced-motion:reduce){
-  .doc-plan,.doc-som,.doc-voile,.doc-plan summary::before{transition:none}
+  .doc-plan,.doc-som,.doc-voile,.doc-plan summary::before,
+  .doc-jauge .piste i{transition:none}
 }
