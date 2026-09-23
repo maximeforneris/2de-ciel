@@ -42,7 +42,13 @@
 }
 .doc-barre button:hover,.doc-barre .bouton:hover{border-color:var(--encre)}
 .doc-barre .lu[aria-pressed="true"]{border-color:var(--encre);font-weight:700}
-.doc-plier{display:none}
+/* Les deux commandes de colonne. Elles vivent dans la barre, donc elles sont
+   atteignables sans remonter — c'est tout l'interet d'une barre collante. */
+.doc-plier{display:inline-flex;align-items:center;gap:7px}
+.doc-plier .mot{display:inline}
+.doc-som-plier{display:none}          /* sous 1 000 px : nav.somm joue ce role */
+.doc-barre .replie{opacity:.72}
+.doc-barre .replie:hover{opacity:1}
 
 /* ─── les trois colonnes ─────────────────────────────────────────────── */
 .doc-corps{display:block}
@@ -124,9 +130,20 @@
    sommaire horizontal du kit s'efface au profit de celui de droite. */
 @media (min-width:1000px){
   .doc-corps{
-    display:grid;grid-template-columns:var(--doc-plan) minmax(0,1fr);
+    display:grid;grid-template-columns:var(--col-plan,var(--doc-plan)) minmax(0,1fr);
     align-items:start;
   }
+  /* Chaque panneau est place a la main dans la grille. Sans cela, un
+     « display:none » sur le plan sort l'element du flux : le document glissait
+     dans la premiere colonne, large de zero, et se retrouvait a 46 px. */
+  .doc-plan{grid-column:1}
+  .doc-page{grid-column:2}
+  .doc-som{grid-column:3}
+  /* Repliee, la colonne ne laisse pas un vide : sa largeur tombe a zero et le
+     texte s'elargit d'autant. */
+  .doc-plan-ferme{--col-plan:0px}
+  .doc-plan-ferme .doc-plan{display:none}
+  .doc-som-plier{display:inline-flex;align-items:center;gap:7px}
   .doc-plan{
     position:sticky;top:var(--doc-barre);
     max-height:calc(100vh - var(--doc-barre));overflow:auto;
@@ -139,15 +156,41 @@
   .doc-page .page{max-width:var(--doc-texte)}
   .doc nav.somm{display:none}
   .doc h2{scroll-margin-top:calc(var(--doc-barre) + 16px)}
-  .doc-plier{display:none}
 }
 @media (min-width:1280px){
-  .doc-corps{grid-template-columns:var(--doc-plan) minmax(0,1fr) var(--doc-som)}
+  .doc-corps{grid-template-columns:var(--col-plan,var(--doc-plan)) minmax(0,1fr)
+                                   var(--col-som,var(--doc-som))}
+  .doc-som-ferme{--col-som:0px}
+  .doc-som-ferme .doc-som{display:none}
+  .doc-som .fermer{display:none}
 }
-/* entre 1000 et 1279 px — la tablette en paysage — pas de sommaire à droite */
+
+/* Entre 1 000 et 1 279 px — la tablette en paysage —, le sommaire n'a plus la
+   place d'etre une colonne : il devient un tiroir, ouvert par son bouton. Il
+   etait purement et simplement supprime jusqu'au 23 septembre 2026. */
 @media (max-width:1279px){
-  .doc-som{display:none}
+  .doc-som{
+    position:fixed;top:0;right:0;bottom:0;width:min(78%,320px);z-index:70;
+    background:var(--carte);border-left:1px solid var(--trait);
+    overflow:auto;transform:translateX(102%);transition:transform .22s ease;
+    box-shadow:0 0 40px rgba(0,0,0,.25);padding:0 10px 40px;
+  }
+  .doc-tiroir-som .doc-som{transform:none}
+  .doc-som .fermer{
+    position:sticky;top:0;display:block;width:100%;text-align:left;
+    background:var(--carte);border:0;border-bottom:1px solid var(--trait2);
+    padding:14px 10px;margin:0 -10px 10px;font:inherit;font-weight:700;
+    color:var(--encre);cursor:pointer;
+  }
 }
+
+/* Le voile sert les deux tiroirs : il est donc pose a toute largeur, et ne se
+   voit que si l'un d'eux est ouvert. */
+.doc-voile{
+  position:fixed;inset:0;z-index:65;background:rgba(0,0,0,.45);
+  opacity:0;pointer-events:none;transition:opacity .22s ease;
+}
+.doc-tiroir-plan .doc-voile,.doc-tiroir-som .doc-voile{opacity:1;pointer-events:auto}
 
 /* ═══ SUR TÉLÉPHONE ═════════════════════════════════════════════════════
    L'arborescence devient un tiroir. La barre reste collante — on doit
@@ -155,7 +198,6 @@
    des sections se cale juste dessous plutôt que de lui passer dessus. */
 @media (max-width:999px){
   :root{--doc-barre:48px}          /* plus basse : l'ecran est petit */
-  .doc-plier{display:inline-flex;align-items:center;gap:7px}
   /* Le sommaire des sections redevient collant, cale SOUS la barre : sur
      telephone il n'y a pas de colonne de droite, c'est la seule navigation
      interne pendant la lecture. En mode site, site.css l'avait repasse en
@@ -170,12 +212,7 @@
     transition:transform .22s ease;
     box-shadow:0 0 40px rgba(0,0,0,.25);
   }
-  .doc-ouvert .doc-plan{transform:none}
-  .doc-voile{
-    position:fixed;inset:0;z-index:65;background:rgba(0,0,0,.45);
-    opacity:0;pointer-events:none;transition:opacity .22s ease;
-  }
-  .doc-ouvert .doc-voile{opacity:1;pointer-events:auto}
+  .doc-tiroir-plan .doc-plan{transform:none}
   .doc-plan .fermer{
     position:sticky;top:0;display:block;width:100%;text-align:left;
     background:var(--carte);border:0;border-bottom:1px solid var(--trait2);
@@ -183,7 +220,7 @@
   }
 }
 @media (min-width:1000px){
-  .doc-plan .fermer,.doc-voile{display:none}
+  .doc-plan .fermer{display:none}
 }
 
 /* Sous 560 px, « Marquer comme lu » ne tient plus a cote du titre : c'est
@@ -192,9 +229,10 @@
 @media (max-width:560px){
   .doc-barre{gap:8px;padding:0 10px}
   .doc-barre .titre{display:none}
+  .doc-plier .mot{display:none}
   .doc-barre button,.doc-barre .bouton{font-size:12.5px;padding:8px 10px}
 }
 
 @media (prefers-reduced-motion:reduce){
-  .doc-plan,.doc-voile,.doc-plan summary::before{transition:none}
+  .doc-plan,.doc-som,.doc-voile,.doc-plan summary::before{transition:none}
 }

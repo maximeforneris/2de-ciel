@@ -52,8 +52,8 @@
   var bouton = document.createElement("button");
   bouton.type = "button";
   bouton.className = "doc-plier";
-  bouton.setAttribute("aria-expanded", "false");
-  bouton.innerHTML = "<span aria-hidden=\"true\">☰</span> Plan";
+  bouton.innerHTML = "<span aria-hidden=\"true\">☰</span><span class=\"mot\">Plan</span>";
+  bouton.title = "Afficher ou replier le plan du site";
   barre.appendChild(bouton);
 
   var titre = document.createElement("a");
@@ -66,11 +66,15 @@
   droite.className = "droite";
   barre.appendChild(droite);
 
-  var chercher = document.createElement("a");
-  chercher.className = "bouton";
-  chercher.href = titre.href + "#chercher";
-  chercher.textContent = "Chercher";
-  droite.appendChild(chercher);
+  /* Le sommaire de droite se commande comme le plan. Le bouton ne sert que
+     la ou cette colonne existe — sous 1 000 px, c'est le sommaire de section
+     de la page qui joue ce role, et il est deja sous la barre. */
+  var boutonSom = document.createElement("button");
+  boutonSom.type = "button";
+  boutonSom.className = "doc-som-plier";
+  boutonSom.textContent = "Sommaire";
+  boutonSom.title = "Afficher ou replier le sommaire de la page";
+  droite.appendChild(boutonSom);
 
   var lu = vieille && vieille.querySelector(".lu");
   if (lu) droite.appendChild(lu);                 /* le bouton garde son script */
@@ -183,28 +187,109 @@
     }
   } else {
     som.style.display = "none";
+    boutonSom.style.display = "none";
+    som.dataset.vide = "1";
   }
 
-  /* ─── 5. le tiroir, sur téléphone ────────────────────────────────── */
-  var ouvert = false;
-  function bascule(v, parHistorique) {
-    ouvert = v;
-    document.documentElement.classList.toggle("doc-ouvert", v);
-    document.documentElement.style.overflow = v ? "hidden" : "";
-    bouton.setAttribute("aria-expanded", v ? "true" : "false");
-    if (v && !parHistorique && window.history && history.pushState) {
-      history.pushState({ plan: 1 }, "");        /* le bouton retour referme */
-    }
-    if (v) { var a = plan.querySelector('a[aria-current="page"]') || fermer; a.focus(); }
+  /* le bouton de fermeture du sommaire, quand il est en tiroir */
+  var fermerSom = document.createElement("button");
+  fermerSom.type = "button";
+  fermerSom.className = "fermer";
+  fermerSom.textContent = "✕  Fermer le sommaire";
+  som.insertBefore(fermerSom, som.firstChild);
+
+  /* ─── 5. replier, a toute largeur ────────────────────────────────
+     Les deux colonnes se replient TOUJOURS, et la facon de le faire suit la
+     place disponible : au-dela, la colonne se retire et le texte s'elargit ;
+     en deca, elle devient un tiroir par-dessus la page. Le choix de grand
+     ecran est retenu par l'appareil — on ne redemande pas a chaque page.  */
+  var LARGE = window.matchMedia("(min-width:1000px)");   /* le plan est une colonne */
+  var LARGE_SOM = window.matchMedia("(min-width:1280px)"); /* le sommaire aussi */
+  var html = document.documentElement;
+  var vueCle = "fed." + page.getAttribute("data-site") + ".vue";
+  var vue = {};
+  try { vue = JSON.parse(localStorage.getItem(vueCle) || "{}") || {}; } catch (e) {}
+
+  var COLS = {
+    plan: { media: LARGE, ferme: "doc-plan-ferme", tiroir: "doc-tiroir-plan",
+            bouton: bouton, panneau: plan, cle: "plan" },
+    som:  { media: LARGE_SOM, ferme: "doc-som-ferme", tiroir: "doc-tiroir-som",
+            bouton: boutonSom, panneau: som, cle: "som" },
+  };
+
+  function colonne(c) { return c.media.matches; }
+  function visible(c) {
+    return colonne(c) ? !html.classList.contains(c.ferme)
+                      : html.classList.contains(c.tiroir);
   }
-  bouton.addEventListener("click", function () { bascule(!ouvert); });
-  fermer.addEventListener("click", function () { if (ouvert) history.back(); });
-  voile.addEventListener("click", function () { if (ouvert) history.back(); });
-  document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" && ouvert) history.back();
+  function dire(c) {
+    c.bouton.setAttribute("aria-expanded", visible(c) ? "true" : "false");
+    c.bouton.classList.toggle("replie", !visible(c));
+  }
+  function verrou() {
+    /* la page ne defile pas derriere un tiroir ouvert */
+    var un = html.classList.contains("doc-tiroir-plan")
+          || html.classList.contains("doc-tiroir-som");
+    html.style.overflow = un ? "hidden" : "";
+  }
+
+  function montrer(c, v, parHistorique) {
+    if (colonne(c)) {
+      html.classList.toggle(c.ferme, !v);
+      vue[c.cle] = v;
+      try { localStorage.setItem(vueCle, JSON.stringify(vue)); } catch (e) {}
+    } else {
+      if (v) {                                   /* un seul tiroir a la fois */
+        html.classList.remove("doc-tiroir-plan", "doc-tiroir-som");
+      }
+      html.classList.toggle(c.tiroir, v);
+      verrou();
+      if (v && !parHistorique && window.history && history.pushState) {
+        history.pushState({ doc: c.cle }, "");   /* le bouton retour referme */
+      }
+      if (v) {
+        var a = c.panneau.querySelector('a[aria-current="page"]')
+             || c.panneau.querySelector("button.fermer");
+        if (a) a.focus();
+      }
+    }
+    dire(c);
+  }
+
+  /* l'etat retenu, applique avant le premier affichage */
+  if (vue.plan === false) html.classList.add("doc-plan-ferme");
+  if (vue.som === false) html.classList.add("doc-som-ferme");
+  dire(COLS.plan); dire(COLS.som);
+
+  Object.keys(COLS).forEach(function (k) {
+    var c = COLS[k];
+    c.bouton.addEventListener("click", function () { montrer(c, !visible(c)); });
   });
-  window.addEventListener("popstate", function () { if (ouvert) bascule(false, true); });
-  plan.addEventListener("click", function (e) {
-    if (ouvert && e.target.closest && e.target.closest("a")) bascule(false, true);
+  function refermer() {
+    if (html.classList.contains("doc-tiroir-plan")) { montrer(COLS.plan, false, true); }
+    if (html.classList.contains("doc-tiroir-som")) { montrer(COLS.som, false, true); }
+  }
+  function partir() {                             /* par le voile, Echap, un lien */
+    if (html.classList.contains("doc-tiroir-plan")
+     || html.classList.contains("doc-tiroir-som")) history.back();
+  }
+  fermer.addEventListener("click", partir);
+  fermerSom.addEventListener("click", partir);
+  voile.addEventListener("click", partir);
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") partir();
+  });
+  window.addEventListener("popstate", refermer);
+  [plan, som].forEach(function (p) {
+    p.addEventListener("click", function (e) {
+      if (e.target.closest && e.target.closest("a")) refermer();
+    });
+  });
+  /* on tourne l'appareil, ou on elargit la fenetre : un tiroir reste ouvert
+     par-dessus une colonne qui vient d'apparaitre. On le referme. */
+  [LARGE, LARGE_SOM].forEach(function (m) {
+    var maj = function () { refermer(); verrou(); dire(COLS.plan); dire(COLS.som); };
+    if (m.addEventListener) m.addEventListener("change", maj);
+    else if (m.addListener) m.addListener(maj);
   });
 })();
