@@ -59,40 +59,8 @@ noscript p{padding:16px;max-width:60ch}
 .bouton-calc[aria-pressed="true"]{color:var(--carte);background:var(--encre);border-color:var(--encre)}
 .barre .rangee{gap:6px;justify-content:flex-end;flex-wrap:wrap}
 
-/* ─────────── Le panneau d'outils, calculatrice et formulaire : a droite, par-dessus sur telephone ─────────── */
-.calculatrice{position:fixed;top:0;right:0;bottom:0;width:min(100%,380px);z-index:20;display:flex;flex-direction:column;
-  background:var(--carte);border-left:1px solid var(--trait);box-shadow:var(--ombre)}
-.calculatrice[hidden]{display:none}
-.calc-tete{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 12px;min-height:48px;
-  border-bottom:1px solid var(--trait2)}
-.calc-corps{flex:1;min-height:0;display:flex;flex-direction:column;gap:8px;padding:10px 12px 12px}
-.calc-angle{display:flex;gap:0;align-self:flex-start;border:1px solid var(--trait);border-radius:999px;overflow:hidden}
-.calc-angle button{font:600 .78rem/1 system-ui,sans-serif;padding:7px 12px;border:0;background:none;color:var(--encre2);cursor:pointer}
-.calc-angle button[aria-pressed="true"]{background:var(--encre);color:var(--carte)}
-.calc-ecran{flex:1;min-height:96px;overflow-y:auto;background:var(--carte2);border:1px solid var(--trait2);border-radius:var(--r);
-  padding:6px 10px;display:flex;flex-direction:column}
-.calc-historique{list-style:none;margin:auto 0 0;padding:0}
-.calc-historique li{padding:5px 0;border-bottom:1px dashed var(--trait2)}
-.calc-historique li:last-child{border-bottom:0}
-.calc-expr,.calc-res{display:block;width:100%;border:0;background:none;padding:0;cursor:pointer;color:var(--encre);
-  font-family:var(--mono);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
-.calc-expr{text-align:left;font-size:.86rem;color:var(--encre2)}
-.calc-res{text-align:right;font-size:1.25rem;font-weight:650}
-.calc-res.erreur{font-family:system-ui,sans-serif;font-size:.9rem;color:var(--faux);cursor:default}
-.calc-expr:hover,.calc-res:not(.erreur):hover{color:var(--accent)}
-.calc-saisie{width:100%;font-family:var(--mono);font-size:1.2rem;padding:8px 10px;border:1.5px solid var(--trait);
-  border-radius:var(--r);background:var(--carte);color:var(--encre)}
-.calc-saisie:focus{outline:none;border-color:var(--accent)}
-.calc-touches{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
-.calc-touches button{min-height:42px;padding:0 2px;border-radius:var(--r);border:1px solid var(--trait2);background:var(--carte2);
-  color:var(--encre);font:600 .9rem/1 system-ui,sans-serif;cursor:pointer;touch-action:manipulation}
-.calc-touches button:hover{border-color:var(--encre2)}
-.calc-touches button:active{transform:scale(.97)}
-.calc-touches .chiffre{background:var(--carte);border-color:var(--trait);font-family:var(--mono);font-size:1.1rem}
-.calc-touches .fonction{font-size:.82rem;color:var(--encre2)}
-.calc-touches .op{font-size:1.15rem}
-.calc-touches .efface{color:var(--faux)}
-.calc-touches .egal{background:var(--encre);border-color:var(--encre);color:var(--carte);font-size:1.15rem}
+/* Le panneau et le pave de la calculatrice sont dans calculette.css, partagee avec les
+   sites de classe (option « calculatrice: oui » de SITE.md). */
 /* les onglets du panneau, quand la classe a les deux outils */
 .outils-onglets{display:flex;border:1px solid var(--trait);border-radius:999px;overflow:hidden}
 .outil-onglet{font-size:.8rem;font-weight:650;padding:7px 12px;border:0;background:none;color:var(--encre2);cursor:pointer;min-height:34px}
@@ -100,16 +68,9 @@ noscript p{padding:16px;max-width:60ch}
 .outil-onglet[hidden]{display:none}
 .form-corps{flex:1;min-height:0;overflow-y:auto;padding:10px 12px 16px;display:flex;flex-direction:column;gap:10px}
 .form-corps[hidden],.calc-corps[hidden]{display:none}
-/* tablette en portrait : a cote, plus etroite ; la question prend la mise en page du telephone */
-@media (min-width:640px) and (max-width:899px){
-  .calculatrice{width:300px}
-  body.calc-ouverte{padding-right:300px}
-  body.calc-ouverte .annonces{left:calc((100% - 300px) / 2)}
-}
-@media (min-width:900px){
-  body.calc-ouverte{padding-right:380px}
-  body.calc-ouverte .annonces{left:calc((100% - 380px) / 2)}
-}
+/* les annonces se recentrent sur ce qui reste visible quand le panneau est ouvert */
+@media (min-width:640px) and (max-width:899px){ body.calc-ouverte .annonces{left:calc((100% - 300px) / 2)} }
+@media (min-width:900px){ body.calc-ouverte .annonces{left:calc((100% - 380px) / 2)} }
 .entete{padding:4px 0 18px;border-bottom:1px solid var(--trait);margin-bottom:20px}
 .surtitre{font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--encre2);font-weight:650;margin:0;
   display:flex;flex-wrap:wrap;gap:8px;align-items:center}
@@ -357,6 +318,78 @@ table.controle{border-collapse:collapse;width:100%;font-size:.86rem}
 @keyframes monte{0%{opacity:0;transform:translateY(6px)}20%{opacity:1}100%{opacity:0;transform:translateY(-24px)}}
 @keyframes entre{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* La calculatrice · le panneau et le pave.
+   Une seule feuille pour le jeu d'entrainement et pour les sites de classe (option
+   « calculatrice: oui » de SITE.md, qui la recopie dans assets/). Les couleurs sont les
+   jetons du kit ; l'accent, l'erreur et la chasse fixe ont un repli, parce que les chartes
+   les nomment --froid, --chaud et .mono. Sortie de jeu.css le 6 octobre 2026. */
+/* le panneau : a droite, par-dessus sur telephone */
+.calculatrice{position:fixed;top:0;right:0;bottom:0;width:min(100%,380px);z-index:20;display:flex;flex-direction:column;
+  background:var(--carte);border-left:1px solid var(--trait);box-shadow:var(--ombre)}
+.calculatrice[hidden]{display:none}
+.calc-tete{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 12px;min-height:48px;
+  border-bottom:1px solid var(--trait2)}
+.calc-corps{flex:1;min-height:0;display:flex;flex-direction:column;gap:8px;padding:10px 12px 12px}
+.calc-angle{display:flex;gap:0;align-self:flex-start;border:1px solid var(--trait);border-radius:999px;overflow:hidden}
+.calc-angle button{font:600 .78rem/1 system-ui,sans-serif;padding:7px 12px;border:0;background:none;color:var(--encre2);cursor:pointer}
+.calc-angle button[aria-pressed="true"]{background:var(--encre);color:var(--carte)}
+.calc-ecran{flex:1;min-height:96px;overflow-y:auto;background:var(--carte2);border:1px solid var(--trait2);border-radius:var(--r,6px);
+  padding:6px 10px;display:flex;flex-direction:column}
+.calc-historique{list-style:none;margin:auto 0 0;padding:0}
+.calc-historique li{padding:5px 0;border-bottom:1px dashed var(--trait2)}
+.calc-historique li:last-child{border-bottom:0}
+.calc-expr,.calc-res{display:block;width:100%;border:0;background:none;padding:0;cursor:pointer;color:var(--encre);
+  font-family:var(--mono,ui-monospace,Consolas,monospace);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.calc-expr{text-align:left;font-size:.86rem;color:var(--encre2)}
+.calc-res{text-align:right;font-size:1.25rem;font-weight:650}
+.calc-res.erreur{font-family:system-ui,sans-serif;font-size:.9rem;color:var(--faux,var(--chaud,#ab432a));cursor:default}
+.calc-expr:hover,.calc-res:not(.erreur):hover{color:var(--accent,var(--froid,#2c6da6))}
+.calc-saisie{width:100%;font-family:var(--mono,ui-monospace,Consolas,monospace);font-size:1.2rem;padding:8px 10px;border:1.5px solid var(--trait);
+  border-radius:var(--r,6px);background:var(--carte);color:var(--encre)}
+.calc-saisie:focus{outline:none;border-color:var(--accent,var(--froid,#2c6da6))}
+.calc-touches{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.calc-touches button{min-height:42px;padding:0 2px;border-radius:var(--r,6px);border:1px solid var(--trait2);background:var(--carte2);
+  color:var(--encre);font:600 .9rem/1 system-ui,sans-serif;cursor:pointer;touch-action:manipulation}
+.calc-touches button:hover{border-color:var(--encre2)}
+.calc-touches button:active{transform:scale(.97)}
+.calc-touches .chiffre{background:var(--carte);border-color:var(--trait);font-family:var(--mono,ui-monospace,Consolas,monospace);font-size:1.1rem}
+.calc-touches .fonction{font-size:.82rem;color:var(--encre2)}
+.calc-touches .op{font-size:1.15rem}
+.calc-touches .efface{color:var(--faux,var(--chaud,#ab432a))}
+.calc-touches .egal{background:var(--encre);border-color:var(--encre);color:var(--carte);font-size:1.15rem}
+/* tablette en portrait : a cote, plus etroite ; la question prend la mise en page du telephone */
+@media (min-width:640px) and (max-width:899px){
+  .calculatrice{width:300px}
+  body.calc-ouverte{padding-right:300px}
+}
+@media (min-width:900px){
+  body.calc-ouverte{padding-right:380px}
+}
+.calc-fermer{font:inherit;font-size:.8rem;font-weight:600;color:var(--encre2);background:none;border:1px solid var(--trait);
+  border-radius:999px;padding:6px 12px;cursor:pointer;min-height:36px}
+.calc-fermer:hover{color:var(--encre);border-color:var(--encre2)}
+.calc-titre{font-weight:700;font-size:.95rem}
+@media print{ .calculatrice{display:none!important} body.calc-ouverte{padding-right:0!important} }
+/* sur un site de classe : au-dessus de la coquille de documentation, et le bouton qui l'ouvre
+   (la barre haute le met en forme ; hors coquille, il flotte en bas a droite) */
+.doc-shell .calculatrice{z-index:60}
+.bouton-calculatrice[aria-pressed="true"]{font-weight:700;border-color:var(--encre)}
+.bouton-calculatrice.flottant{position:fixed;right:16px;bottom:16px;z-index:40;font:inherit;font-size:.9rem;font-weight:600;
+  padding:10px 16px;border-radius:999px;border:1px solid var(--encre);background:var(--carte);color:var(--encre);
+  box-shadow:var(--ombre);cursor:pointer}
+body.calc-ouverte .bouton-calculatrice.flottant{display:none}
+/* Dans la coquille de documentation, le panneau prend la place du sommaire de droite ; entre
+   1 000 et 1 279 px, celle du plan aussi, qui revient a la fermeture. Sans cela, le texte de la
+   page tombait a 416 px de large sur un ecran de 1 280. */
+@media (min-width:1000px){
+  body.calc-ouverte .doc-corps{--col-som:0px}
+  body.calc-ouverte .doc-som{display:none}
+}
+@media (min-width:1000px) and (max-width:1279px){
+  body.calc-ouverte .doc-corps{--col-plan:0px}
+  body.calc-ouverte .doc-plan{display:none}
+}
 
 /* habillage : charte « cablage » */
 @font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url(../assets/polices/jetbrains-mono-400-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
@@ -1686,7 +1719,14 @@ var Generateurs = (function () {
    On tape au clavier ou sur le pave. Priorites usuelles ; ^ associe a droite ;
    -2^2 vaut -4 ; 2π et 3(4+5) sont des produits ; sin(30)² vaut (sin 30)².
    Les parentheses oubliees en fin de ligne sont fermees.
-   Aucun eval : l'expression est lue par un petit analyseur recursif. */
+   Apres un resultat, une ligne qui commence par un operateur part de Ans, au clavier
+   comme au pave ; Entree sur une ligne vide refait le dernier calcul (Ans×1,05, puis
+   Entree, Entree… pour iterer). Demande le 6 octobre 2026.
+   Aucun eval : l'expression est lue par un petit analyseur recursif.
+
+   monter(conteneur, { memoire: "cle" }) garde l'historique, Ans et l'unite d'angle dans le
+   sessionStorage, le temps de l'onglet : c'est ce qui suit l'eleve d'une page du site a
+   l'autre. Sans l'option, rien n'est garde. */
 "use strict";
 var Calculette = (function () {
   var N = Nombres;
@@ -1814,6 +1854,8 @@ var Calculette = (function () {
   var BLOCS = ["sin⁻¹(", "cos⁻¹(", "tan⁻¹(", "sin(", "cos(", "tan(", "ln(", "log(", "√(", "×10^", "Ans"];
   /* Apres un resultat, ces touches partent de Ans, comme sur une calculatrice */
   var APRES_ANS = ["+", "−", "×", "÷", "^", "²", "×10^"];
+  /* ... et une ligne tapee au clavier qui commence par l'un de ces signes */
+  var DEBUT_ANS = /^[+\-−–×*·÷\/^²³]/;
 
   function el(tag, attrs, enfants) {
     var n = document.createElement(tag);
@@ -1833,8 +1875,9 @@ var Calculette = (function () {
     return String(Number(x.toPrecision(10))).replace("e+", "E").replace("e-", "E−").replace(".", ",");
   }
 
-  function monter(conteneur) {
-    var degres = true, ans = 0, aUnResultat = false;
+  function monter(conteneur, options) {
+    options = options || {};
+    var degres = true, ans = 0, aUnResultat = false, derniere = "", lignes = [];
     var tactile = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
     var bDeg = el("button", { type: "button", "aria-pressed": "true", texte: "Degrés" });
     var bRad = el("button", { type: "button", "aria-pressed": "false", texte: "Radians" });
@@ -1870,12 +1913,18 @@ var Calculette = (function () {
       saisie.value = v.slice(0, a - n) + v.slice(a);
       saisie.setSelectionRange(a - n, a - n);
     }
-    function ligne(expr, contenu, erreur) {
+    function garder() {
+      if (!options.memoire) return;
+      try { sessionStorage.setItem(options.memoire, JSON.stringify({ ans: ans, a: aUnResultat, deg: degres, der: derniere, l: lignes.slice(-40) })); } catch (e) {}
+    }
+    /* rejoue : une ligne relue dans la memoire de l'onglet, avec la valeur qu'elle avait */
+    function ligne(expr, contenu, erreur, rejoue) {
+      if (!rejoue) { lignes.push([expr, contenu, erreur ? 1 : 0, ans]); garder(); }
       var bExpr = el("button", { type: "button", classe: "calc-expr", title: "Reprendre ce calcul", texte: joli(expr) });
       bExpr.addEventListener("click", function () { saisie.value = expr; saisie.focus(); });
       var bRes = el("button", { type: "button", classe: "calc-res" + (erreur ? " erreur" : ""), texte: contenu });
       if (!erreur) {
-        var valeur = ans;
+        var valeur = rejoue ? rejoue[3] : ans;
         bRes.title = "Insérer cette valeur";
         bRes.addEventListener("click", function () { inserer(brut(valeur)); saisie.focus(); });
       }
@@ -1885,7 +1934,9 @@ var Calculette = (function () {
     }
     function calculer() {
       var expr = saisie.value.trim();
-      if (!expr) return;
+      if (!expr) { if (!derniere) return; expr = derniere; }   /* Entree a vide : le dernier calcul, encore */
+      if (aUnResultat && DEBUT_ANS.test(expr)) expr = "Ans" + expr;
+      derniere = expr;
       var ouvertes = (expr.match(/\(/g) || []).length - (expr.match(/\)/g) || []).length;
       for (; ouvertes > 0; ouvertes--) expr += ")";   /* l'historique montre ce qui a ete calcule */
       try {
@@ -1913,11 +1964,29 @@ var Calculette = (function () {
       });
       pave.appendChild(b);
     });
+    /* au clavier, un operateur tape sur une ligne vide apres un resultat devient Ans + operateur */
+    saisie.addEventListener("input", function () {
+      if (aUnResultat && saisie.value.length === 1 && DEBUT_ANS.test(saisie.value)) {
+        saisie.value = "Ans" + saisie.value;
+        saisie.setSelectionRange(saisie.value.length, saisie.value.length);
+      }
+    });
     saisie.addEventListener("keydown", function (ev) {
       if (ev.key === "Enter") { ev.preventDefault(); calculer(); }
       else if (ev.key === "Escape") { saisie.value = ""; }
     });
 
+    /* la memoire de l'onglet, relue a l'ouverture */
+    if (options.memoire) {
+      try {
+        var m = JSON.parse(sessionStorage.getItem(options.memoire) || "null");
+        if (m) {
+          ans = m.ans || 0; aUnResultat = !!m.a; derniere = m.der || ""; angle(m.deg !== false); lignes = m.l || [];
+          lignes.forEach(function (x) { ligne(x[0], x[1], x[2], x); });
+        }
+      } catch (e) {}
+      bDeg.addEventListener("click", garder); bRad.addEventListener("click", garder);
+    }
     conteneur.appendChild(el("div", { classe: "calc-angle", role: "group", "aria-label": "Unité d'angle" }, [bDeg, bRad]));
     conteneur.appendChild(ecran);
     conteneur.appendChild(saisie);
