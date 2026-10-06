@@ -358,9 +358,121 @@ table.controle{border-collapse:collapse;width:100%;font-size:.86rem}
 @keyframes entre{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 
+/* habillage : charte « cablage » */
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url(../assets/polices/jetbrains-mono-400-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url(../assets/polices/jetbrains-mono-400-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:700;font-display:swap;src:url(../assets/polices/jetbrains-mono-700-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:700;font-display:swap;src:url(../assets/polices/jetbrains-mono-700-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Red Hat Text';font-style:normal;font-weight:400;font-display:swap;src:url(../assets/polices/red-hat-text-400-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Red Hat Text';font-style:normal;font-weight:400;font-display:swap;src:url(../assets/polices/red-hat-text-400-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Red Hat Text';font-style:normal;font-weight:500;font-display:swap;src:url(../assets/polices/red-hat-text-500-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Red Hat Text';font-style:normal;font-weight:500;font-display:swap;src:url(../assets/polices/red-hat-text-500-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Red Hat Text';font-style:normal;font-weight:700;font-display:swap;src:url(../assets/polices/red-hat-text-700-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Red Hat Text';font-style:normal;font-weight:700;font-display:swap;src:url(../assets/polices/red-hat-text-700-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+
+:root{
+  --fond:#eef0ee;            /* la feuille du schéma */
+  --carte:#ffffff;
+  --carte2:#f4f6f4;
+  --encre:#17191c;
+  --encre2:#545a60;
+  --trait:#b4bab8;
+  --trait2:#d3d8d6;
+  /* les quatre paires T568 */
+  --p-orange:#e8720c;--p-vert:#1f9a3a;--p-bleu:#1f5fd0;--p-brun:#8b5a2b;
+  --led:#2ecc5b;
+  --froid:var(--p-bleu);--tiede:var(--p-orange);--chaud:#c6262e;
+  --vert:var(--p-vert);--violet:var(--p-brun);
+  --ombre:0 1px 0 rgba(23,25,28,.10);
+  --r:2px;
+}
+
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --fond:#121416;--carte:#1a1d20;--carte2:#22262a;--encre:#e8ebe9;--encre2:#9aa3a8;
+    --trait:#3b4246;--trait2:#2b3135;
+    --p-orange:#f28a3a;--p-vert:#3fbf5f;--p-bleu:#4f86e8;--p-brun:#b07a45;--chaud:#e2564f;
+    --ombre:0 1px 0 rgba(0,0,0,.6);
+  }
+}
+:root{--police:"Red Hat Text",system-ui,sans-serif;--police-titres:"Red Hat Text","Helvetica Neue",Arial,sans-serif;--police-mono:"JetBrains Mono",ui-monospace,monospace}
+/* Entrainement · l'habillage d'un site de classe, la part commune.
+
+   L'assembleur la pose apres jeu.css, derriere les polices et les jetons qu'il a releves
+   dans la charte du site (_commun/modeles/web/<charte>.css) : la page jointe prend la
+   palette, les polices, les angles et les ombres de son site, sans en charger la feuille,
+   dont les classes (.page, .barre, .chapeau) rencontreraient celles du jeu. Puis vient la
+   signature propre a la charte, habillages/<charte>.css. Pose le 6 octobre 2026. */
+
+/* Les roles du jeu pris sur les jetons de la charte. Le meme selecteur que les blocs
+   sombres de jeu.css, pour passer apres eux aussi. */
+:root,:root:not([data-theme="light"]),:root[data-theme="dark"]{
+  --accent:var(--froid);
+  --juste:var(--vert);
+  --faux:var(--chaud);
+  --accent-doux:color-mix(in srgb,var(--froid) 13%,var(--carte));
+  --juste-doux:color-mix(in srgb,var(--vert) 13%,var(--carte));
+  --faux-doux:color-mix(in srgb,var(--chaud) 12%,var(--carte));
+  --mono:var(--police-mono);
+}
+body{font-family:var(--police)}
+/* les titres de rubrique comme ceux des pages du site : plus grands, et le court filet
+   de couleur au-dessus, qui est celui du kit commun */
+.rubrique>h2,h2.form-titre{font-size:clamp(22px,3vw,28px);font-weight:700;letter-spacing:-.02em;margin:8px 0 6px}
+.rubrique>h2::before,h2.form-titre::before{content:"";display:block;width:34px;height:3px;background:var(--froid);margin-bottom:12px;border-radius:2px}
+h1,h2,h3,.titre-carte,.titre-jeu h1,.form-titre,.calc-res{font-family:var(--police-titres)}
+
+/* La barre du site, comme en haut de ses autres pages : son nom, qui ramene a l'accueil.
+   Retiree quand la page est ouverte seule, depuis un disque ou l'ENT : le lien n'y menerait
+   nulle part (le petit script pose par l'assembleur). */
+.barre-site-jeu{
+  position:sticky;top:0;z-index:15;
+  display:flex;align-items:center;gap:12px;min-height:52px;padding:0 16px;
+  background:var(--carte);border-bottom:1px solid var(--trait);color:var(--encre);
+}
+.barre-site-jeu .titre{
+  font-family:var(--police-titres);font-weight:700;font-size:15px;letter-spacing:-.01em;
+  color:var(--encre);text-decoration:none;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.barre-site-jeu .titre::before{content:"← ";color:var(--encre2)}
+.barre-site-jeu .titre:hover{text-decoration:underline;text-underline-offset:3px}
+.barre-site-jeu .ou{
+  margin-left:auto;flex:none;font-family:var(--police-mono);font-size:11.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--encre2);
+}
+@media (max-width:520px){ .barre-site-jeu .ou{display:none} }
+body:has(.barre-site-jeu) .annonces{top:64px}
+@media print{ .barre-site-jeu{display:none} }
+
+/* Entrainement · la signature de la charte « cablage », site de la 2de CIEL.
+   La feuille quadrillee du schema de cablage, et le cartouche de l'en-tete, sur-titre en
+   chasse fixe dans le bleu de la paire T568, comme les pages du site. */
+body{
+  background-image:
+    linear-gradient(to right,rgba(23,25,28,.045) 1px,transparent 1px),
+    linear-gradient(to bottom,rgba(23,25,28,.045) 1px,transparent 1px);
+  background-size:24px 24px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) body{
+    background-image:
+      linear-gradient(to right,rgba(232,235,233,.05) 1px,transparent 1px),
+      linear-gradient(to bottom,rgba(232,235,233,.05) 1px,transparent 1px);
+  }
+}
+.entete{
+  position:relative;background:var(--carte);border:1.5px solid var(--encre);
+  padding:22px 22px 20px;margin-top:8px;
+}
+.entete .surtitre{font-family:var(--police-mono);letter-spacing:.14em;color:var(--p-bleu)}
+.entete h1{font-weight:700;letter-spacing:-.02em}
+@media print{ body{background-image:none} }
+
 </style>
 </head>
 <body>
+<div class="barre-site-jeu"><a class="titre">Maths et physique-chimie — 2de Bac Pro CIEL</a><span class="ou">Réviser en jouant</span></div>
+<script>(function(){var b=document.querySelector(".barre-site-jeu");if(!b)return;if(location.protocol==="file:")b.parentNode.removeChild(b);else b.querySelector("a").setAttribute("href","../index.html");})();</script>
 <main id="app" class="page"></main>
 <div id="annonces" class="annonces" aria-live="polite"></div>
 <noscript><p>Cet entraînement demande JavaScript. Rien n'est envoyé : tout se calcule dans le navigateur.</p></noscript>
@@ -937,571 +1049,7 @@ var Generateurs = (function () {
 })();
 
 </script>
-<script>/* moteur/generateurs-thermique.js */
-/* Entrainement · les fabriques de la thermique du batiment (BTS FED, seances 1 a 6).
 
-   Les formules et les constantes sont celles du cours :
-     E = P × t · R = e / λ · R total = Rsi + Σ e/λ + Rse, Rsi = 0,13, Rse = 0,04 (paroi verticale)
-     Φ = U × S × ΔT · Φ = Ψ × L × ΔT · Φ = 0,34 × Q × ΔT · puissance = Φ total × 1,15
-     GV = Φ / ΔT · besoin brut = GV × DJU × 24 / 1 000 · apports 25 % · retour = cout / economie
-     θi − θsi = U × Rsi × (θi − θe)
-   Chaque erreur proposee est une faute relevee en seance ou dans les pages de cours. */
-"use strict";
-(function () {
-  var G = Generateurs, N = Nombres;
-  var definir = G.definir, un = G.un, plage = G.plage, err = G.err;
-  var RSI = 0.13, RSE = 0.04;
-  function v(x, unite, c) { return N.ecrire(x, c || 3) + " " + unite; }
-  function arrondi(x, c) { return Number(x.toPrecision(c || 3)); }
-  function lam(l) { return "λ = " + N.ecrire(l, 3) + " W/(m·K)"; }
-  function temp(t) { return N.ecrire(t, 3) + " °C"; }
-
-  /* ─────────── les erreurs qui reviennent ─────────── */
-  var E = {
-    wh: { nom: "Resté en wattheures", explication: "W × h donne des Wh ; 1 kWh = 1 000 Wh." },
-    secondes: { nom: "Secondes au lieu d'heures", explication: "Le kWh compte des heures : la durée reste en heures." },
-    diviseDuree: { nom: "Divisé par la durée", explication: "L'énergie croît avec la durée : E = P × t." },
-    jours: { nom: "Les jours oubliés", explication: "Une durée par jour se multiplie par le nombre de jours." },
-    journee: { nom: "Toute la journée comptée", explication: "L'appareil ne tourne que les heures indiquées, pas 24 h." },
-    diviseParPrix: { nom: "Divisé par le prix", explication: "Coût = énergie × prix du kWh." },
-    prixWh: { nom: "Prix appliqué à des Wh", explication: "Le prix est par kWh : l'énergie en kWh d'abord." },
-    cm: { nom: "Épaisseur en centimètres", explication: "Dans R = e / λ, l'épaisseur se met en mètres : 12 cm = 0,12 m." },
-    mm: { nom: "Épaisseur en millimètres", explication: "Dans R = e / λ, l'épaisseur se met en mètres : 13 mm = 0,013 m." },
-    renverse: { nom: "Fraction renversée", explication: "R = e / λ : l'épaisseur au numérateur." },
-    foisLambda: { nom: "Multiplié par λ", explication: "On divise l'épaisseur par λ : un λ petit donne une grande résistance." },
-    resteM: { nom: "Resté en mètres", explication: "e = R × λ donne des mètres : × 100 pour des centimètres." },
-    diviseLambda: { nom: "Divisé par λ", explication: "R = e / λ se retourne en e = R × λ : on multiplie." },
-    rsOubliees: { nom: "Rsi et Rse oubliées", explication: "Les couches d'air des deux faces comptent : + 0,13 + 0,04." },
-    nonInverse: { nom: "R donné au lieu de U", explication: "U = 1 / R total : il reste à inverser." },
-    inverses: { nom: "Inverses additionnés", explication: "Couches en série : ce sont les résistances qui s'additionnent, pas leurs inverses." },
-    autres: { nom: "Autres couches oubliées", explication: "R = 1 / U, puis on retire Rsi, Rse et les autres couches : le reste revient à l'isolant." },
-    signe: { nom: "Signe de θe", explication: "20 − (−7) = 27 : retrancher un négatif, c'est ajouter." },
-    sansDT: { nom: "ΔT oublié", explication: "La déperdition est proportionnelle à l'écart de température." },
-    k273: { nom: "273 ajouté à un écart", explication: "Un écart en °C vaut le même nombre en K ; 273 ne s'ajoute qu'à une température." },
-    exterieur: { nom: "Écart avec l'extérieur", explication: "Cette paroi ne voit pas l'extérieur : son écart est θi − θ du local non chauffé." },
-    paire: { nom: "Mauvaise paire de températures", explication: "On compare les deux faces de la paroi : le local chauffé et le local non chauffé." },
-    surface: { nom: "Ψ multiplié par une surface", explication: "Ψ est en W/(m·K) : il se multiplie par une longueur, jamais par une surface." },
-    eau: { nom: "Coefficient de l'eau", explication: "1 163 vaut pour l'eau ; pour l'air, c'est 0,34." },
-    sans034: { nom: "0,34 oublié", explication: "Φ = 0,34 × Q × ΔT : le 0,34 fait passer des m³/h d'air à des W/K." },
-    secondesAir: { nom: "Débit pris en m³/s", explication: "0,34 contient déjà la division par 3 600 : Q reste en m³/h." },
-    margeOubliee: { nom: "Marge oubliée", explication: "Puissance à installer = Φ total × 1,15, pour la relance après le réduit." },
-    marge15: { nom: "1,5 au lieu de 1,15", explication: "La marge usuelle est de 15 % : × 1,15." },
-    margeRetiree: { nom: "Marge retirée", explication: "La marge s'ajoute : on multiplie par 1,15." },
-    margeGV: { nom: "Marge comptée dans le GV", explication: "Le GV se calcule sur les déperditions, sans la marge de relance." },
-    foisDT: { nom: "Multiplié par l'écart", explication: "GV = Φ / ΔT : des watts par kelvin." },
-    sans24: { nom: "24 oublié", explication: "Les DJU comptent des jours ; × 24 pour des heures." },
-    div24: { nom: "Divisé par 24", explication: "On passe des jours aux heures : × 24." },
-    whBesoin: { nom: "Resté en wattheures", explication: "W/K × K·jour × 24 donne des Wh : ÷ 1 000 pour des kWh." },
-    apportsPris: { nom: "Apports pris pour le besoin", explication: "Les apports couvrent 25 % : il reste 75 % à fournir." },
-    apportsAjoutes: { nom: "Apports ajoutés", explication: "Les apports gratuits réduisent le besoin : on les retire." },
-    retourRenverse: { nom: "Fraction renversée", explication: "Temps de retour = coût / économie annuelle : des € divisés par des € par an." },
-    apportsNonRetires: { nom: "Apports non retirés", explication: "L'économie réelle tient compte des 25 % d'apports : × 0,75." },
-    uFinal: { nom: "U final au lieu de ΔU", explication: "On gagne la différence des U : ΔU × S." },
-    kwhPourEuros: { nom: "Coût divisé par des kWh", explication: "On divise par l'économie en euros, pas en kilowattheures." },
-    rse: { nom: "Rse au lieu de Rsi", explication: "Côté intérieur, Rsi = 0,13 ; Rse = 0,04 est côté extérieur." },
-    rsiOubliee: { nom: "Rsi oubliée", explication: "U = (θi − θsi) / (Rsi × (θi − θe)) : Rsi = 0,13 au dénominateur." },
-    chute: { nom: "La chute, pas la surface", explication: "θsi = θi − chute : il reste à retrancher la chute à l'air intérieur." },
-    mauvaisCote: { nom: "Retranché du mauvais côté", explication: "La chute se retranche à l'air intérieur, pas à l'air extérieur." }
-  };
-
-  /* ═══════════════════════════════════════════ J1 · E = P × t */
-  var APPAREILS = [
-    { nom: "Un radiateur électrique", P: [1000, 2000, 250] },
-    { nom: "Un sèche-serviettes", P: [300, 750, 50] },
-    { nom: "Un ballon d'eau chaude", P: [1500, 3000, 500] },
-    { nom: "Une plaque à induction", P: [2000, 3600, 200] },
-    { nom: "Un convecteur de bureau", P: [500, 1500, 250] }
-  ];
-  var METHODE_E = "E = P × t : P en kW et t en heures donnent des kWh.";
-  definir("energie-duree", function (spec, niveau) {
-    var a = un(APPAREILS), P = plage(a.P);
-    if (niveau === 1) {
-      var t = plage([0.5, 10, 0.5]);
-      return {
-        contexte: a.nom + " de " + v(P, "W") + " fonctionne " + v(t, "h") + ".",
-        enonce: "L'énergie consommée ?", unite: "kWh", reponse: P * t / 1000, tolerance: 0.01, methode: METHODE_E,
-        erreurs: [err(P * t, E.wh), err(P * t * 3.6, E.secondes), err(P / t / 1000, E.diviseDuree)]
-      };
-    }
-    var h = plage([2, 12, 1]), j = un([7, 28, 30, 31]), Ej = P * h * j / 1000;
-    var debut = a.nom + " de " + v(P, "W") + " fonctionne " + h + " h par jour pendant " + j + " jours.";
-    var base = [err(P * h / 1000, E.jours), err(P * 24 * j / 1000, E.journee)];
-    if (niveau === 2) return {
-      contexte: debut, enonce: "L'énergie consommée sur la période ?", unite: "kWh", reponse: Ej, tolerance: 0.01, methode: METHODE_E,
-      erreurs: base.concat([err(P * h * j, E.wh)])
-    };
-    var p = plage([0.18, 0.27, 0.01]);
-    return {
-      contexte: debut + " Le kWh coûte " + v(p, "€") + ".", enonce: "Le coût de la période ?", unite: "€", reponse: Ej * p, tolerance: 0.02,
-      methode: METHODE_E + " Puis coût = E × prix du kWh.",
-      erreurs: [err(P * h * p / 1000, E.jours), err(P * h * j * p, E.prixWh), err(Ej / p, E.diviseParPrix), err(P * 24 * j * p / 1000, E.journee)]
-    };
-  });
-
-  /* ═══════════════════════════════════════════ J3 · R = e / λ */
-  var ISOLANTS = [
-    { nom: "laine minérale", l: [0.032, 0.035, 0.040] },
-    { nom: "polystyrène expansé", l: [0.032, 0.038] },
-    { nom: "laine de bois", l: [0.038, 0.040, 0.042] },
-    { nom: "ouate de cellulose", l: [0.039, 0.040] },
-    { nom: "polyuréthane", l: [0.022, 0.025] }
-  ];
-  var MASSIFS = [
-    { nom: "brique creuse", l: 0.45, e: [15, 25, 5] },
-    { nom: "béton plein", l: 1.75, e: [15, 25, 1] },
-    { nom: "bois massif", l: 0.13, e: [2, 8, 1] }
-  ];
-  var MURS = [{ nom: "brique creuse", l: 0.45 }, { nom: "béton plein", l: 1.75 }];
-  function isolant() { var m = un(ISOLANTS); return { nom: m.nom, l: un(m.l) }; }
-  var METHODE_R = "R = e / λ, avec e en mètres : R en m²·K/W.";
-
-  definir("resistance-couche", function (spec, niveau) {
-    var m, e, R;
-    if (niveau <= 2) {
-      if (niveau === 2 && Math.random() < 0.5) { m = un(MASSIFS); e = plage(m.e); m = { nom: m.nom, l: m.l }; }
-      else { m = isolant(); e = plage([8, 30, 1]); }
-      R = e / 100 / m.l;
-      return {
-        contexte: "Une couche de " + m.nom + " de " + v(e, "cm") + ", " + lam(m.l) + ".",
-        enonce: "Sa résistance thermique ?", unite: "m²·K/W", reponse: R, tolerance: 0.02, methode: METHODE_R,
-        erreurs: [err(e / m.l, E.cm), err(m.l / (e / 100), E.renverse), err(e / 100 * m.l, E.foisLambda)]
-      };
-    }
-    if (Math.random() < 0.5) {
-      var plaque = Math.random() < 0.4, mm;
-      if (plaque) { m = { nom: "plaque de plâtre", l: 0.25 }; mm = 13; }
-      else { m = isolant(); mm = plage([60, 300, 20]); }
-      return {
-        contexte: "Une couche de " + m.nom + " de " + v(mm, "mm") + ", " + lam(m.l) + ".",
-        enonce: "Sa résistance thermique ?", unite: "m²·K/W", reponse: mm / 1000 / m.l, tolerance: 0.02, methode: METHODE_R,
-        erreurs: [err(mm / m.l, E.mm), err(mm / 10 / m.l, E.cm), err(m.l / (mm / 1000), E.renverse)]
-      };
-    }
-    m = isolant(); R = plage([2, 8, 0.5]);
-    return {
-      contexte: "On veut une couche de " + m.nom + " (" + lam(m.l) + ") de résistance R = " + v(R, "m²·K/W") + ".",
-      enonce: "Quelle épaisseur poser ?", unite: "cm", reponse: R * m.l * 100, tolerance: 0.02,
-      methode: "R = e / λ se retourne : e = R × λ, en mètres, puis en centimètres.",
-      erreurs: [err(R * m.l, E.resteM), err(R / m.l, E.diviseLambda), err(m.l / R * 100, E.renverse)]
-    };
-  });
-
-  /* ═══════════════════════════════════════════ J3 · le U d'une paroi */
-  var METHODE_U = "R total = 0,13 + Σ e/λ + 0,04, puis U = 1 / R total, en W/(m²·K).";
-  function paroi4(iso, e, mur) {
-    var Rautres = 0.013 / 0.25 + 0.20 / mur.l + 0.015 / 1.15;
-    return {
-      Rautres: Rautres,
-      texte: "De l'intérieur vers l'extérieur : plaque de plâtre 1,3 cm (λ = 0,25), " + iso.nom + " " +
-        (e === null ? "à poser (" + lam(iso.l) + ")" : v(e, "cm") + " (" + lam(iso.l) + ")") + ", " + mur.nom +
-        " 20 cm (λ = " + N.ecrire(mur.l) + "), enduit ciment 1,5 cm (λ = 1,15). Paroi verticale."
-    };
-  }
-  definir("coefficient-u", function (spec, niveau) {
-    if (niveau === 1) {
-      var X = plage([1.5, 7, 0.1]);
-      return {
-        contexte: "Paroi verticale : ses couches totalisent Σ e/λ = " + v(X, "m²·K/W") + ", sans les résistances superficielles.",
-        enonce: "Son coefficient U ?", unite: "W/(m²·K)", reponse: 1 / (RSI + X + RSE), tolerance: 0.02, methode: METHODE_U,
-        erreurs: [err(1 / X, E.rsOubliees), err(RSI + X + RSE, E.nonInverse), err(1 / (X + RSI), { nom: "Rse oubliée", explication: "Les deux faces comptent : Rsi = 0,13 et Rse = 0,04." })]
-      };
-    }
-    var iso = isolant(), e, mur = un(MURS), Ri, Rm, R;
-    if (niveau === 2) {
-      e = plage([8, 20, 1]); var em = 20;
-      Ri = e / 100 / iso.l; Rm = em / 100 / mur.l; R = RSI + Ri + Rm + RSE;
-      return {
-        contexte: "Paroi verticale : " + iso.nom + " " + v(e, "cm") + " (" + lam(iso.l) + ") et " + mur.nom + " " + v(em, "cm") + " (λ = " + N.ecrire(mur.l) + ").",
-        enonce: "Son coefficient U ?", unite: "W/(m²·K)", reponse: 1 / R, tolerance: 0.03, methode: METHODE_U,
-        erreurs: [err(1 / (Ri + Rm), E.rsOubliees), err(R, E.nonInverse), err(1 / Ri + 1 / Rm, E.inverses),
-                  err(1 / (RSI + e / iso.l + em / mur.l + RSE), E.cm)]
-      };
-    }
-    if (Math.random() < 0.5) {
-      e = plage([8, 20, 1]);
-      var p = paroi4(iso, e, mur); Ri = e / 100 / iso.l; R = RSI + Ri + p.Rautres + RSE;
-      return {
-        contexte: p.texte, enonce: "Le coefficient U de la paroi ?", unite: "W/(m²·K)", reponse: 1 / R, tolerance: 0.03, methode: METHODE_U,
-        erreurs: [err(1 / (Ri + p.Rautres), E.rsOubliees), err(R, E.nonInverse), err(1 / (RSI + e / iso.l + p.Rautres + RSE), E.cm)]
-      };
-    }
-    var Uv = un([0.20, 0.22, 0.25, 0.28, 0.30]), q = paroi4(iso, null, mur);
-    var eM = (1 / Uv - RSI - RSE - q.Rautres) * iso.l;
-    return {
-      contexte: q.texte + " U visé : " + v(Uv, "W/(m²·K)") + ".",
-      enonce: "Quelle épaisseur d'isolant ?", unite: "cm", reponse: eM * 100, tolerance: 0.03,
-      methode: "R total = 1 / U ; on retire 0,13, 0,04 et les autres couches ; le reste est R de l'isolant, et e = R × λ.",
-      erreurs: [err(iso.l / Uv * 100, E.autres), err((1 / Uv - q.Rautres) * iso.l * 100, E.rsOubliees), err(eM, E.resteM)]
-    };
-  });
-
-  /* ═══════════════════════════════════════════ J4 · les deperditions */
-  var BASES = [-10, -7, -5, -2];
-  var PAROIS = [
-    { nom: "Un mur", S: [40, 150, 1], U: [0.18, 0.40, 0.01] },
-    { nom: "Un mur ancien non isolé", S: [40, 120, 1], U: [1.5, 2.5, 0.1] },
-    { nom: "Une toiture", S: [50, 120, 1], U: [0.12, 0.25, 0.01] },
-    { nom: "Des menuiseries", S: [8, 30, 1], U: [1.1, 1.8, 0.1] }
-  ];
-  function tableau(lignes) {
-    return '<table class="donnees">' + lignes.map(function (l) {
-      return "<tr><td>" + l[0] + "</td><td>" + l[1] + "</td></tr>";
-    }).join("") + "</table>";
-  }
-  definir("deperditions", function (spec, niveau) {
-    var ti = un([19, 20]), te = un(BASES), dt = ti - te;
-    var air = "Intérieur " + temp(ti) + ", extérieur " + temp(te) + ".";
-    if (niveau === 1) {
-      var p = un(PAROIS), S = plage(p.S), U = plage(p.U);
-      return {
-        contexte: p.nom + " de " + v(S, "m²") + ", U = " + v(U, "W/(m²·K)") + ". " + air,
-        enonce: "Sa déperdition ?", unite: "W", reponse: U * S * dt, tolerance: 0.02, methode: "Φ = U × S × ΔT, avec ΔT = θi − θe.",
-        erreurs: [err(U * S * (ti + te), E.signe), err(U * S, E.sansDT), err(U * S * (dt + 273), E.k273)]
-      };
-    }
-    if (niveau === 2) {
-      var cas = un(["plancher", "pont", "air"]);
-      if (cas === "plancher") {
-        var Sp = plage([50, 120, 1]), Up = plage([0.20, 0.40, 0.01]), tu = un([5, 8, 10]);
-        return {
-          contexte: "Un plancher de " + v(Sp, "m²") + ", U = " + v(Up, "W/(m²·K)") + ", sur un vide sanitaire à " + temp(tu) + ". " + air,
-          enonce: "Sa déperdition ?", unite: "W", reponse: Up * Sp * (ti - tu), tolerance: 0.02,
-          methode: "Φ = U × S × ΔT, avec l'écart entre les deux faces : θi − θ du vide sanitaire.",
-          erreurs: [err(Up * Sp * dt, E.exterieur), err(Up * Sp * (tu - te), E.paire), err(Up * Sp, E.sansDT)]
-        };
-      }
-      if (cas === "pont") {
-        var L = plage([20, 60, 1]), psi = plage([0.30, 0.90, 0.05]);
-        return {
-          contexte: "Une jonction plancher-mur de " + v(L, "m") + ", Ψ = " + v(psi, "W/(m·K)") + ", sur une façade de 2,5 m de haut. " + air,
-          enonce: "La déperdition par ce pont thermique ?", unite: "W", reponse: psi * L * dt, tolerance: 0.02,
-          methode: "Φ = Ψ × L × ΔT : Ψ se multiplie par une longueur.",
-          erreurs: [err(psi * L * 2.5 * dt, E.surface), err(psi * L, E.sansDT), err(psi * L * (ti + te), E.signe)]
-        };
-      }
-      var Q = plage([60, 300, 5]);
-      return {
-        contexte: "Un débit d'air neuf de " + v(Q, "m³/h") + ". " + air,
-        enonce: "La déperdition par l'air neuf ?", unite: "W", reponse: 0.34 * Q * dt, tolerance: 0.02,
-        methode: "Φ = 0,34 × Q × ΔT, avec Q en m³/h.",
-        erreurs: [err(1163 * Q * dt, E.eau), err(Q * dt, E.sans034), err(0.34 * Q / 3600 * dt, E.secondesAir)]
-      };
-    }
-    var postes = [
-      ["Murs", plage([400, 900, 10])], ["Toiture", plage([150, 500, 10])], ["Menuiseries", plage([300, 800, 10])],
-      ["Plancher bas", plage([200, 450, 10])], ["Ponts thermiques", plage([200, 1200, 10])], ["Air neuf", plage([300, 1100, 10])]
-    ];
-    var total = postes.reduce(function (s, x) { return s + x[1]; }, 0);
-    var table = tableau(postes.map(function (x) { return [x[0], v(x[1], "W", 4)]; }));
-    if (Math.random() < 0.5) return {
-      contexte: "Le bilan d'une maison, au jour le plus froid. " + air + table,
-      enonce: "La puissance à installer ?", unite: "W", reponse: total * 1.15, tolerance: 0.01,
-      methode: "On additionne les postes, puis × 1,15 pour la relance.",
-      erreurs: [err(total, E.margeOubliee), err(total * 1.5, E.marge15), err(total / 1.15, E.margeRetiree)]
-    };
-    return {
-      contexte: "Le bilan d'une maison, au jour le plus froid. " + air + table,
-      enonce: "Le GV du bâtiment ?", unite: "W/K", reponse: total / dt, tolerance: 0.01,
-      methode: "GV = Φ total / ΔT, sans la marge : des watts par kelvin.",
-      erreurs: [err(total * 1.15 / dt, E.margeGV), err(total * dt, E.foisDT), err(total / (ti + te), E.signe)]
-    };
-  });
-
-  /* ═══════════════════════════════════════════ J5 · le besoin annuel et son cout */
-  var VILLES = [{ nom: "Nice", dju: 1100 }, { nom: "Paris", dju: 2300 }, { nom: "Rouen", dju: 2400 }, { nom: "Strasbourg", dju: 2700 }];
-  var PRIX = [{ nom: "au gaz", p: 0.12 }, { nom: "à l'électricité", p: 0.25 }];
-  var METHODE_B = "Besoin brut = GV × DJU × 24 / 1 000, en kWh.";
-  function ville(x) { return x.nom + " (" + v(x.dju, "DJU", 4) + ")"; }
-  definir("besoin-annuel", function (spec, niveau) {
-    var vil = un(VILLES);
-    if (niveau === 1) {
-      var gv = plage([80, 250, 1]), B = gv * vil.dju * 24 / 1000;
-      return {
-        contexte: "Un bâtiment de GV = " + v(gv, "W/K") + ", à " + ville(vil) + ".",
-        enonce: "Son besoin brut de chauffage sur la saison ?", unite: "kWh", reponse: B, tolerance: 0.02, methode: METHODE_B,
-        erreurs: [err(B / 24, E.sans24), err(B * 1000, E.whBesoin), err(B / 576, E.div24)]
-      };
-    }
-    if (niveau === 2) {
-      if (Math.random() < 0.5) {
-        var brut = plage([4000, 20000, 10]);
-        return {
-          contexte: "Besoin brut : " + v(brut, "kWh", 5) + ". Les apports gratuits en couvrent 25 %.",
-          enonce: "Le besoin net ?", unite: "kWh", reponse: brut * 0.75, tolerance: 0.01,
-          methode: "Besoin net = besoin brut − apports, soit × 0,75.",
-          erreurs: [err(brut * 0.25, E.apportsPris), err(brut * 1.25, E.apportsAjoutes)]
-        };
-      }
-      var n = plage([3000, 15000, 10]), pr = un(PRIX);
-      return {
-        contexte: "Besoin net : " + v(n, "kWh", 5) + ", chauffage " + pr.nom + " à " + v(pr.p, "€/kWh") + ".",
-        enonce: "La facture annuelle de chauffage ?", unite: "€", reponse: n * pr.p, tolerance: 0.01,
-        methode: "Coût = énergie × prix du kWh.",
-        erreurs: [err(n / pr.p, E.diviseParPrix), err(n * 1000 * pr.p, E.prixWh)]
-      };
-    }
-    var S = plage([50, 120, 5]), U1 = plage([0.8, 1.5, 0.1]), U2 = plage([0.14, 0.20, 0.01]), C = plage([2000, 7000, 250]), px = un(PRIX);
-    var eco = (U1 - U2) * S * vil.dju * 24 / 1000 * 0.75 * px.p;
-    return {
-      contexte: "Isoler une toiture de " + v(S, "m²") + " fait passer son U de " + N.ecrire(U1) + " à " + N.ecrire(U2) +
-        " W/(m²·K). Maison à " + ville(vil) + ", apports 25 %, chauffage " + px.nom + " à " + v(px.p, "€/kWh") + ". Travaux : " + v(C, "€", 4) + ".",
-      enonce: "Le temps de retour ?", unite: "ans", reponse: C / eco, tolerance: 0.03,
-      methode: "Économie = ΔU × S × DJU × 24 / 1 000 × 0,75 × prix ; temps de retour = coût / économie annuelle.",
-      erreurs: [err(eco / C, E.retourRenverse), err(C / (eco / 0.75), E.apportsNonRetires), err(C / (U2 * S * vil.dju * 24 / 1000 * 0.75 * px.p), E.uFinal),
-                err(C / (eco / 24), E.sans24)]
-    };
-  });
-
-  /* ═══════════════════════════════════════════ J6 · la paroi mesuree */
-  definir("surface-paroi", function (spec, niveau) {
-    var ti = un([19, 20, 21]), te = plage([-5, 10, 1]), dt = ti - te;
-    var air = "Local à " + temp(ti) + ", extérieur à " + temp(te) + ".";
-    if (niveau === 1) {
-      var U = plage([0.2, 2.5, 0.05]), chute = U * RSI * dt;
-      return {
-        contexte: "Une paroi de U = " + v(U, "W/(m²·K)") + ". " + air,
-        enonce: "La température de sa surface intérieure ?", unite: "°C", reponse: ti - chute, tolerance: 0.01,
-        methode: "θi − θsi = U × Rsi × (θi − θe), avec Rsi = 0,13 ; puis θsi = θi − chute.",
-        erreurs: [err(ti - U * RSE * dt, E.rse), err(chute, E.chute), err(te + chute, E.mauvaisCote)]
-      };
-    }
-    if (niveau === 2) {
-      var U0 = plage([0.8, 2.5, 0.05]), tsi = Number((ti - U0 * RSI * dt).toFixed(1));
-      if (dt < 8) { te = ti - 15; dt = 15; air = "Local à " + temp(ti) + ", extérieur à " + temp(te) + "."; tsi = Number((ti - U0 * RSI * dt).toFixed(1)); }
-      return {
-        contexte: "On relève une surface intérieure à " + temp(tsi) + ". " + air,
-        enonce: "Le coefficient U de la paroi ?", unite: "W/(m²·K)", reponse: (ti - tsi) / (RSI * dt), tolerance: 0.03,
-        methode: "U = (θi − θsi) / (Rsi × (θi − θe)), avec Rsi = 0,13.",
-        erreurs: [err((ti - tsi) / (RSE * dt), E.rse), err((ti - tsi) / dt, E.rsiOubliee), err((ti - tsi) * RSI * dt, { nom: "Relation mal retournée", explication: "On isole U : on divise l'écart air-surface par Rsi × ΔT." })]
-      };
-    }
-    var U3 = plage([0.20, 2.0, 0.05]), ch = U3 * RSI * dt;
-    if (dt < 10) { te = ti - 15; dt = 15; ch = U3 * RSI * dt; air = "Local à " + temp(ti) + ", extérieur à " + temp(te) + "."; }
-    return {
-      contexte: "Une paroi de U = " + v(U3, "W/(m²·K)") + ". " + air + " Le thermomètre infrarouge lit à ± 0,5 K.",
-      enonce: "L'incertitude relative sur l'écart air-surface ?", unite: "%", reponse: 0.5 / ch * 100, tolerance: 0.03,
-      methode: "Écart attendu = U × 0,13 × ΔT ; incertitude relative = 0,5 / écart × 100.",
-      erreurs: [err(ch / 0.5 * 100, { nom: "Rapport renversé", explication: "On divise l'incertitude par la grandeur mesurée, pas l'inverse." }),
-                err(0.5 / (ti - ch) * 100, { nom: "Rapporté à la température", explication: "L'incertitude se compare à l'écart mesuré, pas à la température." }),
-                err(0.5 / (U3 * RSE * dt) * 100, E.rse)]
-    };
-  });
-
-  /* ═══════════════════════════════════════════ LES PROBLEMES DU CONTROLE
-     Trois suites, chacune sur un batiment tire au sort : la paroi, le bilan, l'argent.
-     Une question donne le resultat retenu de la precedente, pour que la suite reste
-     faisable apres une erreur. */
-  G.definirSuite("paroi-complete", function () {
-    var iso = isolant(), e = plage([10, 20, 1]), mur = un(MURS), te = un([-10, -7, -5]), S = plage([60, 140, 1]), dt = 20 - te;
-    var p = paroi4(iso, e, mur), Ri = e / 100 / iso.l, R = RSI + Ri + p.Rautres + RSE, U = 1 / R, Ur = arrondi(U, 3);
-    return [
-      { contexte: p.texte, enonce: "La résistance de la couche de " + iso.nom + " ?", unite: "m²·K/W", reponse: Ri, tolerance: 0.02, methode: METHODE_R,
-        erreurs: [err(e / iso.l, E.cm), err(iso.l / (e / 100), E.renverse), err(e / 100 * iso.l, E.foisLambda)] },
-      { contexte: p.texte, enonce: "Le coefficient U de la paroi ?", unite: "W/(m²·K)", reponse: U, tolerance: 0.03, methode: METHODE_U,
-        erreurs: [err(1 / (Ri + p.Rautres), E.rsOubliees), err(R, E.nonInverse), err(1 / (RSI + e / iso.l + p.Rautres + RSE), E.cm)] },
-      { contexte: "Ce mur fait " + v(S, "m²") + " ; on retient U = " + v(Ur, "W/(m²·K)") + ". Local à 20 °C, extérieur à " + temp(te) + ".",
-        enonce: "Sa déperdition ?", unite: "W", reponse: Ur * S * dt, tolerance: 0.02, methode: "Φ = U × S × ΔT, avec ΔT = θi − θe.",
-        erreurs: [err(Ur * S * (20 + te), E.signe), err(Ur * S, E.sansDT), err(R * S * dt, { nom: "R à la place de U", explication: "Φ = U × S × ΔT : c'est U, pas R, qui multiplie." })] }
-    ];
-  });
-
-  G.definirSuite("bilan-batiment", function () {
-    var te = un([-10, -7, -5]), dt = 20 - te, tu = un([5, 8, 10]);
-    var Spl = plage([60, 120, 1]), Upl = plage([0.20, 0.40, 0.01]);
-    var L1 = plage([30, 60, 1]), P1 = plage([0.50, 0.90, 0.05]), L2 = plage([15, 35, 1]), P2 = plage([0.30, 0.60, 0.05]);
-    var Q = plage([80, 200, 5]);
-    var fpl = Upl * Spl * (20 - tu), fpo = (P1 * L1 + P2 * L2) * dt, fair = 0.34 * Q * dt;
-    var murs = plage([500, 900, 10]), toit = plage([200, 450, 10]), menu = plage([400, 800, 10]);
-    var r1 = Math.round(fpl), r2 = Math.round(fpo), r3 = Math.round(fair), total = murs + toit + menu + r1 + r2 + r3;
-    var cadre = "Maison : intérieur 20 °C, extérieur de base " + temp(te) + ", vide sanitaire à " + temp(tu) + ", hauteur sous plafond 2,5 m. ";
-    var table = tableau([["Murs", v(murs, "W")], ["Toiture", v(toit, "W")], ["Menuiseries", v(menu, "W")],
-                         ["Plancher bas", v(r1, "W", 4)], ["Ponts thermiques", v(r2, "W", 4)], ["Air neuf", v(r3, "W", 4)]]);
-    return [
-      { contexte: cadre + "Plancher bas : " + v(Spl, "m²") + ", U = " + v(Upl, "W/(m²·K)") + ".", enonce: "La déperdition du plancher ?", unite: "W",
-        reponse: fpl, tolerance: 0.02, methode: "Φ = U × S × ΔT, avec l'écart entre les deux faces : 20 °C et le vide sanitaire.",
-        erreurs: [err(Upl * Spl * dt, E.exterieur), err(Upl * Spl * (tu - te), E.paire), err(Upl * Spl, E.sansDT)] },
-      { contexte: cadre + "Ponts thermiques : " + v(L1, "m") + " de jonction plancher-mur (Ψ = " + v(P1, "W/(m·K)") + ") et " + v(L2, "m") +
-          " de refends (Ψ = " + v(P2, "W/(m·K)") + ").", enonce: "La déperdition par les ponts thermiques ?", unite: "W",
-        reponse: fpo, tolerance: 0.02, methode: "Φ = Ψ × L × ΔT, ligne par ligne, puis on additionne.",
-        erreurs: [err(P1 * L1 * dt, { nom: "Un pont oublié", explication: "Chaque ligne de pont thermique se compte : on additionne les Ψ × L." }),
-                  err(fpo * 2.5, E.surface), err((P1 * L1 + P2 * L2) * (20 - tu), { nom: "Mauvais écart", explication: "Les ponts de façade voient l'extérieur : θi − θe." })] },
-      { contexte: cadre + "Air neuf : " + v(Q, "m³/h") + ".", enonce: "La déperdition par l'air neuf ?", unite: "W",
-        reponse: fair, tolerance: 0.02, methode: "Φ = 0,34 × Q × ΔT, avec Q en m³/h.",
-        erreurs: [err(1163 * Q * dt, E.eau), err(Q * dt, E.sans034), err(0.34 * Q / 3600 * dt, E.secondesAir)] },
-      { contexte: "Le bilan complet, vos trois résultats arrondis compris." + table, enonce: "La puissance à installer ?", unite: "W",
-        reponse: total * 1.15, tolerance: 0.01, methode: "On additionne les six postes, puis × 1,15 pour la relance.",
-        erreurs: [err(total, E.margeOubliee), err(total * 1.5, E.marge15), err(total / 1.15, E.margeRetiree)] },
-      { contexte: "Total des déperditions : " + v(total, "W", 5) + ", pour un écart de base de " + v(dt, "K") + ".", enonce: "Le GV de la maison ?", unite: "W/K",
-        reponse: total / dt, tolerance: 0.01, methode: "GV = Φ total / ΔT, sans la marge.",
-        erreurs: [err(total * 1.15 / dt, E.margeGV), err(total * dt, E.foisDT), err(total / (20 + te), E.signe)] }
-    ];
-  });
-
-  G.definirSuite("energie-argent", function () {
-    var gv = plage([100, 220, 1]), vil = un(VILLES), px = un(PRIX);
-    var brut = gv * vil.dju * 24 / 1000, brutR = Math.round(brut), netR = Math.round(brutR * 0.75);
-    var S = plage([50, 110, 5]), U1 = plage([0.8, 1.5, 0.1]), U2 = plage([0.14, 0.20, 0.01]), C = plage([2500, 7000, 250]);
-    var eco = (U1 - U2) * S * vil.dju * 24 / 1000 * 0.75 * px.p, ecoR = Math.round(eco);
-    var cadre = "Maison de GV = " + v(gv, "W/K") + ", à " + ville(vil) + ", chauffage " + px.nom + " à " + v(px.p, "€/kWh") + ". ";
-    return [
-      { contexte: cadre, enonce: "Le besoin brut de la saison ?", unite: "kWh", reponse: brut, tolerance: 0.02, methode: METHODE_B,
-        erreurs: [err(brut / 24, E.sans24), err(brut * 1000, E.whBesoin), err(brut / 576, E.div24)] },
-      { contexte: cadre + "On retient un besoin brut de " + v(brutR, "kWh", 5) + " ; les apports gratuits en couvrent 25 %.", enonce: "Le besoin net ?", unite: "kWh",
-        reponse: brutR * 0.75, tolerance: 0.01, methode: "Besoin net = besoin brut × 0,75.",
-        erreurs: [err(brutR * 0.25, E.apportsPris), err(brutR * 1.25, E.apportsAjoutes)] },
-      { contexte: cadre + "On retient un besoin net de " + v(netR, "kWh", 5) + ".", enonce: "La facture annuelle de chauffage ?", unite: "€",
-        reponse: netR * px.p, tolerance: 0.01, methode: "Coût = énergie × prix du kWh.",
-        erreurs: [err(netR / px.p, E.diviseParPrix), err(netR * 1000 * px.p, E.prixWh)] },
-      { contexte: cadre + "On isole la toiture : " + v(S, "m²") + ", U passe de " + N.ecrire(U1) + " à " + N.ecrire(U2) + " W/(m²·K). Apports 25 %.",
-        enonce: "L'économie annuelle, en euros ?", unite: "€", reponse: eco, tolerance: 0.03,
-        methode: "ΔGV = ΔU × S ; énergie évitée = ΔGV × DJU × 24 / 1 000 × 0,75 ; puis × prix.",
-        erreurs: [err(eco / 0.75, E.apportsNonRetires), err(U2 * S * vil.dju * 24 / 1000 * 0.75 * px.p, E.uFinal), err(eco / 24, E.sans24)] },
-      { contexte: "Les travaux coûtent " + v(C, "€", 4) + " ; on retient une économie de " + v(ecoR, "€", 4) + " par an.", enonce: "Le temps de retour ?", unite: "ans",
-        reponse: C / ecoR, tolerance: 0.02, methode: "Temps de retour = coût / économie annuelle.",
-        erreurs: [err(ecoR / C, E.retourRenverse), err(C / (ecoR / px.p), E.kwhPourEuros)] }
-    ];
-  });
-})();
-
-</script>
-<script>/* moteur/generateurs-hydraulique.js */
-/* Entrainement · les fabriques de l'hydraulique et de l'ECS (BTS FED, seances 8 a 10).
-   Les formules du cours :
-     Δp = j × (L + Léq), j en Pa/m · 1 mCE = 9 810 Pa · Δp = k × Q², Δp en mCE, Q en m³/h
-     pompe H = H0 − a × Q² ; point de fonctionnement Q = √(H0 / (a + k))
-     E = V × 1,163 × ΔT, E en Wh, V en litres · bouclage : L × W/m × 8 760 h */
-"use strict";
-(function () {
-  var G = Generateurs, N = Nombres;
-  var definir = G.definir, un = G.un, plage = G.plage, err = G.err;
-  var MCE = 9810;
-  function v(x, unite, c) { return N.ecrire(x, c || 3) + " " + unite; }
-
-  var E = {
-    singOubliees: { nom: "Singularités oubliées", explication: "Coudes, tés, vannes : leur Léq s'ajoute à L avant de multiplier par j." },
-    leqSansJ: { nom: "Léq ajoutée sans j", explication: "Δp = j × (L + Léq) : la parenthèse entière se multiplie par j." },
-    singSeules: { nom: "Tube droit oublié", explication: "Δp = j × (L + Léq) : la longueur droite compte aussi." },
-    mce1000: { nom: "1 mCE pris pour 1 000 Pa", explication: "1 mCE = 9 810 Pa, soit près de 10 kPa." },
-    pascals: { nom: "Resté en pascals", explication: "1 mCE = 9 810 Pa : on divise." },
-    organes: { nom: "Organes oubliés", explication: "Générateur, émetteurs et vannes pèsent souvent plus que le tube : on additionne tout." },
-    kpaMce: { nom: "kPa pris pour des mCE", explication: "1 mCE ≈ 10 kPa : des kPa se divisent par 9,81 pour des mCE." },
-    nonCarre: { nom: "Q non élevé au carré", explication: "Δp = k × Q², donc k = Δp / Q²." },
-    foisQ2: { nom: "Multiplié par Q²", explication: "k = Δp / Q² : on divise." },
-    renverse: { nom: "Fraction renversée", explication: "k = Δp / Q² : la perte de charge au numérateur." },
-    lineaire: { nom: "Proportionnel au débit", explication: "La perte de charge suit le carré du débit : Δp₂ = Δp₁ × (Q₂ / Q₁)²." },
-    rapportRenverse: { nom: "Rapport renversé", explication: "Plus de débit, plus de perte : (Q₂ / Q₁)², pas (Q₁ / Q₂)²." },
-    racine: { nom: "Racine oubliée", explication: "H0 − a Q² = k Q² donne Q² = H0 / (a + k) : il reste la racine." },
-    pompeOubliee: { nom: "Courbe de pompe oubliée", explication: "La pompe perd de la hauteur avec le débit : a s'ajoute à k." },
-    signeA: { nom: "Signe de a", explication: "H0 − a Q² = k Q² : a Q² passe de l'autre côté avec un +, d'où a + k." },
-    wh: { nom: "Resté en wattheures", explication: "E = V × 1,163 × ΔT donne des Wh : ÷ 1 000 pour des kWh." },
-    coef1163: { nom: "1 163 pour des litres", explication: "1 163 vaut pour des m³ ; pour des litres, c'est 1,163." },
-    temperature: { nom: "Température au lieu d'écart", explication: "ΔT = température chaude − température de l'eau froide." },
-    volumeJour: { nom: "Volume du jour au lieu de la pointe", explication: "Sans stockage, la puissance se calcule sur l'heure de pointe." },
-    watts: { nom: "Resté en watts", explication: "Une heure de pointe : des Wh par heure, soit des W ; ÷ 1 000 pour des kW." },
-    etale: { nom: "Journée étalée sur 24 h", explication: "La pointe ne s'étale pas : la production couvre l'heure la plus chargée." },
-    ballonOublie: { nom: "Ballon oublié", explication: "Le ballon plein fournit sa part : la production couvre la différence." },
-    ballonAjoute: { nom: "Ballon ajouté", explication: "Le ballon fournit de l'eau chaude : on le retire de la pointe, on ne l'ajoute pas." },
-    ballonSeul: { nom: "Ballon seul", explication: "La production couvre ce que le ballon ne fournit pas : pointe − ballon." },
-    journee: { nom: "Une journée au lieu d'une année", explication: "Le bouclage tourne 8 760 h par an." },
-    jours: { nom: "Jours au lieu d'heures", explication: "Une année compte 8 760 heures : W × h donne des Wh." },
-    whBoucle: { nom: "Resté en wattheures", explication: "W × h donne des Wh : ÷ 1 000 pour des kWh." }
-  };
-
-  /* ═══════════════════════════════════════════ J8 · pertes de charge */
-  definir("perte-charge", function (spec, niveau) {
-    var j = plage([80, 250, 10]), L = plage([10, 60, 1]), Leq = plage([4, 30, 1]), dp = j * (L + Leq);
-    var ctx = "Un tronçon de " + v(L, "m") + " de tube droit, des singularités pour " + v(Leq, "m") + " équivalents, j = " + v(j, "Pa/m") + ".";
-    if (niveau === 1) return {
-      contexte: ctx, enonce: "Sa perte de charge ?", unite: "Pa", reponse: dp, tolerance: 0.01,
-      methode: "Δp = j × (L + Léq) : on additionne les longueurs, puis on multiplie une fois par j.",
-      erreurs: [err(j * L, E.singOubliees), err(j * L + Leq, E.leqSansJ), err(j * Leq, E.singSeules)]
-    };
-    if (niveau === 2) return {
-      contexte: ctx, enonce: "Sa perte de charge, en mCE ?", unite: "mCE", reponse: dp / MCE, tolerance: 0.03,
-      methode: "Δp = j × (L + Léq) en Pa, puis 1 mCE = 9 810 Pa.",
-      erreurs: [err(dp / 1000, E.mce1000), err(dp, E.pascals), err(j * L / MCE, E.singOubliees)]
-    };
-    var gen = plage([5, 15, 1]), emi = plage([0.5, 1.5, 0.1]), tot = dp / MCE + gen * 1000 / MCE + emi;
-    return {
-      contexte: "Le tronçon le plus défavorisé : tube et singularités " + v(dp, "Pa", 5) + ", générateur " + v(gen, "kPa") +
-        ", émetteurs et vannes " + v(emi, "mCE") + ".",
-      enonce: "La hauteur manométrique à fournir ?", unite: "mCE", reponse: tot, tolerance: 0.03,
-      methode: "Tout en mCE (1 mCE = 9 810 Pa ≈ 10 kPa), puis on additionne les trois postes.",
-      erreurs: [err(dp / MCE, E.organes), err(dp / MCE + gen + emi, E.kpaMce), err(dp / 1000 + gen + emi, E.mce1000)]
-    };
-  });
-
-  /* ═══════════════════════════════════════════ J9 · courbe du reseau, point de fonctionnement */
-  definir("reseau-k", function (spec, niveau) {
-    if (niveau === 1) {
-      var dp = plage([1, 6, 0.1]), Q = plage([0.5, 3, 0.05]);
-      return {
-        contexte: "Un réseau perd " + v(dp, "mCE") + " pour un débit de " + v(Q, "m³/h") + ".",
-        enonce: "Son coefficient k, dans Δp = k × Q² ?", unite: "", reponse: dp / (Q * Q), tolerance: 0.02,
-        methode: "k = Δp / Q², avec Δp en mCE et Q en m³/h.",
-        erreurs: [err(dp / Q, E.nonCarre), err(dp * Q * Q, E.foisQ2), err(Q * Q / dp, E.renverse)]
-      };
-    }
-    if (niveau === 2) {
-      var d1 = plage([1, 6, 0.1]), Q1 = plage([0.6, 2.5, 0.05]), f = un([0.5, 0.6, 0.7, 0.8, 1.2, 1.25, 1.3, 1.5, 2]), Q2 = Number((Q1 * f).toFixed(2));
-      return {
-        contexte: "Un réseau perd " + v(d1, "mCE") + " à " + v(Q1, "m³/h") + ". Le débit passe à " + v(Q2, "m³/h") + ".",
-        enonce: "Sa nouvelle perte de charge ?", unite: "mCE", reponse: d1 * Math.pow(Q2 / Q1, 2), tolerance: 0.02,
-        methode: "Δp = k × Q² : Δp₂ = Δp₁ × (Q₂ / Q₁)².",
-        erreurs: [err(d1 * Q2 / Q1, E.lineaire), err(d1 * Math.pow(Q1 / Q2, 2), E.rapportRenverse), err(d1 * Q2 * Q2, { nom: "k oublié", explication: "On garde le même réseau : Δp₂ = Δp₁ × (Q₂ / Q₁)²." })]
-      };
-    }
-    var H0 = plage([4, 8, 0.2]), a = plage([0.8, 2.5, 0.1]), k = plage([1, 4, 0.05]);
-    if (Math.abs(k - a) < 0.3) k = Number((k + 0.5).toFixed(2));
-    return {
-      contexte: "Circulateur : H = " + N.ecrire(H0) + " − " + N.ecrire(a) + " × Q². Réseau : Δp = " + N.ecrire(k) + " × Q². H et Δp en mCE, Q en m³/h.",
-      enonce: "Le débit au point de fonctionnement ?", unite: "m³/h", reponse: Math.sqrt(H0 / (a + k)), tolerance: 0.02,
-      methode: "Au croisement, H0 − a Q² = k Q², donc Q = √(H0 / (a + k)).",
-      erreurs: [err(H0 / (a + k), E.racine), err(Math.sqrt(H0 / k), E.pompeOubliee), err(Math.sqrt(H0 / Math.abs(k - a)), E.signeA)]
-    };
-  });
-
-  /* ═══════════════════════════════════════════ J10 · l'eau chaude sanitaire */
-  definir("ecs", function (spec, niveau) {
-    var tf = un([10, 12, 15]), tc = un([55, 60]), dt = tc - tf;
-    var eau = "Eau froide à " + tf + " °C, eau chaude à " + tc + " °C.";
-    if (niveau === 1) {
-      var V = plage([100, 3000, 50]), Ek = V * 1.163 * dt / 1000;
-      return {
-        contexte: "On puise " + v(V, "L", 4) + " d'eau chaude. " + eau, enonce: "L'énergie nécessaire ?", unite: "kWh", reponse: Ek, tolerance: 0.02,
-        methode: "E = V × 1,163 × ΔT : V en litres, E en Wh ; puis ÷ 1 000 pour des kWh.",
-        erreurs: [err(Ek * 1000, E.wh), err(V * 1163 * dt / 1000, E.coef1163), err(V * 1.163 * tc / 1000, E.temperature)]
-      };
-    }
-    if (niveau === 2) {
-      var Vj = plage([1000, 5000, 100]), Vp = Math.round(Vj * plage([0.25, 0.45, 0.05]) / 50) * 50, P = Vp * 1.163 * dt / 1000;
-      return {
-        contexte: "Une journée : " + v(Vj, "L", 4) + " puisés, dont " + v(Vp, "L", 4) + " pendant l'heure de pointe. " + eau,
-        enonce: "La puissance d'une production instantanée ?", unite: "kW", reponse: P, tolerance: 0.02,
-        methode: "Sans stockage, on couvre l'heure de pointe : P = V pointe × 1,163 × ΔT, en W, puis en kW.",
-        erreurs: [err(Vj * 1.163 * dt / 1000, E.volumeJour), err(P * 1000, E.watts), err(Vj * 1.163 * dt / 24 / 1000, E.etale)]
-      };
-    }
-    if (Math.random() < 0.6) {
-      var Vpt = plage([600, 1500, 50]), Vb = plage([200, Vpt - 200, 50]), Ps = (Vpt - Vb) * 1.163 * dt / 1000;
-      return {
-        contexte: "Une pointe de " + v(Vpt, "L", 4) + " en une heure ; un ballon de " + v(Vb, "L", 4) + " est plein au début de la pointe. " + eau,
-        enonce: "La puissance de production nécessaire ?", unite: "kW", reponse: Ps, tolerance: 0.02,
-        methode: "Le ballon fournit son volume ; la production couvre (V pointe − V ballon) × 1,163 × ΔT.",
-        erreurs: [err(Vpt * 1.163 * dt / 1000, E.ballonOublie), err((Vpt + Vb) * 1.163 * dt / 1000, E.ballonAjoute), err(Vb * 1.163 * dt / 1000, E.ballonSeul)]
-      };
-    }
-    var Lb = plage([40, 200, 10]), w = plage([8, 15, 1]), Eb = Lb * w * 8760 / 1000;
-    return {
-      contexte: "Une boucle d'ECS de " + v(Lb, "m") + " perd " + v(w, "W/m") + ", en permanence.",
-      enonce: "Ce qu'elle perd en un an ?", unite: "kWh", reponse: Eb, tolerance: 0.02,
-      methode: "Puissance perdue = L × W/m ; × 8 760 h par an, ÷ 1 000 pour des kWh.",
-      erreurs: [err(Lb * w * 24 / 1000, E.journee), err(Lb * w * 365 / 1000, E.jours), err(Eb * 1000, E.whBoucle)]
-    };
-  });
-})();
-
-</script>
 <script>/* moteur/generateurs-calcul.js */
 /* Entrainement · les fabriques du calcul general : la consolidation du CAP (fiches 01 a 35)
    et les automatismes de seconde (fiches AUTO-01 a AUTO-17, salves 1 a 4).
@@ -1927,7 +1475,7 @@ var Generateurs = (function () {
     if (reste) vals[n - 1] = net(vals[n - 1] + (n - reste) * pas);
     var somme = net(vals.reduce(function (a, b) { return a + b; }, 0)), tri = vals.slice().sort(function (a, b) { return a - b; });
     var liste = vals.map(function (x) { return nb(x); }).join(" ; ");
-    var ctx = chantier(spec) ? "Le gazole consommé par la pelle sur " + n + " jours, en litres : " + liste + "." : dec ? "Six mesures d'une tension, en V : " + liste + "." : "La série : " + liste + ".";
+    var ctx = chantier(spec) ? "Le gazole consommé par la pelle sur " + n + " jours, en litres : " + liste + "." : dec ? (n === 6 ? "Six" : "Cinq") + " mesures d'une tension, en V : " + liste + "." : "La série : " + liste + ".";
     var errs = [err(somme / (n - 1), E.mauvaisNombre), err(somme, E.sommeSeule)];
     if (n % 2 === 1) errs.push(err(tri[(n - 1) / 2], E.milieu));
     return { contexte: ctx, enonce: "La moyenne ?", unite: chantier(spec) ? "L" : dec ? "V" : "", reponse: somme / n, tolerance: 0.005,
@@ -2128,6 +1676,7 @@ var Generateurs = (function () {
 })();
 
 </script>
+
 <script>/* moteur/calculette.js */
 /* Entrainement · la calculatrice.
    Ecrite pour le depot : aucun droit a demander, aucune requete, rien d'enregistre.
@@ -3072,7 +2621,7 @@ var Entrainement = (function () {
       var rejouer = h("button", { type: "button", classe: "bouton principal" }, "Rejouer");
       rejouer.addEventListener("click", function () { demarrerChrono(c, a); });
       afficher([
-        barre({ href: "#/" + c.id, texte: c.nom }),
+        barre({ href: "#/" + c.id, texte: "L'entraînement" }),
         h("div", { classe: "fin" }, [
           h("p", { classe: "surtitre", texte: (raison === "temps" ? "Temps écoulé" : "Plus de cœurs") + " · " + a.titre }),
           h("h1", { texte: rg.actuel.titre }),
@@ -3115,7 +2664,7 @@ var Entrainement = (function () {
     }));
     afficher([
       /* la calculatrice seulement : le formulaire est deja la page */
-      barre({ href: "#/" + c.id, texte: c.nom }, c.calculatrice ? { calculatrice: true, formulaire: false, classe: c } : null),
+      barre({ href: "#/" + c.id, texte: "L'entraînement" }, c.calculatrice ? { calculatrice: true, formulaire: false, classe: c } : null),
       entete(c.nom, "Formulaire", "Les formules à connaître, avec leurs unités, les repères utiles et le piège qui revient."),
       h("div", { classe: "form-actions rangee" }, [parts[0], imprimer]),
       sommaire,
@@ -3159,7 +2708,7 @@ var Entrainement = (function () {
     document.title = l.titre + " · " + c.nom;
     var st = etoilesDe(c, l);
     afficher([
-      barre({ href: "#/" + c.id, texte: c.nom }),
+      barre({ href: "#/" + c.id, texte: "L'entraînement" }),
       entete(l.seance ? "Leçon · " + l.seance : "Leçon", l.titre, l.intro),
       h("ol", { classe: "parcours" }, l.etapes.map(function (e, i) {
         var ouverte = i === 0 || st[i - 1] > 0, n = st[i] || 0;
