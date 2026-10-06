@@ -61,13 +61,6 @@ noscript p{padding:16px;max-width:60ch}
 
 /* Le panneau et le pave de la calculatrice sont dans calculette.css, partagee avec les
    sites de classe (option « calculatrice: oui » de SITE.md). */
-/* les onglets du panneau, quand la classe a les deux outils */
-.outils-onglets{display:flex;border:1px solid var(--trait);border-radius:999px;overflow:hidden}
-.outil-onglet{font-size:.8rem;font-weight:650;padding:7px 12px;border:0;background:none;color:var(--encre2);cursor:pointer;min-height:34px}
-.outil-onglet[aria-selected="true"]{background:var(--encre);color:var(--carte)}
-.outil-onglet[hidden]{display:none}
-.form-corps{flex:1;min-height:0;overflow-y:auto;padding:10px 12px 16px;display:flex;flex-direction:column;gap:10px}
-.form-corps[hidden],.calc-corps[hidden]{display:none}
 /* les annonces se recentrent sur ce qui reste visible quand le panneau est ouvert */
 @media (min-width:640px) and (max-width:899px){ body.calc-ouverte .annonces{left:calc((100% - 300px) / 2)} }
 @media (min-width:900px){ body.calc-ouverte .annonces{left:calc((100% - 380px) / 2)} }
@@ -205,42 +198,7 @@ table.donnees th{font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;
 .methode{display:flex;flex-direction:column;gap:2px;padding-top:8px;border-top:1px dashed var(--trait)}
 .etiquette{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--encre2)}
 
-/* ─────────── Le formulaire : une page imprimable, et un onglet du panneau ─────────── */
-.form-actions{display:flex;gap:8px;align-items:stretch;margin:0 0 10px}
-.form-filtre{flex:1;min-width:0;width:100%;font:inherit;font-size:1rem;padding:8px 10px;border:1.5px solid var(--trait);
-  border-radius:var(--r);background:var(--carte);color:var(--encre)}
-.form-filtre:focus{outline:none;border-color:var(--accent)}
-.form-sommaire{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 18px}
-.form-sommaire button{background:none;cursor:pointer;padding:4px 10px}
-.form-sommaire button:hover{border-color:var(--encre2);color:var(--encre)}
-.form-groupe{margin:0 0 26px}
-.form-groupe[hidden],.form-section[hidden]{display:none}
-.form-titre{font-size:1.15rem;font-weight:700;margin:0 0 8px}
-h3.form-titre{font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--encre2);margin:6px 0 6px;
-  padding-bottom:4px;border-bottom:1px solid var(--trait2)}
-.form-section{background:var(--carte);border:1px solid var(--trait2);border-radius:var(--r);padding:12px 16px 14px;
-  margin:0 0 10px;scroll-margin-top:12px}
-.form-entete{display:flex;align-items:baseline;gap:8px;margin:0 0 6px;font-weight:700}
-/* une formule par ligne, ses unites a droite ; l'une sous l'autre quand la place manque */
-.form-liste{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);margin:0}
-.form-liste dt,.form-liste dd{padding:7px 0;border-top:1px dashed var(--trait2)}
-.form-liste dt:first-of-type,.form-liste dt:first-of-type + dd{border-top:0}
-.form-liste dt{font-size:1.05rem;font-weight:650;font-variant-numeric:tabular-nums;padding-right:14px;overflow-wrap:anywhere}
-.form-liste dd{margin:0;font-size:.86rem;color:var(--encre2)}
-.form-reperes{margin:8px 0 0;padding:8px 0 0 18px;border-top:1px solid var(--trait2);font-size:.88rem}
-.form-reperes li{margin:2px 0}
-.form-piege{display:flex;gap:8px;align-items:baseline;margin:10px 0 0;padding:7px 10px;border-left:3px solid var(--faux);
-  background:var(--faux-doux);border-radius:0 var(--r) var(--r) 0;font-size:.88rem}
-.form-piege .etiquette{color:var(--faux);flex:none}
-.form-corps .form-section{padding:10px 12px 12px;box-shadow:none}
-.form-corps .form-liste,.form-corps .form-liste dd{display:block}
-.form-corps .form-liste dt{padding:6px 0 0}
-.form-corps .form-liste dd{border-top:0;padding:0 0 6px}
-@container (max-width:528px){
-  .form-liste{display:block}
-  .form-liste dt{padding:7px 0 0}
-  .form-liste dd{border-top:0;padding:1px 0 7px}
-}
+/* Le formulaire et les onglets du panneau sont dans formulaire.css, partagee avec les sites. */
 /* a l'impression : les formules seules, sans barre ni champ, une section jamais coupee */
 @media print{
   body{background:#fff;color:#000;padding-right:0!important}
@@ -371,14 +329,17 @@ table.controle{border-collapse:collapse;width:100%;font-size:.86rem}
 .calc-fermer:hover{color:var(--encre);border-color:var(--encre2)}
 .calc-titre{font-weight:700;font-size:.95rem}
 @media print{ .calculatrice{display:none!important} body.calc-ouverte{padding-right:0!important} }
-/* sur un site de classe : au-dessus de la coquille de documentation, et le bouton qui l'ouvre
-   (la barre haute le met en forme ; hors coquille, il flotte en bas a droite) */
+/* sur un site de classe : au-dessus de la coquille de documentation, et les boutons qui
+   l'ouvrent (la barre haute les met en forme ; hors coquille, ils flottent en bas a droite).
+   Sur telephone, un seul bouton « Outils » remplace les deux. */
 .doc-shell .calculatrice{z-index:60}
-.bouton-calculatrice[aria-pressed="true"]{font-weight:700;border-color:var(--encre)}
-.bouton-calculatrice.flottant{position:fixed;right:16px;bottom:16px;z-index:40;font:inherit;font-size:.9rem;font-weight:600;
-  padding:10px 16px;border-radius:999px;border:1px solid var(--encre);background:var(--carte);color:var(--encre);
-  box-shadow:var(--ombre);cursor:pointer}
-body.calc-ouverte .bouton-calculatrice.flottant{display:none}
+.bouton-outil[aria-pressed="true"]{font-weight:700;border-color:var(--encre)}
+.bouton-outil.etroit{display:none}
+@media (max-width:639px){ .bouton-outil.large{display:none} .bouton-outil.etroit{display:inline-flex} }
+.outils-flottants{position:fixed;right:16px;bottom:16px;z-index:40;display:flex;gap:8px}
+.outils-flottants .bouton-outil{font:inherit;font-size:.9rem;font-weight:600;padding:10px 16px;border-radius:999px;
+  border:1px solid var(--encre);background:var(--carte);color:var(--encre);box-shadow:var(--ombre);cursor:pointer}
+body.calc-ouverte .outils-flottants{display:none}
 /* Dans la coquille de documentation, le panneau prend la place du sommaire de droite ; entre
    1 000 et 1 279 px, celle du plan aussi, qui revient a la fermeture. Sans cela, le texte de la
    page tombait a 416 px de large sur un ecran de 1 280. */
@@ -390,6 +351,63 @@ body.calc-ouverte .bouton-calculatrice.flottant{display:none}
   body.calc-ouverte .doc-corps{--col-plan:0px}
   body.calc-ouverte .doc-plan{display:none}
 }
+
+/* Le formulaire · la page, l'onglet du panneau, et les onglets eux-memes.
+   Une seule feuille pour le jeu d'entrainement et pour les sites de classe (option
+   « formulaire: » de SITE.md). Sortie de jeu.css le 6 octobre 2026 ; les couleurs ont un
+   repli, les chartes nommant --froid et --chaud ce que le jeu nomme --accent et --faux. */
+/* les onglets du panneau, quand la classe a les deux outils */
+.outils-onglets{display:flex;border:1px solid var(--trait);border-radius:999px;overflow:hidden}
+.outil-onglet{font-size:.8rem;font-weight:650;padding:7px 12px;border:0;background:none;color:var(--encre2);cursor:pointer;min-height:34px}
+.outil-onglet[aria-selected="true"]{background:var(--encre);color:var(--carte)}
+.outil-onglet[hidden]{display:none}
+.form-corps{flex:1;min-height:0;overflow-y:auto;padding:10px 12px 16px;display:flex;flex-direction:column;gap:10px}
+.form-corps[hidden],.calc-corps[hidden]{display:none}
+/* ─────────── Le formulaire : une page imprimable, et un onglet du panneau ─────────── */
+.form-actions{display:flex;gap:8px;align-items:stretch;margin:0 0 10px}
+.form-filtre{flex:1;min-width:0;width:100%;font:inherit;font-size:1rem;padding:8px 10px;border:1.5px solid var(--trait);
+  border-radius:var(--r,6px);background:var(--carte);color:var(--encre)}
+.form-filtre:focus{outline:none;border-color:var(--accent,var(--froid,#2c6da6))}
+.form-sommaire{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 18px}
+.form-sommaire button{background:none;cursor:pointer;padding:4px 10px}
+.form-sommaire button:hover{border-color:var(--encre2);color:var(--encre)}
+.form-groupe{margin:0 0 26px}
+.form-groupe[hidden],.form-section[hidden]{display:none}
+.form-titre{font-size:1.15rem;font-weight:700;margin:0 0 8px}
+h3.form-titre{font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--encre2);margin:6px 0 6px;
+  padding-bottom:4px;border-bottom:1px solid var(--trait2)}
+.form-section{background:var(--carte);border:1px solid var(--trait2);border-radius:var(--r,6px);padding:12px 16px 14px;
+  margin:0 0 10px;scroll-margin-top:12px}
+.form-entete{display:flex;align-items:baseline;gap:8px;margin:0 0 6px;font-weight:700}
+/* une formule par ligne, ses unites a droite ; l'une sous l'autre quand la place manque */
+.form-liste{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);margin:0}
+.form-liste dt,.form-liste dd{padding:7px 0;border-top:1px dashed var(--trait2)}
+.form-liste dt:first-of-type,.form-liste dt:first-of-type + dd{border-top:0}
+.form-liste dt{font-size:1.05rem;font-weight:650;font-variant-numeric:tabular-nums;padding-right:14px;overflow-wrap:anywhere}
+.form-liste dd{margin:0;font-size:.86rem;color:var(--encre2)}
+.form-reperes{margin:8px 0 0;padding:8px 0 0 18px;border-top:1px solid var(--trait2);font-size:.88rem}
+.form-reperes li{margin:2px 0}
+.form-piege{display:flex;gap:8px;align-items:baseline;margin:10px 0 0;padding:7px 10px;border-left:3px solid var(--faux,var(--chaud,#ab432a));
+  background:var(--faux-doux,color-mix(in srgb,var(--chaud,#ab432a) 12%,var(--carte)));border-radius:0 var(--r,6px) var(--r,6px) 0;font-size:.88rem}
+.form-piege .etiquette{color:var(--faux,var(--chaud,#ab432a));flex:none}
+.form-corps .form-section{padding:10px 12px 12px;box-shadow:none}
+.form-corps .form-liste,.form-corps .form-liste dd{display:block}
+.form-corps .form-liste dt{padding:6px 0 0}
+.form-corps .form-liste dd{border-top:0;padding:0 0 6px}
+@container (max-width:528px){
+  .form-liste{display:block}
+  .form-liste dt{padding:7px 0 0}
+  .form-liste dd{border-top:0;padding:1px 0 7px}
+}
+/* la pastille de seance et l'etiquette du piege, dessinees ici : le kit des sites n'a pas
+   les classes du jeu */
+.form-entete .pastille{display:inline-block;font-size:.74rem;font-weight:650;padding:1px 8px;border:1px solid var(--trait);
+  border-radius:999px;color:var(--encre2);white-space:nowrap;letter-spacing:0;text-transform:none;font-family:inherit}
+.form-piege .etiquette{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700}
+/* la section de la page ouverte, sur un site de classe */
+.form-section.form-ici{border-color:var(--accent,var(--froid,#2c6da6));box-shadow:inset 3px 0 0 var(--accent,var(--froid,#2c6da6))}
+.form-ici .form-entete::after{content:"cette page";margin-left:auto;font-size:.7rem;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--accent,var(--froid,#2c6da6))}
 
 /* habillage : charte « cablage » */
 @font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url(../assets/polices/jetbrains-mono-400-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
@@ -1998,6 +2016,126 @@ var Calculette = (function () {
 })();
 
 </script>
+<script>/* moteur/formulaire.js */
+/* Entrainement · le formulaire.
+   Les formules d'une classe, avec leurs unites, leurs reperes et leurs pieges. Une seule
+   ecriture pour le jeu (sa page, son onglet pendant une partie) et pour les sites de classe
+   (option « formulaire: » de SITE.md, qui le pose dans la barre de chaque page). Sorti de
+   jeu.js le 6 octobre 2026.
+
+   donnees = { themes: [...], chercher: "...", pages: { BATT: "S2", ... },
+               groupes: [ { theme, titre, sections: [ { seance, titre, formules: [[f, unites]],
+                                                       reperes: [...], piege } ] } ] }
+
+   « Celui qui va bien » : sur une page du site, la section dont l'etiquette nomme la page
+   est reperee — J4 pour la seance J4, AUTO 04 pour la fiche AUTO-04, Fiche 18 pour la
+   fiche 18, Salve 2 pour CHRONO-2. `pages:` ajoute les familles qui ne portent pas le nom
+   de leur sequence (en terminale, BATT est la sequence 2). */
+"use strict";
+var Formulaire = (function () {
+  function sansAccent(t) { return String(t).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[  ]/g, " "); }
+  /* les insecables, poses au rendu : « 3 600 », « 20 K » et « : » ne se coupent pas en fin de ligne */
+  function insecables(t) {
+    return String(t || "").replace(/(\d) (?=\d{3}(?!\d))/g, "$1 ").replace(/(\d) (?=[A-Za-zµ°%€])/g, "$1 ")
+      .replace(/ ([:;!?»])/g, " $1").replace(/« /g, "« ");
+  }
+  function el(tag, attrs, enfants) {
+    var n = document.createElement(tag);
+    for (var k in attrs || {}) {
+      var v = attrs[k];
+      if (v === null || v === undefined || v === false) continue;
+      if (k === "classe") n.className = v;
+      else if (k === "html") n.innerHTML = v;
+      else if (k === "texte") n.textContent = v;
+      else n.setAttribute(k, v === true ? "" : v);
+    }
+    (function ajouter(e) {
+      if (e === null || e === undefined || e === false) return;
+      if (Array.isArray(e)) { e.forEach(ajouter); return; }
+      n.appendChild(typeof e === "string" ? document.createTextNode(e) : e);
+    })(enfants);
+    return n;
+  }
+  /* les groupes dans l'ordre des themes de la classe, puis les autres dans l'ordre d'ecriture */
+  function ordonner(themes, groupes) {
+    var ordre = (themes || []).slice();
+    (groupes || []).forEach(function (g) { if (ordre.indexOf(g.theme || "") < 0) ordre.push(g.theme || ""); });
+    var sortie = [];
+    ordre.forEach(function (t) { (groupes || []).forEach(function (g) { if ((g.theme || "") === t) sortie.push(g); }); });
+    return sortie;
+  }
+  function compter(groupes) {
+    return (groupes || []).reduce(function (n, g) { return n + g.sections.reduce(function (m, s) { return m + s.formules.length; }, 0); }, 0);
+  }
+
+  function dom(donnees, compact) {
+    return ordonner(donnees.themes, donnees.groupes).map(function (grp) {
+      return el("section", { classe: "form-groupe" }, [
+        el(compact ? "h3" : "h2", { classe: "form-titre", texte: grp.titre }),
+        grp.sections.map(function (sec) {
+          return el("div", { classe: "form-section", "data-seance": sec.seance || null }, [
+            el("p", { classe: "form-entete" }, [sec.seance ? el("span", { classe: "pastille", texte: sec.seance }) : null, el("span", { html: insecables(sec.titre) })]),
+            el("dl", { classe: "form-liste" }, sec.formules.map(function (f) {
+              /* la police du texte, pas la mono : son zero barre se lit comme un diametre, et Φ comme un zero */
+              return [el("dt", { html: insecables(f[0]) }), el("dd", { html: insecables(f[1]) })];
+            })),
+            sec.reperes && sec.reperes.length ? el("ul", { classe: "form-reperes" }, sec.reperes.map(function (r) { return el("li", { html: insecables(r) }); })) : null,
+            sec.piege ? el("p", { classe: "form-piege" }, [el("span", { classe: "etiquette", texte: "Piège" }), el("span", { html: insecables(sec.piege) })]) : null
+          ]);
+        })
+      ]);
+    });
+  }
+
+  /* un champ qui ne garde que les sections ou le mot apparait, accents ignores ; rend [champ, contenu] */
+  function filtre(donnees, compact) {
+    var contenu = el("div", { classe: "form-contenu" }, dom(donnees, compact));
+    var champ = el("input", { type: "search", classe: "form-filtre",
+      placeholder: "Chercher : " + (donnees.chercher || "un mot, une unité") + "…", "aria-label": "Chercher une formule" });
+    champ.addEventListener("input", function () {
+      var q = sansAccent(champ.value.trim());
+      [].forEach.call(contenu.querySelectorAll(".form-section"), function (x) { x.hidden = !!q && sansAccent(x.textContent).indexOf(q) < 0; });
+      [].forEach.call(contenu.querySelectorAll(".form-groupe"), function (x) { x.hidden = !x.querySelector(".form-section:not([hidden])"); });
+    });
+    return [champ, contenu];
+  }
+
+  /* ─── la section qui va bien ─── */
+  var FAMILLES = { CHRONO: "SALVE", SALVES: "SALVE", FICHES: "FICHE" };
+  function famille(mot) { mot = sansAccent(mot).toUpperCase(); return FAMILLES[mot] || mot; }
+  /* « Fiches 06-07 », « AUTO 12-13 », « Salves 1 à 3 », « Salves 3 et 4 », « J4 » → { f, n: [...] } */
+  function lireEtiquette(t) {
+    var m = String(t || "").match(/^\s*([A-Za-zÀ-ÿ]+)\s*-?\s*(.*)$/);
+    if (!m) return null;
+    var n = [], reste = m[2], r;
+    if ((r = reste.match(/^(\d+)\s*(?:-|à|a)\s*(\d+)/))) for (var i = +r[1]; i <= +r[2]; i++) n.push(i);
+    else (reste.match(/\d+/g) || []).forEach(function (x) { n.push(+x); });
+    return n.length ? { f: famille(m[1]), n: n } : null;
+  }
+  /* « cours/J4 », « aide/AUTO-04-pourcentages », « conso/FICHE-18-pourcentages » → { f, n } */
+  function lirePage(id, pages) {
+    var base = String(id || "").split("/").pop();
+    var m = base.match(/^([A-Za-z]+)-?(\d+)/);
+    if (!m) return null;
+    var alias = pages && pages[m[1].toUpperCase()];
+    if (alias) return lireEtiquette(alias);
+    return { f: famille(m[1]), n: [+m[2]] };
+  }
+  /* toutes les sections de la page : une sequence peut en avoir deux (S2, l'oxydoreduction
+     puis l'energie) ; rend un tableau, vide si la page n'a pas de section */
+  function trouver(contenu, idPage, pages) {
+    var p = lirePage(idPage, pages);
+    if (!p) return [];
+    return [].filter.call(contenu.querySelectorAll(".form-section[data-seance]"), function (s) {
+      var e = lireEtiquette(s.getAttribute("data-seance"));
+      return e && e.f === p.f && e.n.indexOf(p.n[0]) >= 0;
+    });
+  }
+
+  return { dom: dom, filtre: filtre, ordonner: ordonner, compter: compter, trouver: trouver, insecables: insecables };
+})();
+
+</script>
 <script>/* moteur/jeu.js */
 /* Entrainement · le moteur.
 
@@ -2179,44 +2317,10 @@ var Entrainement = (function () {
      Les formules d'une classe, avec leurs unites, leurs reperes et leurs pieges :
      `formulaire: [ { theme, titre, sections: [ { seance, titre, formules: [[f, unites]],
      reperes: [...], piege } ] } ]`. Il a sa page (#/<classe>/formulaire), imprimable,
-     et il s'ouvre aussi dans le panneau d'outils pendant une partie. */
-  function sansAccent(t) { return String(t).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[\u00a0\u202f]/g, " "); }
-  /* les insecables, poses au rendu : « 3 600 », « 20 K » et « : » ne se coupent pas en fin de ligne */
-  function insecables(t) {
-    return String(t || "").replace(/(\d) (?=\d{3}(?!\d))/g, "$1\u00a0").replace(/(\d) (?=[A-Za-zµ°%€])/g, "$1\u00a0")
-      .replace(/ ([:;!?»])/g, "\u00a0$1").replace(/« /g, "«\u00a0");
-  }
-  function formulaireDOM(c, compact) {
-    var groupes = [];
-    parTheme(c, c.formulaire || []).forEach(function (g) { groupes = groupes.concat(g[1]); });
-    return groupes.map(function (grp) {
-      return h("section", { classe: "form-groupe" }, [
-        h(compact ? "h3" : "h2", { classe: "form-titre", texte: grp.titre }),
-        grp.sections.map(function (sec) {
-          return h("div", { classe: "form-section" }, [
-            h("p", { classe: "form-entete" }, [sec.seance ? h("span", { classe: "pastille", texte: sec.seance }) : null, h("span", { html: insecables(sec.titre) })]),
-            h("dl", { classe: "form-liste" }, sec.formules.map(function (f) {
-              /* la police du texte, pas la mono : son zero barre se lit comme un diametre, et Φ comme un zero */
-              return [h("dt", { html: insecables(f[0]) }), h("dd", { html: insecables(f[1]) })];
-            })),
-            sec.reperes && sec.reperes.length ? h("ul", { classe: "form-reperes" }, sec.reperes.map(function (r) { return h("li", { html: insecables(r) }); })) : null,
-            sec.piege ? h("p", { classe: "form-piege" }, [h("span", { classe: "etiquette", texte: "Piège" }), h("span", { html: insecables(sec.piege) })]) : null
-          ]);
-        })
-      ]);
-    });
-  }
-  /* un champ qui ne garde que les sections ou le mot apparait, accents ignores */
+     et il s'ouvre aussi dans le panneau d'outils pendant une partie. Le rendu est dans
+     moteur/formulaire.js, partage avec les sites de classe. */
   function formulaireFiltre(c, compact) {
-    var contenu = h("div", { classe: "form-contenu" }, formulaireDOM(c, compact));
-    var champ = h("input", { type: "search", classe: "form-filtre", /* `chercher:` de la classe : quatre mots de son formulaire, pour montrer ce qu'on peut taper */
-      placeholder: "Chercher : " + (c.chercher || "un mot, une unité") + "…", "aria-label": "Chercher une formule" });
-    champ.addEventListener("input", function () {
-      var q = sansAccent(champ.value.trim());
-      [].forEach.call(contenu.querySelectorAll(".form-section"), function (x) { x.hidden = !!q && sansAccent(x.textContent).indexOf(q) < 0; });
-      [].forEach.call(contenu.querySelectorAll(".form-groupe"), function (x) { x.hidden = !x.querySelector(".form-section:not([hidden])"); });
-    });
-    return [champ, contenu];
+    return Formulaire.filtre({ themes: c.themes, groupes: c.formulaire || [], chercher: c.chercher }, compact);
   }
 
   /* ═══════════════════════════════════════════ LE PANNEAU D'OUTILS

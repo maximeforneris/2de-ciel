@@ -50,14 +50,17 @@
 .calc-fermer:hover{color:var(--encre);border-color:var(--encre2)}
 .calc-titre{font-weight:700;font-size:.95rem}
 @media print{ .calculatrice{display:none!important} body.calc-ouverte{padding-right:0!important} }
-/* sur un site de classe : au-dessus de la coquille de documentation, et le bouton qui l'ouvre
-   (la barre haute le met en forme ; hors coquille, il flotte en bas a droite) */
+/* sur un site de classe : au-dessus de la coquille de documentation, et les boutons qui
+   l'ouvrent (la barre haute les met en forme ; hors coquille, ils flottent en bas a droite).
+   Sur telephone, un seul bouton « Outils » remplace les deux. */
 .doc-shell .calculatrice{z-index:60}
-.bouton-calculatrice[aria-pressed="true"]{font-weight:700;border-color:var(--encre)}
-.bouton-calculatrice.flottant{position:fixed;right:16px;bottom:16px;z-index:40;font:inherit;font-size:.9rem;font-weight:600;
-  padding:10px 16px;border-radius:999px;border:1px solid var(--encre);background:var(--carte);color:var(--encre);
-  box-shadow:var(--ombre);cursor:pointer}
-body.calc-ouverte .bouton-calculatrice.flottant{display:none}
+.bouton-outil[aria-pressed="true"]{font-weight:700;border-color:var(--encre)}
+.bouton-outil.etroit{display:none}
+@media (max-width:639px){ .bouton-outil.large{display:none} .bouton-outil.etroit{display:inline-flex} }
+.outils-flottants{position:fixed;right:16px;bottom:16px;z-index:40;display:flex;gap:8px}
+.outils-flottants .bouton-outil{font:inherit;font-size:.9rem;font-weight:600;padding:10px 16px;border-radius:999px;
+  border:1px solid var(--encre);background:var(--carte);color:var(--encre);box-shadow:var(--ombre);cursor:pointer}
+body.calc-ouverte .outils-flottants{display:none}
 /* Dans la coquille de documentation, le panneau prend la place du sommaire de droite ; entre
    1 000 et 1 279 px, celle du plan aussi, qui revient a la fermeture. Sans cela, le texte de la
    page tombait a 416 px de large sur un ecran de 1 280. */
