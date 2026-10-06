@@ -285,6 +285,13 @@ body.en-recherche .compteur{display:none}
   line-height:1.15;letter-spacing:-.02em;margin-top:4px;text-wrap:balance;
 }
 .porte .d{font-size:14.5px;line-height:1.45;color:var(--encre2);margin-top:8px}
+/* La porte mise en avant, « ! » devant son titre dans portes: — meme place que
+   les autres, pour ne pas casser la rangee ; elle se distingue par sa matiere. */
+.porte.vedette{
+  background:color-mix(in srgb,var(--teinte) 9%,var(--carte));border-color:var(--teinte);
+}
+.porte.vedette::before{height:5px}
+.porte.vedette .t{font-size:22px}
 
 /* ─────────────────────────────────────────────── reprendre la lecture */
 .reprendre{

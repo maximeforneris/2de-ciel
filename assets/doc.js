@@ -109,7 +109,22 @@
   vers.textContent = "Accueil du site";
   plan.appendChild(vers);
 
-  (window.PLAN.espaces || []).forEach(function (esp) {
+  /* Un dossier joint mis en avant (« ! » devant son id dans joints:) passe en
+     tete, en lien direct : une seule page, rien a deplier. Ajoute le 6 octobre
+     2026 pour l'entrainement du BTS. */
+  var espaces = (window.PLAN.espaces || []).filter(function (esp) {
+    if (!esp.vedette) return true;
+    var p0 = ((esp.groupes || [])[0] || {}).pages || [];
+    if (!p0.length) return false;
+    var a = document.createElement("a");
+    a.className = "vers-vedette" + (p0[0].id === ici ? " ici" : "");
+    a.href = racine + p0[0].url;
+    a.innerHTML = "<span>" + esp.nom + "</span>";
+    plan.appendChild(a);
+    return false;
+  });
+
+  espaces.forEach(function (esp) {
     var pages = [];
     (esp.groupes || []).forEach(function (g) { pages = pages.concat(g.pages || []); });
     var ouvertes = pages.filter(function (p) { return !p.tenue; });
@@ -117,7 +132,7 @@
     var dedans = pages.some(function (p) { return p.id === ici; });
 
     var d = document.createElement("details");
-    if (dedans || (!ici && esp === window.PLAN.espaces[0])) d.open = true;
+    if (dedans || (!ici && esp === espaces[0])) d.open = true;
     var s = document.createElement("summary");
     s.innerHTML = "<span>" + esp.nom + "</span>";
     var c = document.createElement("span");

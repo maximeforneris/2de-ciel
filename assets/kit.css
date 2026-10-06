@@ -154,6 +154,13 @@ h4{font-weight:600;font-size:16.5px;margin:18px 0 6px}
 .formule blockquote{margin:10px 0 0;padding:0;border:0;font-size:14.5px;color:var(--encre2)}
 .formule blockquote p{margin:0}
 
+/* ─────────────────────────────────────────────── formules MathML
+   pandoc --mathml, depuis le 6 octobre 2026. Sans police mathematique, une
+   formule herite de celle du texte : espaces de travers, « t ( v ) ». La
+   famille generique math est Cambria Math sous Windows, STIX sur iPad. */
+math{font-family:math;font-size:1.12em}
+.m-ponct{white-space:nowrap}
+
 /* ─────────────────────────────────────────────── point cle */
 .cle{margin:18px 0;padding:14px 17px;background:var(--carte2);
   border-left:3px solid var(--vert);border-radius:0 var(--r) var(--r) 0;
@@ -259,6 +266,7 @@ tbody tr:last-child td{border-bottom:0}
 .qq{padding:11px 0;border-bottom:1px solid var(--trait2)}
 .qq:last-of-type{border-bottom:0}
 .qq p{margin:0 0 8px;font-size:16.5px}
+.qq p.pourquoi{margin:9px 0 0;font-size:15.5px;color:var(--encre2)}
 .qq .choix{display:flex;flex-wrap:wrap;gap:7px}
 .qq button{font-family:"IBM Plex Mono",monospace;font-size:14px;padding:5px 12px;
   border:1px solid var(--trait);border-radius:var(--r);background:transparent;

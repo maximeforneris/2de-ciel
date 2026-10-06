@@ -67,6 +67,17 @@
   font-weight:600;text-decoration:none;border-left:2px solid var(--trait);
 }
 .doc-plan .vers-accueil:hover{background:var(--carte2);border-left-color:var(--encre)}
+/* Un dossier joint mis en avant (« ! » devant son id dans joints:) : un lien
+   direct, en tete du plan, plein, la seule teinte de la charte en filet. */
+.doc-plan .vers-vedette{
+  display:block;margin:0 0 12px;padding:9px 10px;color:var(--carte);background:var(--encre);
+  font-weight:700;text-decoration:none;border-left:4px solid var(--r3,var(--froid));
+}
+.doc-plan .vers-vedette span::after{content:" ›";font-weight:400}
+.doc-plan .vers-vedette:hover,.doc-plan .vers-vedette.ici{
+  background:color-mix(in srgb,var(--encre) 86%,var(--r3,var(--froid)));
+}
+.doc-plan .vers-vedette:focus-visible{outline:2px solid var(--r3,var(--froid));outline-offset:2px}
 .doc-plan details{margin:0 0 4px}
 .doc-plan summary{
   display:flex;align-items:baseline;gap:8px;cursor:pointer;list-style:none;
