@@ -54,3 +54,14 @@ h3.form-titre{font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;colo
 .form-section.form-ici{border-color:var(--accent,var(--froid,#2c6da6));box-shadow:inset 3px 0 0 var(--accent,var(--froid,#2c6da6))}
 .form-ici .form-entete::after{content:"cette page";margin-left:auto;font-size:.7rem;font-weight:700;letter-spacing:.08em;
   text-transform:uppercase;color:var(--accent,var(--froid,#2c6da6))}
+
+/* Un vecteur porte sa fleche : <span class='vec'>AB</span>, ecrit par le contenu du jeu
+   (Tle CTRM, sequence 3). Ici parce que cette feuille est chargee par la page du jeu ET
+   par les sites de classe, ou le formulaire s'ouvre. Pose le 9 octobre 2026. */
+span.vec{position:relative;display:inline-block;line-height:1}
+span.vec::before{content:"";position:absolute;left:.04em;right:.08em;top:-.07em;border-top:.085em solid currentColor}
+span.vec::after{content:"";position:absolute;right:.02em;top:-.165em;width:.19em;height:.19em;
+  border-top:.085em solid currentColor;border-right:.085em solid currentColor;transform:rotate(45deg)}
+/* une minuscule n'a que la hauteur d'x : la fleche descend d'autant */
+span.vec.min::before{top:.15em}
+span.vec.min::after{top:.05em}

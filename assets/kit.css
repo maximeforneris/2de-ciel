@@ -47,6 +47,9 @@ body{
 .page>p,.page>h2,.page>h3,.page>h4,.page>ul,.page>ol,.page>blockquote{max-width:660px}
 h1,h2,h3,h4,.gro{font-family:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif}
 .mono,code{font-family:"IBM Plex Mono",ui-monospace,monospace}
+/* Pas de ligature dans le code : JetBrains Mono, police de charte, dessine <= en ≤
+   et != en ≠, et l'eleve ne sait plus ce qu'il doit taper. 8 octobre 2026. */
+code,pre,kbd,samp,.mono{font-variant-ligatures:none;font-feature-settings:"calt" 0,"liga" 0}
 p{margin:0 0 13px}
 a{color:var(--froid)}
 
