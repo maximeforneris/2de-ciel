@@ -49,10 +49,16 @@ var Formulaire = (function () {
     return (groupes || []).reduce(function (n, g) { return n + g.sections.reduce(function (m, s) { return m + s.formules.length; }, 0); }, 0);
   }
 
+  /* Dans le panneau d'une page (compact), chaque groupe est un menu deroulant, demande le
+     15 octobre 2026 (« meme constat pour le formulaire » que pour le plan du site) : fermes
+     par defaut, ouverts sur la section de la page (trouver) ou par une recherche (filtre).
+     La page du formulaire, elle, reste depliee : elle s'imprime. */
   function dom(donnees, compact) {
     return ordonner(donnees.themes, donnees.groupes).map(function (grp) {
-      return el("section", { classe: "form-groupe" }, [
-        el(compact ? "h3" : "h2", { classe: "form-titre", texte: grp.titre }),
+      var n = grp.sections.reduce(function (m, s) { return m + s.formules.length; }, 0);
+      return el(compact ? "details" : "section", { classe: "form-groupe" + (compact ? " form-plie" : "") }, [
+        compact ? el("summary", { classe: "form-titre" }, [el("span", { texte: grp.titre }), el("span", { classe: "form-compte", texte: n + (n > 1 ? " formules" : " formule") })])
+          : el("h2", { classe: "form-titre", texte: grp.titre }),
         grp.sections.map(function (sec) {
           return el("div", { classe: "form-section", "data-seance": sec.seance || null }, [
             el("p", { classe: "form-entete" }, [sec.seance ? el("span", { classe: "pastille", texte: sec.seance }) : null, el("span", { html: insecables(sec.titre) })]),
@@ -76,7 +82,11 @@ var Formulaire = (function () {
     champ.addEventListener("input", function () {
       var q = sansAccent(champ.value.trim());
       [].forEach.call(contenu.querySelectorAll(".form-section"), function (x) { x.hidden = !!q && sansAccent(x.textContent).indexOf(q) < 0; });
-      [].forEach.call(contenu.querySelectorAll(".form-groupe"), function (x) { x.hidden = !x.querySelector(".form-section:not([hidden])"); });
+      [].forEach.call(contenu.querySelectorAll(".form-groupe"), function (x) {
+        x.hidden = !x.querySelector(".form-section:not([hidden])");
+        /* repliable : une recherche ouvre ce qu'elle trouve ; effacee, seule la section de la page reste ouverte */
+        if (x.tagName === "DETAILS") x.open = q ? !x.hidden : !!x.querySelector(".form-ici");
+      });
     });
     return [champ, contenu];
   }
@@ -107,10 +117,13 @@ var Formulaire = (function () {
   function trouver(contenu, idPage, pages) {
     var p = lirePage(idPage, pages);
     if (!p) return [];
-    return [].filter.call(contenu.querySelectorAll(".form-section[data-seance]"), function (s) {
+    var ici = [].filter.call(contenu.querySelectorAll(".form-section[data-seance]"), function (s) {
       var e = lireEtiquette(s.getAttribute("data-seance"));
       return e && e.f === p.f && e.n.indexOf(p.n[0]) >= 0;
     });
+    /* la section de la page se voit : son groupe repliable s'ouvre */
+    ici.forEach(function (s) { var g = s.closest("details"); if (g) g.open = true; });
+    return ici;
   }
 
   return { dom: dom, filtre: filtre, ordonner: ordonner, compter: compter, trouver: trouver, insecables: insecables };

@@ -96,6 +96,15 @@
   font-variant-numeric:tabular-nums;font-weight:400;white-space:nowrap;flex:none}
 .doc-plan .groupe{margin:8px 0 4px 18px;font-size:11.5px;letter-spacing:.08em;
   text-transform:uppercase;color:var(--encre2)}
+/* une sequence repliable dans sa rubrique (15 octobre 2026) : l'intitule garde la
+   voix des groupes, petites capitales espacees ; une sequence toute « a venir » s'eteint */
+.doc-plan details.groupe-d{margin:1px 0 1px 12px}
+.doc-plan details.groupe-d>summary{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--encre2);padding:5px 6px}
+.doc-plan details.groupe-d[open]>summary,.doc-plan details.groupe-d>summary:hover{color:var(--encre)}
+.doc-plan details.groupe-d.a-venir>summary{color:var(--trait)}
+.doc-plan details.groupe-d .compte{letter-spacing:0;text-transform:none}
+.doc-plan details.groupe-d>ul{padding-left:20px}
 .doc-plan ul{list-style:none;margin:0 0 6px;padding:0 0 0 18px}
 .doc-plan li{margin:0}
 .doc-plan a,.doc-plan .tenue{
@@ -171,7 +180,7 @@
 @media (min-width:1280px){
   .doc-corps{grid-template-columns:var(--col-plan,var(--doc-plan)) minmax(0,1fr)
                                    var(--col-som,var(--doc-som))}
-  .doc-som-ferme{--col-som:0px}
+  .doc-som-ferme,.doc-sans-som{--col-som:0px}
   .doc-som-ferme .doc-som{display:none}
   .doc-som .fermer{display:none}
 }

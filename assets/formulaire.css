@@ -22,6 +22,18 @@
 .form-titre{font-size:1.15rem;font-weight:700;margin:0 0 8px}
 h3.form-titre{font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--encre2);margin:6px 0 6px;
   padding-bottom:4px;border-bottom:1px solid var(--trait2)}
+/* le groupe repliable du panneau (15 octobre 2026) : l'intitule devient le bouton du menu */
+.form-plie{margin:0 0 6px}
+.form-plie>summary.form-titre{display:flex;align-items:baseline;gap:8px;cursor:pointer;list-style:none;
+  font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--encre2);margin:0;
+  padding:8px 4px 6px;border-bottom:1px solid var(--trait2)}
+.form-plie>summary.form-titre::-webkit-details-marker{display:none}
+.form-plie>summary.form-titre::before{content:"›";display:inline-block;width:10px;flex:none;transition:transform .15s ease}
+.form-plie[open]>summary.form-titre::before{transform:rotate(90deg)}
+.form-plie[open]>summary.form-titre,.form-plie>summary.form-titre:hover{color:var(--encre)}
+.form-plie .form-compte{margin-left:auto;letter-spacing:0;text-transform:none;font-weight:400;white-space:nowrap}
+.form-plie[open]>summary.form-titre{margin-bottom:8px}
+@media (prefers-reduced-motion:reduce){.form-plie>summary.form-titre::before{transition:none}}
 .form-section{background:var(--carte);border:1px solid var(--trait2);border-radius:var(--r,6px);padding:12px 16px 14px;
   margin:0 0 10px;scroll-margin-top:12px}
 .form-entete{display:flex;align-items:baseline;gap:8px;margin:0 0 6px;font-weight:700}
