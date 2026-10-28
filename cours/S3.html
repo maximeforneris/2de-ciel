@@ -5,24 +5,24 @@
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta name="robots" content="noindex, nofollow">
 <title>Séquence 3 — loi d'Ohm</title>
-<link rel="stylesheet" href="../assets/kit.css?v=92c198de">
-<link rel="stylesheet" href="../assets/site.css?v=92c198de">
-<link rel="stylesheet" href="../assets/cablage.css?v=92c198de">
-<link rel="stylesheet" href="../assets/vivant.css?v=92c198de">
-<link rel="stylesheet" href="../assets/doc.css?v=92c198de">
-<link rel="stylesheet" href="../assets/calculette.css?v=92c198de">
-<link rel="stylesheet" href="../assets/formulaire.css?v=92c198de">
-<link rel="stylesheet" href="../assets/impression.css?v=92c198de">
-<script src="../assets/kit.js?v=92c198de-98a0b8" defer></script>
-<script src="../assets/site.js?v=92c198de" defer></script>
-<script src="../assets/vivant.js?v=92c198de" defer></script>
-<script src="../assets/plan.js?v=92c198de" defer></script>
-<script src="../assets/doc.js?v=92c198de" defer></script>
-<script src="../assets/nombres.js?v=92c198de" defer></script>
-<script src="../assets/calculette.js?v=92c198de" defer></script>
-<script src="../assets/formulaire.js?v=92c198de" defer></script>
-<script src="../assets/formulaire-donnees.js?v=92c198de" defer></script>
-<script src="../assets/outils-page.js?v=92c198de" defer></script>
+<link rel="stylesheet" href="../assets/kit.css?v=1e56870b">
+<link rel="stylesheet" href="../assets/site.css?v=1e56870b">
+<link rel="stylesheet" href="../assets/cablage.css?v=1e56870b">
+<link rel="stylesheet" href="../assets/vivant.css?v=1e56870b">
+<link rel="stylesheet" href="../assets/doc.css?v=1e56870b">
+<link rel="stylesheet" href="../assets/calculette.css?v=1e56870b">
+<link rel="stylesheet" href="../assets/formulaire.css?v=1e56870b">
+<link rel="stylesheet" href="../assets/impression.css?v=1e56870b">
+<script src="../assets/kit.js?v=1e56870b-a84ff8" defer></script>
+<script src="../assets/site.js?v=1e56870b" defer></script>
+<script src="../assets/vivant.js?v=1e56870b" defer></script>
+<script src="../assets/plan.js?v=1e56870b" defer></script>
+<script src="../assets/doc.js?v=1e56870b" defer></script>
+<script src="../assets/nombres.js?v=1e56870b" defer></script>
+<script src="../assets/calculette.js?v=1e56870b" defer></script>
+<script src="../assets/formulaire.js?v=1e56870b" defer></script>
+<script src="../assets/formulaire-donnees.js?v=1e56870b" defer></script>
+<script src="../assets/outils-page.js?v=1e56870b" defer></script>
 
 <div class="page" data-site="ciel2" data-page="cours/S3">
 <div class="jauge-lecture" id="jauge-lecture"><i></i></div><div class="barre-site"><a class="accueil" href="../index.html">Maths et physique-chimie — 2de Bac Pro CIEL</a><span class="fleches"><a class="fleche" href="S2.html" rel="prev" title="Séquence 2 — sécurité et mesures" aria-label="Séquence 2 — sécurité et mesures">&lsaquo;</a></span><button type="button" class="lu" data-lu="cours/S3">Marquer comme lu</button></div>
@@ -33,11 +33,11 @@
     <h1>Loi d'Ohm<span>et diviseur de tension</span></h1>
   </div>
   <p class="accroche">Une LED qui ne supporte que 2 V, branchée sur du 5 V. Le technicien a mis une résistance en série. Pourquoi, et comment on la choisit, avec un calculateur pour essayer dix valeurs en dix secondes.</p>
-  <p class="contenu">1 outil · 4 exercices · 5 items d'entraînement · 1 repli · 2 figures</p>
+  <p class="contenu">1 outil · 4 exercices · 5 items d'entraînement · 1 repli · 2 simulations · 2 figures</p>
   <p class="k-savoirs">Savoirs travaillés</p><div class="savoirs"><span class="tag">ELEC Électricité — U, I, R, montages</span><span class="tag">PREM Résolution d'un problème du premier degré</span><span class="tag">AU Automatismes</span></div>
 </header>
 <aside class="prerequis"><p class="chapeau-p">Avant de commencer</p><ul><li><b><a href="../aide/FICHE-01-isoler-et-convertir.html">Isoler une inconnue et convertir</a></b><span class="ou">Fiche 1 — isoler et convertir</span><span class="car">U = R × I se retourne dans les deux sens, et les milliampères sont le piège de la LED.</span></li><li><b><a href="../aide/FICHE-03-mettre-en-equation.html">Mettre un problème en équation</a></b><span class="ou">Fiche 3 — mettre en équation</span><span class="car">choisir la résistance de la LED, c'est écrire une équation avant de la résoudre.</span></li><li><b><a href="../aide/AUTO-01-puissances-de-dix.html">Les puissances de 10</a></b><span class="ou">Auto 01 — puissances de 10</span><span class="car">20 mA et 4,7 kΩ ne se multiplient pas sans passer par 10⁻³ et 10³.</span></li></ul></aside>
-<nav class="somm"><div class="in"><a href="#la-situation">La situation</a><a href="#la-loi-d-ohm">La loi d’Ohm</a><a href="#deux-dipoles-en-serie-la-tension-se-partage">Deux dipôles en série : la tension se partage</a><a href="#essayez-c-est-plus-rapide-que-de-lire">Essayez, c’est plus rapide que de lire</a><a href="#choisir-la-resistance-de-la-led">Choisir la résistance de la LED</a><a href="#vous-verifier">Vous vérifier</a><a href="#pour-aller-plus-loin">Pour aller plus loin</a><a href="#la-led-du-capteur">La LED du capteur</a></div></nav>
+<nav class="somm"><div class="in"><a href="#la-situation">La situation</a><a href="#la-loi-d-ohm">La loi d’Ohm</a><a href="#deux-dipoles-en-serie-la-tension-se-partage">Deux dipôles en série : la tension se partage</a><a href="#le-diviseur-en-quelques-gestes">Le diviseur, en quelques gestes</a><a href="#essayez-c-est-plus-rapide-que-de-lire">Essayez, c’est plus rapide que de lire</a><a href="#choisir-la-resistance-de-la-led">Choisir la résistance de la LED</a><a href="#vous-verifier">Vous vérifier</a><a href="#pour-aller-plus-loin">Pour aller plus loin</a><a href="#la-led-du-capteur">La LED du capteur</a></div></nav>
 <h2 id="la-situation">La situation</h2>
 <p>Sur une carte, une <strong>LED témoin</strong> doit s’allumer sous <strong>5 V</strong>. Elle ne supporte que <strong>2 V</strong> à ses bornes et <strong>20 mA</strong> au maximum.</p>
 <p>Le technicien a placé une <strong>résistance en série</strong> avec elle. Un stagiaire demande : <em>« pourquoi ? on ne peut pas brancher la LED directement ? »</em></p>
@@ -70,6 +70,9 @@
 </blockquote>
 </div>
 <figure class="schema"><div class="dessin" data-schema="diviseur-de-tension"></div><figcaption>300 Ω et 200 Ω sous 5 V : qui prend combien.</figcaption></figure>
+<h2 id="le-diviseur-en-quelques-gestes">Le diviseur, en quelques gestes</h2>
+<p>Le même montage, à manipuler : l’ampèremètre sur les fils, le voltmètre sur chaque résistance, puis un potentiomètre. Quatre étapes, un geste à chacune, et un défi pour finir.</p>
+<figure class="simulation"><iframe src="sim/2de-s3-pont-diviseur.html" title="La simulation : Deux résistances sous 5 V : qui prend combien ?" loading="lazy"></iframe><figcaption><a href="sim/2de-s3-pont-diviseur.html" target="_blank" rel="noopener">l’ouvrir seule, en plein écran</a></figcaption></figure>
 <h2 id="essayez-c-est-plus-rapide-que-de-lire">Essayez, c’est plus rapide que de lire</h2>
 <div class="outil" data-outil="diviseur">
 
@@ -91,6 +94,8 @@
 <p>Prendre la valeur normalisée <strong>en dessous</strong> ferait passer plus de 20 mA. Quand un calcul donne un maximum, on arrondit <strong>du côté qui protège</strong>, pas au plus proche.</p>
 </div>
 <figure class="schema"><div class="dessin" data-schema="led-et-sa-resistance"></div><figcaption>Trois volts pour la résistance, vingt milliampères au plus.</figcaption></figure>
+<p>Le même choix, à manipuler : la LED branchée seule qui grille, la tension qui se partage avec sa résistance, puis le tiroir des valeurs normalisées.</p>
+<figure class="simulation"><iframe src="sim/led-resistance.html" title="La simulation : Pourquoi la LED grille sans sa résistance ?" loading="lazy"></iframe><figcaption><a href="sim/led-resistance.html" target="_blank" rel="noopener">l’ouvrir seule, en plein écran</a></figcaption></figure>
 <h2 id="vous-verifier">Vous vérifier</h2>
 <section class="exo" id="S3-e1" data-exo="S3-e1" data-type="calcul" data-savoir="ELEC" data-a="IXgueGB4OTs2OS82eHZ4LHhgbGxtdGp2eC41NnhgaXRqdngveGB4Bi9qaTtjeCc="><p class="k">Exercice · ELEC</p><h4>La résistance à mettre</h4><div class="enonce">
 
