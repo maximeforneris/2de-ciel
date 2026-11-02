@@ -6,6 +6,7 @@
 <title>Deux résistances sous 5 V : qui prend combien ?</title>
 <meta name="description" content="Le même courant partout dans un seul chemin, les 5 V qui se partagent entre 300 Ω et 200 Ω, le partage en proportion des résistances, puis le potentiomètre, un diviseur dont on déplace le point milieu. Quatre étapes, un geste à chacune.">
 <meta name="etiquette" content="Simulation · Format court">
+<meta name="stockage" content="sim-travail-v1 : l’avancement d’une simulation, réponses comprises, 30 jours au plus">
 <style>
 /* Simulations des TP · feuille commune, inlinee dans chaque page par assembler-simulations.py.
    Palette du kit web (kit.css) : papier, graphite, un seul accent. Polices du systeme : la page
@@ -203,6 +204,11 @@ details.modele ul{margin:8px 0 0;padding-left:1.2em;color:var(--encre2);font-siz
 .pc-bandeau-mode{margin:10px 0;padding:10px 12px;border-left:4px solid var(--accent);background:var(--accent-doux);border-radius:var(--r)}
 .pc-note .pc-bandeau-mode{border-left-color:var(--encre)}
 .pc-confirmer{margin-top:10px;padding:10px 12px;border:1px solid var(--encre);border-radius:var(--r)}
+/* le travail garde : la question a l'ouverture, et le mot apres la reprise */
+.pc-reprise{margin:0 0 14px;padding:12px 14px;border:2px solid var(--accent);border-radius:var(--r);background:var(--accent-doux)}
+.pc-reprise p{margin:0 0 10px}
+.pc-reprise .pc-zero.pc-confirme{color:var(--faux);border-color:var(--faux);font-weight:700}
+.pc-repris{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:10px 0;padding:8px 12px;border-left:4px solid var(--accent);background:var(--accent-doux);border-radius:var(--r)}
 .pc-q-lib{margin:0 0 8px;font-weight:600}
 .pc-q-num{display:inline-grid;place-items:center;width:1.6em;height:1.6em;border-radius:50%;background:var(--encre);color:var(--carte);
   font-size:.8rem;margin-right:.5em;vertical-align:.1em}
@@ -508,6 +514,35 @@ html.court-dans-page .court-ecran svg { max-height: none; }
 .court-simplifie { margin: 14px auto 0; font-size: .9rem; }
 .court-simplifie summary { cursor: pointer; font-weight: 700; }
 
+/* ─── en paysage ─── (2 novembre 2026, « format non adapté aux ordi et aux tablettes en mode paysage ») : la carte
+   verticale, plafonnée par la hauteur de l'écran, y laissait une scène de moins de 300 px de large au milieu du vide.
+   Sur un écran couché, deux colonnes : la scène à gauche, à toute la hauteur, le sous-titre à droite, qui se lisent
+   ensemble. La scène se règle sur la HAUTEUR de la fenêtre ; dans une page de cours, sur la LARGEUR du cadre (plus bas),
+   puisque le cadre prend la hauteur que la page lui dit : une hauteur en vh y tournerait en rond. */
+@media (orientation: landscape) and (min-width: 600px) {
+  html:not(.court-dans-page) .page { padding-top: 8px; padding-bottom: 14px; }
+  html:not(.court-dans-page) .court { max-width: 1080px; }
+  html:not(.court-dans-page) .court-essai { flex-basis: auto; }
+  html:not(.court-dans-page) .court-barre { margin: 0 0 6px; }
+  html:not(.court-dans-page) .court-carte { display: grid; grid-template-columns: auto minmax(280px, 1fr); }
+  html:not(.court-dans-page) .court-haut { grid-column: 1 / -1; }
+  html:not(.court-dans-page) .court-ecran svg { width: auto; max-width: none; height: max(300px, calc(100vh - 136px)); max-height: 860px; }
+  html:not(.court-dans-page) .court-sous { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 20px 24px; min-height: 0; border-top: 0; }
+  html:not(.court-dans-page) .court-sous p { font-size: clamp(1.15rem, 2.1vw, 1.6rem); line-height: 1.42; }
+  html:not(.court-dans-page) .court-sous .conseil { font-size: clamp(1rem, 1.6vw, 1.25rem); }
+  html:not(.court-dans-page) .court[data-style="bd"] .court-sous { border-left: 3px solid #141414; }
+  html:not(.court-dans-page) .court[data-style="neon"] .court-sous, html:not(.court-dans-page) .court[data-style="schema"] .court-sous { border-left: 1px solid var(--c-seg); }
+}
+@media (min-width: 540px) {
+  html.court-dans-page .court { max-width: none; }
+  html.court-dans-page .court-carte { display: grid; grid-template-columns: minmax(0, 52%) minmax(0, 1fr); }
+  html.court-dans-page .court-haut { grid-column: 1 / -1; }
+  html.court-dans-page .court-sous { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 16px 20px; min-height: 0; border-top: 0; }
+  html.court-dans-page .court-sous p { font-size: 1.08rem; line-height: 1.42; }
+  html.court-dans-page .court[data-style="bd"] .court-sous { border-left: 3px solid #141414; }
+  html.court-dans-page .court[data-style="neon"] .court-sous, html.court-dans-page .court[data-style="schema"] .court-sous { border-left: 1px solid var(--c-seg); }
+}
+
 /* ─── la scène : les seules classes qu'une page emploie ─── */
 /* une règle CSS l'emporte toujours sur un attribut SVG : la couleur et la taille par défaut ne s'appliquent qu'aux textes
    qui n'en portent pas, et fill="…" ou font-size="…" posés par une page s'appliquent (relevé le 28 octobre 2026) */
@@ -584,6 +619,7 @@ html.court-dans-page .court-ecran svg { max-height: none; }
 </style>
 <script>
 window.SIM_MODE = "td";
+window.SIM_PAGE = "2de-s3-pont-diviseur";
 /* Entrainement · les nombres a la francaise, dans les deux sens.
    Ecrire : virgule decimale, espace fine insecable entre les milliers, ecriture
    scientifique au-dela de dix millions ou en deca d'un millieme.
@@ -947,9 +983,65 @@ var Calculette = (function () {
 
 /* Simulations des TP · briques communes, inlinees dans l'en-tete de chaque page.
    Rien ici ne touche au DOM au chargement : une simulation appelle ce dont elle a besoin.
-   Aucune requete, aucun stockage : la page fonctionne hors ligne et n'enregistre rien. */
+   Aucune requete : la page fonctionne hors ligne. Le seul stockage est LE TRAVAIL GARDE, juste en dessous :
+   l'avancement d'un parcours, sur l'appareil de l'eleve, et rien d'autre. */
 "use strict";
 var Sim = (function () {
+
+  /* LE TRAVAIL GARDE (2 novembre 2026, « il faudrait que le navigateur garde en memoire ou en sont les eleves, parfois
+     ils font une fausse manip et il faut tout recommencer ») : un parcours, un entrainement au CCF, un TD du BTS,
+     une evaluation notee, un format court se gardent dans le stockage local, UNE CLE PAR PAGE ET PAR MODE, et n'en
+     sortent pas. 30 jours, puis la cle s'efface. Le contenu est obscurci, pas protege : c'est le niveau des valeurs
+     des exercices, et le code de la page porte de toute facon les reponses. Le stockage refuse (fenetre privee,
+     disque plein) : la page marche comme avant, et revient au message d'avant-fermeture.
+     LE TIRAGE GARDE : le sujet doit revenir le meme, sinon les reponses gardees ne correspondent plus aux nombres de
+     la page. Math.random est donc remplace par un generateur a graine PENDANT LE CHARGEMENT, ou les pages tirent leur
+     sujet, puis rendu ; la graine est gardee avec le travail. Une partie se construit plus tard, a son ouverture :
+     elle tire dans son propre generateur (sousTirage), pour ne dependre ni de l'ordre des parties ni du bruit des
+     mesures faites entre-temps. */
+  var JOURS_GARDES = 30;
+  var CLE_TRAVAIL = "sim-travail-v1:" + (window.SIM_PAGE || document.title) + ":" + (window.SIM_MODE === "note" ? "note" : "td");
+  function lireTravail() {
+    try {
+      var b = localStorage.getItem(CLE_TRAVAIL); if (!b) return null;
+      var t = JSON.parse(new TextDecoder().decode(octets(b)));
+      if (!t || Date.now() - t.quand > JOURS_GARDES * 864e5) { localStorage.removeItem(CLE_TRAVAIL); return null; }
+      return t;
+    } catch (e) { return null; }
+  }
+  function ecrireTravail(t) {
+    try { t.quand = Date.now(); localStorage.setItem(CLE_TRAVAIL, enB64(new TextEncoder().encode(JSON.stringify(t)))); return true; }
+    catch (e) { return false; }
+  }
+  function oublierTravail() { try { localStorage.removeItem(CLE_TRAVAIL); } catch (e) { /* rien a oublier */ } }
+  var hasardVrai = Math.random, travailLu = lireTravail();
+  var GRAINE = (travailLu && travailLu.graine) || (1 + Math.floor(hasardVrai() * 4294967295));
+  /* le generateur mulberry32 : quelques lignes, et une suite qu'une graine refait a l'identique */
+  function hasardDe(g) {
+    var a = g >>> 0;
+    return function () {
+      a = (a + 0x6D2B79F5) >>> 0;
+      var t = Math.imul(a ^ (a >>> 15), a | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function sousTirage(n, f) {
+    var avant = Math.random;
+    Math.random = hasardDe((GRAINE ^ Math.imul(n + 1, 0x9E3779B1)) >>> 0);
+    try { return f(); } finally { Math.random = avant; }
+  }
+  Math.random = hasardDe(GRAINE);
+  document.addEventListener("DOMContentLoaded", function () { Math.random = hasardVrai; });
+  /* une image d'animation passee entre deux scripts de la page tirait dans la suite a graine et decalait le sujet
+     (le bidon de CCF-21 changeait d'un rechargement a l'autre) : les animations tirent toujours dans le vrai hasard */
+  var imageVraie = window.requestAnimationFrame;
+  window.requestAnimationFrame = function (f) {
+    return imageVraie.call(window, function (t) {
+      var avant = Math.random; Math.random = hasardVrai;
+      try { f(t); } finally { Math.random = avant; }
+    });
+  };
 
   /* Nombres a la francaise : virgule, espace fine insecable entre les milliers. */
   function fr(x, dec) {
@@ -1649,7 +1741,12 @@ var Sim = (function () {
      apparait aussi au troisieme appui sur « Verifier » quand la manipulation n'est pas faite, et
      le livrable s'ouvre a tout moment, depuis le chemin ou le bouton de chaque phase. Le fichier se
      produit inacheve : ce qui reste y compte comme non reussi.
-     Rien n'est enregistre ni envoye : le fichier se fabrique dans le navigateur (Blob).
+     Rien n'est envoye : le fichier se fabrique dans le navigateur (Blob), et le travail en cours se garde sur
+     l'appareil (LE TRAVAIL GARDE, en tete du fichier). A l'ouverture, une page qui a du travail garde demande :
+     reprendre, ou repartir de zero. JAMAIS DE REPRISE D'OFFICE : une tablette passe de main en main. Reviennent les
+     reponses, les essais, les indices, les appels, le temps, le sujet ; q.apres et q.fini sont rappeles, pour que la
+     scene retrouve ce qu'ils lui disaient. Ne revient pas ce qui vit dans la scene, la manipulation en cours : une
+     question qui attend une mesure le dit, et on la refait.
      UNE MANIPULATION (« action ») : verifier(ctx) rend null tant que rien n'est fait, ou
        { ok, reponse, corriger: ["...", ...], controles: [[condition, "..."], ...], attente: "..." }.
        « reponse » dit ce que la page lit, et va au fichier ; « lu », s'il est donne, remplace « reponse » a
@@ -1816,7 +1913,8 @@ var Sim = (function () {
     function nomComp(k) { return NOMS[k] || COMPETENCES[k] || U41[k] || k; }
     var niveaux = o.niveaux || ["CAP", "Seconde"];
     var etat = { niveau: niveaux.length === 1 ? niveaux[0] : null, debut: null, courante: -1, ouverte: -1,
-      fiches: [], construites: [], colonnes: [], exporte: false, aides: 0, indices: [] };
+      fiches: [], construites: [], colonnes: [], exporte: false, aides: 0, indices: [], ident: "" };
+    var enReprise = false;                               // pendant la reprise : ni defilement, ni sauvegarde
     var donnees = {};                                    // partage entre les phases d'un parcours
     var appels = [];                                     // les fiches des appels lances ou a lancer
     var nPh = o.phases.length;
@@ -2109,7 +2207,8 @@ var Sim = (function () {
       var f = { q: q, essais: 0, juste: false, fini: false, passe: false, reponse: "", note: false, aide: false };
       var maxNote = q.essais || ((q.type === "nombre" || q.type === "action" || q.type === "classer") ? 2 : 1);
       var bloc = el("div", { classe: "pc-q", "data-etat": "a-faire" });
-      bloc.appendChild(el("p", { classe: "pc-q-lib", html: "<span class=\"pc-q-num\">" + (j + 1) + "</span>" + insecables(propre(q.lib)) }));   // pas de « ? » seul en debut de ligne
+      var libNoeud = el("p", { classe: "pc-q-lib", html: "<span class=\"pc-q-num\">" + (j + 1) + "</span>" + insecables(propre(q.lib)) });   // pas de « ? » seul en debut de ligne
+      bloc.appendChild(libNoeud);
       var champ = el("div", { classe: "pc-q-champ" });
       var lireReponse, verifierOk, controles = [];
       if (q.type === "nombre") {
@@ -2342,6 +2441,49 @@ var Sim = (function () {
         bAide.hidden = true; methodeVue.hidden = false;
         if (NOTE) majIndices();
       });
+      /* LE TRAVAIL GARDE : ce qui a ete tape ou choisi, meme pas encore verifie, et tout ce que la question sait */
+      f.garde = function () {
+        return { t: q.type, lib: f.lib !== undefined ? f.lib : q.lib, ld: libNoeud.innerHTML,
+          s: q.type === "nombre" ? inp.value : q.type === "choix" || q.type === "multi" ? choisis : q.type === "classer" ? places : undefined,
+          e: f.essais, a: f.appuis || 0, j: f.juste, fi: f.fini, p: f.passe, n: f.note, ai: f.aide, r: f.reponse,
+          v: isFinite(f.valeur) ? f.valeur : undefined, en: f.enr, m: f.modifiee, at: f.enAttente, h: f.heureEnr ? +f.heureEnr : 0,
+          bp: f.bienPlaces, lu: f.lu, c: f.corriger, de: bloc.getAttribute("data-etat"), rc: retour.className, rh: retour.innerHTML,
+          vu: !methodeVue.hidden, pa: !bPasser.hidden, ia: bAide ? !bAide.hidden : false };
+      };
+      f.restaurer = function (g) {
+        if (!g || g.t !== q.type) return;
+        /* une question ecrite avec les nombres de l'eleve : la scene repartie de zero ecrirait « … » */
+        if (g.lib !== undefined && g.lib !== q.lib) f.lib = g.lib;   // celui du fichier
+        if (g.ld) libNoeud.innerHTML = g.ld;                         // celui de l'ecran, tel que l'eleve l'a lu
+        if (q.type === "nombre") inp.value = g.s || "";
+        else if (q.type === "choix" || q.type === "multi") {
+          choisis = (g.s || []).slice();
+          [].forEach.call(rang.children, function (x) { x.setAttribute("aria-pressed", choisis.indexOf(Number(x.getAttribute("data-k"))) >= 0 ? "true" : "false"); });
+        } else if (q.type === "classer" && g.s) {
+          places = g.s.slice();
+          [].forEach.call(grille.children, function (l, k) {
+            var sel = l.querySelector("select");
+            if (sel) { sel.value = String(places[k]); return; }
+            [].forEach.call(l.querySelectorAll(".pc-option"), function (x, m) { x.setAttribute("aria-pressed", m === places[k] ? "true" : "false"); });
+          });
+        }
+        f.essais = g.e || 0; f.appuis = g.a || 0; f.juste = !!g.j; f.fini = !!g.fi; f.passe = !!g.p; f.note = !!g.n; f.aide = !!g.ai;
+        f.reponse = g.r || ""; f.valeur = g.v; f.enr = g.en; f.modifiee = g.m; f.enAttente = g.at; f.heureEnr = g.h ? new Date(g.h) : undefined;
+        f.bienPlaces = g.bp; f.lu = g.lu; f.corriger = g.c;
+        bloc.setAttribute("data-etat", g.de || "a-faire");
+        retour.className = g.rc || "pc-retour"; retour.innerHTML = g.rh || "";
+        methodeVue.hidden = !g.vu; bPasser.hidden = !g.pa;
+        if (bAide) bAide.hidden = !g.ia;
+        if (f.fini) { bVerif.disabled = true; bPasser.hidden = true; if (bAide) bAide.hidden = true; controles.forEach(function (x) { x.disabled = true; }); }
+      };
+      /* la scene retrouve ce que la reponse lui avait dit (une mesure rappelee, une partie debloquee) */
+      f.rejouer = function () {
+        if (!(NOTE ? f.enr : f.fini)) return;
+        try {
+          if (q.apres && (NOTE || f.juste)) q.apres(ctx, NOTE ? f.note : true, f.reponse, f.valeur);
+          if (q.fini) q.fini(ctx, NOTE ? f.note : f.juste, f.reponse, f.valeur);
+        } catch (e) { if (window.console) console.warn("reprise :", texteSeul(q.lib), e); }
+      };
       if (NOTE && etat.rendu) f.verrouiller();             // une partie ouverte apres le rendu : deja fermee
       bPasser.addEventListener("click", function () {
         f.passe = true; f.note = false;
@@ -2384,6 +2526,16 @@ var Sim = (function () {
         retour.className = "pc-retour " + (f.cote === "NA" ? "faux" : "juste");
         retour.innerHTML = "Évalué par le professeur à " + heure(f.heureCote) + " : <b>" + COTES[f.cote] + "</b>.";
         bProf.textContent = "Le professeur revient sur sa cote";
+      };
+      f.garde = function () {
+        return { t: "appel", ap: f.appele ? +f.appele : 0, co: f.cote, hc: f.heureCote ? +f.heureCote : 0, r: f.reponse, n: f.note,
+          de: bloc.getAttribute("data-etat"), rc: retour.className, rh: retour.innerHTML };
+      };
+      f.restaurer = function (g) {
+        if (!g || g.t !== "appel") return;
+        bloc.setAttribute("data-etat", g.de || "a-faire"); retour.className = g.rc || "pc-retour"; retour.innerHTML = g.rh || "";
+        if (g.ap) { f.appele = new Date(g.ap); f.fini = true; f.reponse = g.r || ""; bAppel.disabled = true; bProf.hidden = false; }
+        if (g.co) { f.cote = g.co; f.heureCote = new Date(g.hc); f.note = !!g.n; f.afficher(); }
       };
       appels.push(f);
       return f;
@@ -2449,7 +2601,7 @@ var Sim = (function () {
           b.addEventListener("click", function () {
             f.cote = x; f.heureCote = new Date(); f.note = x === "A";
             [].forEach.call(rangee.children, function (y) { y.setAttribute("aria-pressed", y === b ? "true" : "false"); });
-            f.afficher(); majPhase(f.phase); majTete(); majAppels();
+            f.afficher(); majPhase(f.phase); majTete(); majAppels(); garder();
             if (finalFait && etat.courante === nPh) construireFinal();
           });
           rangee.appendChild(b);
@@ -2523,7 +2675,7 @@ var Sim = (function () {
       if (etat.rendu || !etat.construites[i] || typeof ph.questions !== "function" || !colQ || !intacte(i)) return;
       var pied = etat.fiches[i].pied;
       while (colQ.children.length > 1) colQ.removeChild(colQ.lastChild);
-      etat.fiches[i] = questionsDe(i).map(function (q, j) { return q.type === "appel" ? poserAppel(colQ, q, i) : poserQuestion(colQ, q, i, j); });
+      sousTirage(i, function () { etat.fiches[i] = questionsDe(i).map(function (q, j) { return q.type === "appel" ? poserAppel(colQ, q, i) : poserQuestion(colQ, q, i, j); }); });
       etat.fiches[i].pied = pied;
       majPhase(i);
     }
@@ -2533,12 +2685,13 @@ var Sim = (function () {
       accueil.hidden = true;
       ecrans.forEach(function (s, k) { s.hidden = k !== i; });
       final.hidden = i !== nPh;
-      if (i < nPh) construire(i); else construireFinal();
+      if (i < nPh) sousTirage(i, function () { construire(i); }); else construireFinal();
       if (pail.length) poserPaillasse(i < nPh ? postes[i] : null, i < nPh ? o.phases[i].paillasse : null);
       majChemin(); majTete(); majHaut();
-      if (i < nPh && o.phases[i].surOuvrir) o.phases[i].surOuvrir(ctx);
+      if (i < nPh && o.phases[i].surOuvrir) sousTirage(100 + i, function () { o.phases[i].surOuvrir(ctx); });
       if (o.surPhase) o.surPhase(i, ctx);
-      racine.scrollIntoView({ block: "start", behavior: "smooth" });
+      if (!enReprise) racine.scrollIntoView({ block: "start", behavior: "smooth" });
+      garderBientot();
     }
 
     /* les boutons d'indice d'une evaluation notee disent ce qui reste, et s'eteignent a zero */
@@ -2598,7 +2751,7 @@ var Sim = (function () {
         var remise = el("div", { classe: "carte pc-remise" });
         remise.appendChild(el("h2", { texte: "Mon fichier pour le professeur" }));
         remise.appendChild(el("p", { classe: "consigne", html: "Tapez l’<b>identifiant donné en classe</b>, puis produisez le fichier. " +
-          "Il se fabrique <b>dans cette page</b> : rien n’est envoyé, rien n’est enregistré. Il est <b>chiffré</b> : seul le professeur peut le lire. Il part dans vos téléchargements, et c’est vous qui le remettez." }));
+          "Il se fabrique <b>dans cette page</b> : rien n’est envoyé. Il est <b>chiffré</b> : seul le professeur peut le lire. Il part dans vos téléchargements, et c’est vous qui le remettez." }));
         var ident = el("input", { type: "text", autocomplete: "off", "aria-label": "Identifiant", placeholder: "identifiant donné en classe" });
         var bProd = el("button", { type: "button", classe: "bouton principal", texte: "Rendre ma copie" });
         var bVoir = el("button", { type: "button", classe: "bouton", hidden: "hidden", texte: "Afficher le texte" });
@@ -2610,6 +2763,11 @@ var Sim = (function () {
           el("div", { classe: "rangee" }, [bOui, bNon])]);
         var dit = el("p", { classe: "pc-retour", "aria-live": "polite" });
         apercu = el("textarea", { classe: "pc-apercu", readonly: "readonly", rows: "10", hidden: "hidden", "aria-label": "Le texte du fichier" });
+        ident.value = etat.ident || "";
+        ident.addEventListener("input", function () { etat.ident = ident.value; });
+        if (etat.rendu) {                                  // la copie etait rendue avant la fermeture : le fichier peut se reproduire
+          ident.disabled = true; bProd.textContent = "Produire de nouveau le fichier"; bVoir.hidden = false;
+        }
         remise.appendChild(el("div", { classe: "pc-q-champ" }, [ident]));
         remise.appendChild(el("div", { classe: "rangee" }, [bProd, bVoir]));
         remise.appendChild(confirmer);
@@ -2802,7 +2960,7 @@ var Sim = (function () {
               if (f.aide) det += NOTE ? ", avec indice" : ", avec aide";
               rep = f.passe && !f.essais ? det : (f.reponse || "(vide)") + " — " + det;
             }
-            out.push("  " + (n + 1) + ". " + texteSeul(q.lib));
+            out.push("  " + (n + 1) + ". " + texteSeul(f && f.lib !== undefined ? f.lib : q.lib));
             out.push("     réponse : " + rep + "   [" + etatCase + "]");
           });
           out.push("");
@@ -2825,14 +2983,103 @@ var Sim = (function () {
       return out.join("\r\n");
     }
 
+    /* ---- LE TRAVAIL GARDE : l'instantane, ecrit peu apres chaque geste, et quand la page passe a l'arriere-plan ---- */
+    var minuteur = null, stockageOk = true;
+    /* dans donnees, seul ce qui se relit tel quel : le tirage (d.cfg), les reponses rappelees ; ni noeuds ni fonctions */
+    function pur(v) {
+      if (v === null || typeof v === "string" || typeof v === "boolean") return true;
+      if (typeof v === "number") return isFinite(v);
+      if (Array.isArray(v)) return v.every(pur);
+      if (typeof v !== "object" || Object.getPrototypeOf(v) !== Object.prototype) return false;
+      return Object.keys(v).every(function (k) { return pur(v[k]); });
+    }
+    function instantane() {
+      var d = {};
+      Object.keys(donnees).forEach(function (k) { if (pur(donnees[k])) d[k] = donnees[k]; });
+      return { graine: GRAINE, niveau: etat.niveau, ecoule: Date.now() - etat.debut, courante: etat.courante, ouverte: etat.ouverte,
+        aides: etat.aides, rendu: !!etat.rendu, exporte: etat.exporte, ident: etat.ident, donnees: d,
+        fiches: o.phases.map(function (ph, i) { return etat.fiches[i] ? etat.fiches[i].map(function (f) { return f.garde(); }) : null; }) };
+    }
+    function garder() {
+      if (minuteur) { clearTimeout(minuteur); minuteur = null; }
+      if (etat.debut && !enReprise) stockageOk = ecrireTravail(instantane());
+    }
+    function garderBientot() { if (!minuteur && etat.debut && !enReprise) minuteur = setTimeout(garder, 400); }
+    ["click", "input", "change"].forEach(function (t) { racine.addEventListener(t, garderBientot, true); });
+    document.addEventListener("visibilitychange", function () { if (document.visibilityState === "hidden") garder(); });
+    window.addEventListener("pagehide", garder);
+
+    /* reprendre : les parties deja ouvertes, dans l'ordre, comme l'eleve les a ouvertes ; puis leurs reponses */
+    function reprendre(t) {
+      enReprise = true;
+      etat.niveau = t.niveau; niv.textContent = t.niveau || "";
+      etat.debut = Date.now() - (t.ecoule || 0); etat.aides = t.aides || 0;
+      etat.ident = t.ident || ""; etat.exporte = !!t.exporte;
+      /* d.cfg, le tirage d'une page, revient AVANT les scenes : il ne se refait pas. Le reste revient APRES : d.regle et
+         d.prepare gardent le reglage unique d'une scene (32 pages), et, restaures trop tot, ils l'auraient empeche. */
+      var gardees = t.donnees || {};
+      if (gardees.cfg) donnees.cfg = gardees.cfg;
+      document.body.classList.add("pc-en-cours");
+      if (libre) mode(true);
+      (t.fiches || []).forEach(function (fs, i) {
+        if (!fs) return;
+        montrer(i);
+        fs.forEach(function (g, j) { var f = etat.fiches[i][j]; if (f) f.restaurer(g); });
+      });
+      Object.keys(gardees).forEach(function (k) { donnees[k] = gardees[k]; });
+      etat.fiches.forEach(function (fs) { (fs || []).forEach(function (f) { if (f.rejouer) f.rejouer(); }); });
+      if (t.rendu) { etat.rendu = true; etat.fiches.forEach(function (fs) { (fs || []).forEach(function (f) { if (f.verrouiller) f.verrouiller(); }); }); }
+      etat.fiches.forEach(function (fs, i) { if (fs) majPhase(i); });
+      etat.ouverte = t.ouverte;
+      if (NOTE) majIndices();
+      majAppels();
+      montrer(t.courante < 0 ? 0 : t.courante);
+      enReprise = false;
+      if (t.courante < nPh) {
+        var compris = el("button", { type: "button", classe: "bouton", texte: "Compris" });
+        var dit = el("div", { classe: "pc-repris", role: "status" }, [
+          el("span", { html: "<b>Votre travail est revenu</b> : les réponses, le temps, le même sujet. La simulation, elle, repart de zéro : si une question attend une mesure, refaites-la." }), compris]);
+        compris.addEventListener("click", function () { dit.parentNode.removeChild(dit); });
+        tete.parentNode.insertBefore(dit, tete.nextSibling);
+      }
+      garder();
+    }
+    /* a l'ouverture, s'il y a du travail garde : la question, posee en tete de l'accueil */
+    function echapper(x) { var d = document.createElement("div"); d.textContent = String(x); return d.innerHTML; }
+    var carteReprise = null;
+    function proposerReprise(t) {
+      var n = 0;
+      (t.fiches || []).forEach(function (fs) { (fs || []).forEach(function (g) { if (g.t !== "appel" && (NOTE ? g.en : g.fi || g.e)) n++; }); });
+      var min = Math.max(1, Math.round((Date.now() - t.quand) / 60000));
+      var depuis = min < 60 ? "il y a " + min + " min" : min < 1440 ? "il y a " + Math.round(min / 60) + " h" : "il y a " + Math.round(min / 1440) + " j";
+      var ou = t.courante >= nPh ? MOT_FIN.toLowerCase() : t.courante >= 0 ? nomPhase(t.courante).toLowerCase() : "le début";
+      var id = t.ident ? " Identifiant : " + echapper(t.ident) + "." : "";
+      var bReprendre = el("button", { type: "button", classe: "bouton principal", texte: t.rendu ? "Retrouver la copie rendue" : "Reprendre où j'en étais" });
+      var bZero = el("button", { type: "button", classe: "bouton pc-zero", texte: t.rendu ? "Commencer une nouvelle copie" : "Repartir de zéro" });
+      carteReprise = el("div", { classe: "pc-reprise" }, [
+        el("p", { html: t.rendu ? "<b>Une copie a été rendue sur cet appareil</b>, " + depuis + "." + id + " Le fichier peut se produire de nouveau."
+          : "<b>" + (NOTE ? "Une évaluation est en cours" : "Un travail est en cours") + " sur cet appareil</b> : " + n + " réponse" + (n > 1 ? "s" : "") +
+            ", " + ou + ", " + depuis + "." + id }),
+        el("div", { classe: "rangee" }, [bReprendre, bZero])]);
+      function fermerCarte() { carteReprise.parentNode.removeChild(carteReprise); carteReprise = null; }
+      bReprendre.addEventListener("click", function () { fermerCarte(); reprendre(t); });
+      /* effacer le travail d'un eleve se confirme : c'est justement la fausse manipulation qu'on veut eviter */
+      bZero.addEventListener("click", function () {
+        if (!bZero.classList.contains("pc-confirme")) { bZero.classList.add("pc-confirme"); bZero.textContent = "Confirmer : tout effacer"; return; }
+        oublierTravail(); fermerCarte();
+      });
+      accueil.insertBefore(carteReprise, accueil.firstChild);
+    }
+
     window.addEventListener("beforeunload", function (e) {
-      if (etat.debut && !etat.exporte) { e.preventDefault(); e.returnValue = ""; }
+      if (!stockageOk && etat.debut && !etat.exporte) { e.preventDefault(); e.returnValue = ""; }   // rien n'est garde : on previent
     });
     majTete();
-    if (libre) mode(NOTE || /^#(ccf|u41|parcours)$/.test(location.hash));
+    if (travailLu && travailLu.niveau) proposerReprise(travailLu);
+    if (libre) mode(NOTE || !!carteReprise || /^#(ccf|u41|parcours)$/.test(location.hash));
     /* la porte d'essai : etat interne et fichier, pour les controles */
-    return { etat: etat, donnees: donnees, ouvrir: ouvrir, fabriquer: fabriquer, rendre: rendre, note: NOTE, fiches: function () { return etat.fiches; },
-      appels: appels, mode: mode, dossier: function () { if (dossierFn) basculerDossier(); return panDos; }, coter: function (f, x) { f.cote = x; f.heureCote = new Date(); f.note = x === "A"; f.afficher(); majPhase(f.phase); majAppels(); },
+    return window.__parcours = { etat: etat, donnees: donnees, ouvrir: ouvrir, fabriquer: fabriquer, rendre: rendre, note: NOTE, garder: garder, fiches: function () { return etat.fiches; },
+      appels: appels, mode: mode, dossier: function () { if (dossierFn) basculerDossier(); return panDos; }, coter: function (f, x) { f.cote = x; f.heureCote = new Date(); f.note = x === "A"; f.afficher(); majPhase(f.phase); majAppels(); garder(); },
       choisirNiveau: function (n) { etat.niveau = n; niv.textContent = n; }, demarrer: function (n) {
         if (libre) mode(true);
         etat.niveau = n || etat.niveau || niveaux[0]; niv.textContent = etat.niveau; etat.debut = Date.now();
@@ -3119,6 +3366,8 @@ var Sim = (function () {
   return { fr: fr, lire: lire, el: el, $: $, borne: borne, mesure: mesure, gauss: gauss, onglets: onglets, curseur: curseur, choix: choix,
     afficheur: afficheur, graphe: graphe, releve: releve, enregistreur: enregistreur, centrale: centrale, molette: molette,
     defi: defi, animer: animer, avancer: avancer, svg: svg, parcours: parcours, calculatrice: calculatrice, trois: trois,
+    /* LE TRAVAIL GARDE, pour les briques d'une collection : le format court y range son etape */
+    travail: { lu: travailLu, ecrire: ecrireTravail, oublier: oublierTravail },
     /* vrai dans la copie notee (l'espace d'evaluation) : chaque page y tire d'autres valeurs */
     note: NOTE_COPIE };
 })();
@@ -3154,6 +3403,13 @@ var Sim = (function () {
    DANS UNE PAGE DE COURS (28 octobre 2026) : le bloc ::: {.simulation data-sim="<page>"} de GUIDE-WEB pose la page
    dans un cadre. Elle s'en aperçoit seule (window.top), se serre (html.court-dans-page de court.css) et envoie sa
    hauteur à la page, que kit.js donne au cadre. La page n'a rien à déclarer pour cela.
+
+   EN PAYSAGE (2 novembre 2026) : sur un écran couché, la carte passe en deux colonnes, la scène à gauche, le sous-titre à
+   droite, sans rien demander à la page (court.css). Elle reste verticale sur un téléphone tenu droit.
+
+   LE TRAVAIL GARDÉ (2 novembre 2026, « parfois ils font une fausse manip et il faut tout recommencer ») : l'étape se garde
+   sur l'appareil (Sim.travail, en tête de commun.js), et l'accroche propose d'y revenir. On reprend AU DÉBUT de l'étape :
+   mettre(S, C) la pose tout entière, c'est la règle 2 ci-dessous, et il n'y a rien d'autre à garder.
 
    L'HABILLAGE : BD à l'ouverture, partout, choisi par l'utilisateur le 28 octobre 2026 (« BD par défaut
    partout ») ; Néon et Schéma restent au choix dans la barre. Une page ne passe pas « style: » sans raison.
@@ -3296,7 +3552,9 @@ var Sim = (function () {
     B.accroche.appendChild(el("h2", { html: cfg.accroche.titre }));
     B.accroche.appendChild(el("p", { texte: fin(cfg.accroche.texte) }));
     var bCommencer = el("button", { type: "button", classe: "court-suite", texte: "Commencer ▶" });
-    B.accroche.appendChild(bCommencer); ecran.appendChild(B.accroche);
+    B.accroche.appendChild(bCommencer);
+    var bReprendre = el("button", { type: "button", classe: "court-suite court-reprendre", hidden: "", texte: "" });
+    B.accroche.appendChild(bReprendre); ecran.appendChild(B.accroche);
     B.defi = el("div", { classe: "court-voile", hidden: "" });
     B.defiTitre = el("h2", { classe: "court-defi-titre", texte: "Le défi" });
     B.defiQ = el("p"); B.choix = el("div", { classe: "court-choix" });
@@ -3394,6 +3652,7 @@ var Sim = (function () {
     function texteDe(b) { return fin(typeof b.t === "function" ? b.t(S) : b.t); }
     function aller(n) {
       S.etape = n; S.beat = 0; S.conseilT = 0; S.defi = 0;
+      if (n > 0) Sim.travail.ecrire({ graine: 0, etape: n });
       B.accroche.hidden = n !== 0;
       B.defi.hidden = n !== N + 1;
       var e = etape(); if (e && e.mettre) e.mettre(S, C);
@@ -3464,13 +3723,19 @@ var Sim = (function () {
     B.defiSuite.addEventListener("click", function () { S.defi++; poserDefi(); B.texte.className = ""; B.texte.textContent = fin("Réponds au défi, ou rejoue."); });
 
     /* ── les commandes ── */
-    function recommencer() { S = etatNeuf(S.son); if (cfg.reprendre) cfg.reprendre(S, C); aller(0); }
+    function recommencer() { Sim.travail.oublier(); bReprendre.hidden = true; S = etatNeuf(S.son); if (cfg.reprendre) cfg.reprendre(S, C); aller(0); }
     bDebut.addEventListener("click", recommencer);
     bRejouer.addEventListener("click", recommencer);
     bCommencer.addEventListener("click", function () { aller(1); });
     B.suite.addEventListener("click", suivant);
 
     aller(0);
+    var garde = Sim.travail.lu;
+    if (garde && garde.etape >= 1 && garde.etape <= N + 1) {
+      bReprendre.textContent = (garde.etape > N ? "Reprendre au défi" : "Reprendre à l'étape " + garde.etape) + " ▶";
+      bReprendre.hidden = false;
+      bReprendre.addEventListener("click", function () { aller(garde.etape); });
+    }
     Sim.animer(pas);
     window[cfg.essai || "court"] = {
       etat: function () { return S; }, aller: aller, action: action, suivant: suivant,
@@ -3828,7 +4093,7 @@ var Sim = (function () {
   }));
 })();
 </script>
-<footer class="pied">Simulation hors ligne, sans compte et sans enregistrement. Modèle simplifié : ce qu'il néglige est écrit sous la simulation.</footer>
+<footer class="pied">Simulation hors ligne, sans compte. L'avancement reste sur cet appareil, rien n'est envoyé. Modèle simplifié : ce qu'il néglige est écrit sous la simulation.</footer>
 </div>
 <script>if (window.Sim && Sim.calculatrice) Sim.calculatrice();</script>
 </body>
