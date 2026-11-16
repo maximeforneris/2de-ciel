@@ -3528,9 +3528,10 @@ var Sim = (function () {
   }
 
   /* la verification : une ligne par membre a calculer, montree quand x est trouve (ou donne) */
-  function boiteVerif(zone, i, e) {
+  function boiteVerif(zone, i, e, ineq) {
     var v = { boite: el("div", { classe: "esc-verif", hidden: "hidden" }), champs: [], e: e };
-    v.boite.appendChild(el("p", { html: "<b>Le vérificateur</b> remplace " + e.inconnue + " par la solution et calcule :" }));
+    v.boite.appendChild(el("p", { html: ineq ? "<b>Le vérificateur</b> calcule avec la solution, puis avec l'entier d'à côté : l'un tient la limite, l'autre non."
+      : "<b>Le vérificateur</b> remplace " + e.inconnue + " par la solution et calcule :" }));
     e.verif.forEach(function (m) {
       var inp = el("input", { type: "text", inputmode: "decimal", autocomplete: "off", "aria-label": "Résultat du calcul de vérification" });
       var lib = el("span");
@@ -3547,14 +3548,15 @@ var Sim = (function () {
   }
 
   function phaseEnigme(e, i, c, defi) {
+    var INEQ = /[≤≥<>]/.test(e.equations[0]);            // une inequation : on la dit, et la verification teste aussi l'entier d'a cote
     return {
       competence: "REA", facultative: !!defi, nomCourt: defi ? "Le défi ★" : "Énigme " + (i + 1),
       titre: c.titre.replace(/^Énigme \d+ · /, "").replace(/^★ Défi · /, "Défi : "),
-      consigne: defi ? "Pour les groupes qui ont ouvert la baie. Même méthode : x est des deux côtés du signe égal."
+      consigne: defi ? (e.consigne || "Pour les groupes qui ont ouvert " + LIEU + ". Même méthode, à tout le groupe.")
         : "Le lecteur lit la carte à voix haute ; le traducteur choisit l'équation, le calculateur trouve " + e.inconnue + ", le vérificateur vérifie. À l'énigme suivante, chacun prend le rôle d'après.",
-      scene: function (zone) { carte(zone, c); boiteVerif(zone, i, e); if (!defi) barre(zone, i); },
+      scene: function (zone) { carte(zone, c); boiteVerif(zone, i, e, INEQ); if (!defi) barre(zone, i); },
       questions: [
-        { type: "choix", competence: "ANA", lib: "Le traducteur : quelle équation traduit la carte ? (" + e.inconnue + " est " + e.quoi + ")",
+        { type: "choix", competence: "ANA", lib: "Le traducteur : quelle " + (INEQ ? "inéquation" : "équation") + " traduit la carte ? (" + e.inconnue + " est " + e.quoi + ")",
           options: e.equations, bonne: 0, methode: e.methode_eq },
         { type: "nombre", lib: "Le calculateur : résolvez l'équation. Que vaut " + e.inconnue + " ?", attendu: e.x, unite: e.unite,
           tolerance: 0, toleranceAbsolue: 0.01, methode: e.methode_x,
@@ -3576,7 +3578,7 @@ var Sim = (function () {
           methode: e.methode_verif,
           fini: function (ctx, juste) { if (!defi) { LETTRE[i] = juste ? "juste" : "donnee"; majBarres(); } } }
       ],
-      bravo: defi ? "Les deux offres coûtent la même somme au bout de " + nb(e.x) + " mois."
+      bravo: defi ? (e.bravo || "Défi relevé : " + e.inconnue + " = " + nb(e.x) + " " + e.unite + ".")
         : "Lettre " + (i + 1) + " : <b>" + MOT.charAt(i) + "</b>."
     };
   }
