@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Les escape games de la 2de CIEL</title>
+<meta name="description" content="Un groupe de trois ou quatre par tablette, et des rôles qui tournent à chaque énigme : le lecteur, le traducteur, le calculateur, le vérificateur. Chaque équation se choisit, se résout et se vérifie, et c&#x27;est la vérification qui allume une lettre du mot de passe. Chaque partie existe aussi sur papier.">
+<meta name="etiquette" content="Par thème">
+<meta name="porte-compte" content="1 simulations">
+<style>
+/* Simulations des TP · feuille commune, inlinee dans chaque page par assembler-simulations.py.
+   Palette du kit web (kit.css) : papier, graphite, un seul accent. Polices du systeme : la page
+   s'ouvre sans reseau, depuis une cle ou le poste de la salle. */
+:root{
+  --fond:#e9e7e3; --carte:#fbfaf9; --carte2:#f2f0ec; --encre:#191a1c; --encre2:#5d5b57;
+  --trait:#c9c5bf; --trait2:#dedbd6; --accent:#2c6da6; --accent-doux:#dfe8f1;
+  --juste:#2f7a55; --juste-doux:#e2efe7; --faux:#ab432a; --faux-doux:#f5e3dd; --tiede:#b8801f;
+  --scene:#f6f5f2; --ombre:0 1px 2px rgba(25,26,28,.05),0 10px 26px rgba(25,26,28,.07); --r:6px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --fond:#131315; --carte:#1c1d20; --carte2:#232427; --encre:#eceae6; --encre2:#a6a49f;
+    --trait:#4a4a4d; --trait2:#333437; --accent:#63a6dd; --accent-doux:#1d2a36;
+    --juste:#5cc08d; --juste-doux:#17281f; --faux:#ef7a58; --faux-doux:#34201a; --tiede:#dfae4e;
+    --scene:#18191b; --ombre:0 1px 2px rgba(0,0,0,.5),0 12px 32px rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"]{
+  --fond:#131315; --carte:#1c1d20; --carte2:#232427; --encre:#eceae6; --encre2:#a6a49f;
+  --trait:#4a4a4d; --trait2:#333437; --accent:#63a6dd; --accent-doux:#1d2a36;
+  --juste:#5cc08d; --juste-doux:#17281f; --faux:#ef7a58; --faux-doux:#34201a; --tiede:#dfae4e;
+  --scene:#18191b; --ombre:0 1px 2px rgba(0,0,0,.5),0 12px 32px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--fond);color:var(--encre);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,Arial,sans-serif;font-size:16px;line-height:1.5}
+.page{max-width:1120px;margin:0 auto;padding:18px 16px 48px}
+.mono,.afficheur .val,.curseur .val,table.releve td{font-family:ui-monospace,"Cascadia Mono",Consolas,"Roboto Mono",monospace;font-variant-numeric:tabular-nums}
+h1,h2,h3{line-height:1.2;margin:0;text-wrap:balance}
+sub,sup{font-size:.72em;line-height:0}
+
+/* En-tete */
+.tete{padding:6px 0 16px;border-bottom:1px solid var(--trait);margin-bottom:16px}
+.surtitre{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--encre2);font-weight:600}
+.tete h1{font-size:clamp(1.45rem,4vw,2rem);margin:4px 0 6px;font-weight:750}
+.chapeau{margin:0;color:var(--encre2);max-width:70ch}
+
+/* Onglets : un par protocole ou par ecran */
+.onglets{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 16px}
+.onglets button{font:inherit;font-weight:650;font-size:.95rem;padding:9px 14px;border-radius:var(--r);
+  border:1px solid var(--trait);background:var(--carte);color:var(--encre2);cursor:pointer}
+.onglets button[aria-selected="true"]{background:var(--encre);border-color:var(--encre);color:var(--carte)}
+.onglets button:not([aria-selected="true"]):hover{border-color:var(--encre2);color:var(--encre)}
+.vue[hidden]{display:none}
+
+/* Mise en page : la scene a gauche, les commandes a droite ; une colonne sous 820 px */
+.plan{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(280px,1fr);gap:16px;align-items:start}
+@media (max-width:820px){.plan{grid-template-columns:1fr}}
+.carte{background:var(--carte);border:1px solid var(--trait2);border-radius:var(--r);box-shadow:var(--ombre);padding:16px;margin-bottom:16px}
+.carte > h2{font-size:1.08rem;margin-bottom:10px;font-weight:700}
+.carte > h2 .num{color:var(--accent);margin-right:.35em}
+.consigne{color:var(--encre2);margin:0 0 12px;font-size:.95rem}
+.scene{background:var(--scene);border:1px solid var(--trait2);border-radius:var(--r);overflow:hidden;position:relative}
+.scene svg,.scene canvas{display:block;width:100%;height:auto}
+.legende{font-size:.82rem;color:var(--encre2);margin-top:6px}
+
+/* Commandes */
+.commandes{display:flex;flex-direction:column;gap:14px}
+.curseur label{display:flex;justify-content:space-between;gap:8px;font-size:.9rem;font-weight:600;margin-bottom:2px}
+.curseur .val{font-weight:600;color:var(--encre)}
+.curseur input[type=range]{width:100%;accent-color:var(--accent);height:28px;margin:0}
+.curseur .bornes{display:flex;justify-content:space-between;font-size:.75rem;color:var(--encre2)}
+.choix .titre{font-size:.9rem;font-weight:600;margin-bottom:4px}
+.choix .boutons{display:flex;flex-wrap:wrap;gap:6px}
+.choix button,.bouton{font:inherit;font-size:.9rem;font-weight:600;padding:8px 12px;border-radius:var(--r);
+  border:1px solid var(--trait);background:var(--carte);color:var(--encre);cursor:pointer;min-height:40px}
+.choix button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.bouton:hover,.choix button:hover{border-color:var(--encre2)}
+.bouton.principal{background:var(--encre);border-color:var(--encre);color:var(--carte)}
+.bouton:disabled{opacity:.45;cursor:not-allowed}
+.rangee{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+
+/* Afficheurs : ce que lit un instrument */
+.afficheurs{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.afficheur{border:1px solid var(--trait);border-radius:var(--r);background:var(--carte2);padding:8px 10px}
+.afficheur .nom{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--encre2);font-weight:650}
+.afficheur .val{font-size:1.45rem;font-weight:650;white-space:nowrap}
+.afficheur .unite{font-size:.95rem;color:var(--encre2);margin-left:.25em}
+.afficheur .note{font-size:.75rem;color:var(--encre2)}
+
+/* Releve de mesures et graphe */
+.releve-zone{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:14px;align-items:start}
+@media (max-width:820px){.releve-zone{grid-template-columns:1fr}}
+table.releve{border-collapse:collapse;width:100%;font-size:.92rem}
+table.releve th,table.releve td{border:1px solid var(--trait);padding:5px 8px;text-align:center}
+table.releve th{background:var(--carte2);font-weight:650;font-size:.82rem}
+table.releve tr.vide td{color:var(--encre2);font-style:italic}
+table.releve td.jour-heure{white-space:nowrap}
+.graphe{background:var(--carte);border:1px solid var(--trait2);border-radius:var(--r)}
+.graphe canvas{display:block;width:100%;height:auto}
+
+/* Enregistreur : une mesure toute seule, a intervalle regulier du temps simule */
+.enregistreur{border:1px solid var(--trait);border-radius:var(--r);background:var(--carte2);padding:10px 12px;display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
+.enr-lampe{display:inline-block;width:14px;height:14px;border-radius:50%;background:var(--trait)}
+.enr-lampe.actif{background:var(--faux)}
+.enr-lampe.eclair{animation:eclair .6s ease-out}
+@keyframes eclair{from{box-shadow:0 0 0 0 var(--faux)}to{box-shadow:0 0 0 10px transparent}}
+.enr-info{font-size:.88rem;color:var(--encre2)}
+
+/* Defi : l'eleve propose une valeur, la page dit juste ou pas encore, jamais la reponse */
+.defi{border:1px dashed var(--trait);border-radius:var(--r);padding:12px 14px;background:var(--carte2)}
+.defi p{margin:0 0 8px}
+.defi .saisie{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.defi input{font:inherit;width:9em;padding:7px 9px;border-radius:var(--r);border:1px solid var(--trait);background:var(--carte);color:var(--encre)}
+.defi .retour{margin-top:8px;font-weight:600;min-height:1.4em}
+.defi .retour.juste{color:var(--juste)}
+.defi .retour.faux{color:var(--faux)}
+.defi .methode{font-weight:400;color:var(--encre2)}
+
+/* Encadres */
+.note-modele{margin-top:6px}
+details.modele{border-top:1px solid var(--trait);padding-top:10px;margin-top:8px}
+details.modele summary{cursor:pointer;font-weight:650}
+details.modele ul{margin:8px 0 0;padding-left:1.2em;color:var(--encre2);font-size:.92rem}
+.alerte{border-left:4px solid var(--tiede);background:var(--carte2);padding:8px 12px;border-radius:0 var(--r) var(--r) 0;font-size:.92rem}
+.pied{margin-top:24px;padding-top:10px;border-top:1px solid var(--trait);font-size:.8rem;color:var(--encre2)}
+
+@media print{
+  body{background:#fff}
+  .onglets,.commandes .bouton,.defi{display:none}
+  .carte{box-shadow:none;break-inside:avoid}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* Centrale d'acquisition : periode, duree, deux courbes en direct, tableau defilant, export */
+.centrale{display:flex;flex-direction:column;gap:12px}
+.centrale-reglages{display:flex;flex-wrap:wrap;gap:12px 22px;border:1px solid var(--trait);border-radius:var(--r);background:var(--carte2);padding:10px 12px}
+.centrale-traces{display:flex;flex-wrap:wrap;gap:8px 18px}
+.centrale-traces label{display:flex;align-items:center;gap:8px;font-size:.9rem;font-weight:600}
+.centrale-traces select{font:inherit;font-size:.9rem;padding:7px 8px;border-radius:var(--r);border:1px solid var(--trait);background:var(--carte);color:var(--encre);min-height:40px;max-width:100%}
+.centrale-pastille{display:inline-block;width:14px;height:4px;border-radius:2px}
+.centrale-table{max-height:300px;overflow:auto;border:1px solid var(--trait2);border-radius:var(--r)}
+.centrale-table table.releve th{position:sticky;top:0;z-index:1}
+.centrale-table table.releve{border-collapse:separate;border-spacing:0}
+
+/* Molette posee sur la scene : on la tourne au doigt */
+.molette{cursor:grab;touch-action:none;outline:none}
+.molette.tourne{cursor:grabbing}
+.molette:focus-visible .molette-corps,.molette.prise .molette-corps{stroke:var(--accent);stroke-width:3}
+.molette-corps{fill:var(--carte2);stroke:var(--encre);stroke-width:2}
+.molette.tourne .molette-corps{fill:var(--accent-doux)}
+.molette-index{stroke:var(--accent);stroke-width:3.5;stroke-linecap:round}
+.molette-graduation{stroke:var(--encre2);stroke-width:1.2}
+.molette-titre{font-size:11px;font-weight:650;fill:var(--encre)}
+.molette-val{font-size:11.5px;font-weight:650;fill:var(--accent);font-family:ui-monospace,Consolas,monospace}
+
+/* Parcours : une simulation menee comme un projet, cinq phases et un livrable (CAP, seconde) */
+.pc-tete{position:sticky;top:0;z-index:5;background:var(--fond);padding:8px 0 10px;margin:-6px 0 12px;
+  border-bottom:1px solid var(--trait2);display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between}
+.pc-chemin{list-style:none;margin:0;padding:0;display:flex;align-items:flex-start;gap:0;flex:1 1 420px;min-width:0}
+.pc-chemin li{flex:1 1 0;display:flex;justify-content:center;position:relative}
+.pc-chemin li+li::before{content:"";position:absolute;top:21px;right:calc(50% + 22px);left:calc(-50% + 22px);height:2px;background:var(--trait)}
+.pc-noeud{font:inherit;background:none;border:0;padding:0;display:flex;flex-direction:column;align-items:center;gap:2px;
+  color:var(--encre2);cursor:pointer;min-width:44px;min-height:44px}
+.pc-noeud:disabled{cursor:default;opacity:.55}
+.pc-rond{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-weight:750;font-size:1.05rem;
+  border:2px solid var(--trait);background:var(--carte);color:var(--encre2);transition:transform .2s,background .2s}
+.pc-comp{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.pc-etoiles{font-size:.78rem;color:var(--tiede);min-height:1.1em;letter-spacing:1px}
+.pc-noeud.pc-fait .pc-rond{background:var(--accent);border-color:var(--accent);color:#fff}
+.pc-noeud.pc-ici .pc-rond{border-color:var(--encre);box-shadow:0 0 0 4px var(--accent-doux);transform:scale(1.06);color:var(--encre)}
+.pc-noeud.pc-fait.pc-ici .pc-rond{color:#fff}
+.pc-noeud.pc-ici .pc-comp{color:var(--encre)}
+.pc-drapeau .pc-rond{font-size:1.15rem}
+.pc-facultatif .pc-rond{border-style:dashed;font-size:1.3rem}
+.pc-info{display:flex;gap:12px;align-items:center;font-size:.9rem;font-weight:650;color:var(--encre2)}
+.pc-score{color:var(--tiede);font-variant-numeric:tabular-nums}
+.pc-niveau:empty,.pc-temps:empty{display:none}
+.pc-niveau{border:1px solid var(--trait);border-radius:999px;padding:2px 10px;font-size:.8rem}
+.pc-ecran[hidden]{display:none}
+.pc-surtitre{font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
+.pc-phase-tete{margin:4px 0 14px}
+.pc-phase-tete h2{font-size:clamp(1.25rem,3.4vw,1.6rem);font-weight:750}
+.pc-bulle{position:relative;margin:10px 0 0;padding:10px 14px;background:var(--carte);border:1px solid var(--trait2);
+  border-radius:var(--r);border-left:4px solid var(--accent);max-width:70ch;color:var(--encre)}
+.pc-commande .pc-client{font-weight:700;margin:0 0 6px}
+.pc-texte p{margin:0 0 8px}
+.pc-livrable{margin:8px 0 0;padding-top:8px;border-top:1px dashed var(--trait)}
+.pc-illus:empty{display:none}
+.pc-plan{margin:0 0 12px;padding-left:1.2em}
+.pc-plan li{margin:4px 0}
+.pc-choix-niveau{margin:6px 0 14px}
+.pc-partir{min-height:48px;font-size:1rem;padding:10px 18px}
+.pc-questions h2{font-size:1rem}
+.pc-q{border:1px solid var(--trait);border-radius:var(--r);padding:12px;margin-bottom:12px;background:var(--carte2);transition:border-color .2s,background .2s}
+.pc-q[data-etat="juste"]{border-color:var(--juste);background:var(--juste-doux)}
+.pc-q[data-etat="faux"]{border-color:var(--faux)}
+.pc-q[data-etat="passe"]{border-style:dashed;opacity:.85}
+/* les deux modes (16 octobre 2026) : en note, une reponse enregistree n'a pas de couleur de verdict */
+.pc-q[data-etat="enregistree"]{border-color:var(--accent);background:var(--accent-doux)}
+.pc-q[data-etat="enregistree"] .pc-q-num{background:var(--accent)}
+.pc-q[data-etat="modifiee"]{border-color:var(--accent);border-style:dashed}
+.pc-bandeau-mode{margin:10px 0;padding:10px 12px;border-left:4px solid var(--accent);background:var(--accent-doux);border-radius:var(--r)}
+.pc-note .pc-bandeau-mode{border-left-color:var(--encre)}
+.pc-confirmer{margin-top:10px;padding:10px 12px;border:1px solid var(--encre);border-radius:var(--r)}
+/* le travail garde : la question a l'ouverture, et le mot apres la reprise */
+.pc-reprise{margin:0 0 14px;padding:12px 14px;border:2px solid var(--accent);border-radius:var(--r);background:var(--accent-doux)}
+.pc-reprise p{margin:0 0 10px}
+.pc-reprise .pc-zero.pc-confirme{color:var(--faux);border-color:var(--faux);font-weight:700}
+.pc-repris{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:10px 0;padding:8px 12px;border-left:4px solid var(--accent);background:var(--accent-doux);border-radius:var(--r)}
+.pc-q-lib{margin:0 0 8px;font-weight:600}
+.pc-q-num{display:inline-grid;place-items:center;width:1.6em;height:1.6em;border-radius:50%;background:var(--encre);color:var(--carte);
+  font-size:.8rem;margin-right:.5em;vertical-align:.1em}
+.pc-q[data-etat="juste"] .pc-q-num{background:var(--juste)}
+.pc-q-champ{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px}
+.pc-q-champ input,.pc-remise input{font:inherit;font-size:1.05rem;width:9em;min-height:44px;padding:7px 10px;border-radius:var(--r);
+  border:1px solid var(--trait);background:var(--carte);color:var(--encre)}
+.pc-remise input{width:min(100%,18em)}
+.pc-unite{font-weight:600;color:var(--encre2)}
+.pc-options{display:flex;flex-wrap:wrap;gap:6px}
+.pc-option{font:inherit;font-size:.92rem;font-weight:600;min-height:44px;padding:8px 12px;border-radius:var(--r);
+  border:1px solid var(--trait);background:var(--carte);color:var(--encre);cursor:pointer;text-align:left}
+.pc-option[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.pc-option:disabled{cursor:default}
+.pc-classer{display:flex;flex-direction:column;gap:8px;width:100%}
+.pc-classer-ligne{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--trait2);padding-bottom:6px}
+.pc-classer-item{font-weight:600}
+.pc-aide{margin:0;font-size:.9rem;color:var(--encre2)}
+.pc-retour{margin-top:8px;font-weight:650;min-height:1.4em}
+.pc-retour.juste{color:var(--juste)}
+.pc-retour.faux{color:var(--faux)}
+.pc-retour .methode{font-weight:400;color:var(--encre2)}
+.pc-q-bravo{font-weight:400;color:var(--encre)}
+.pc-q .bouton{min-height:44px}
+.pc-pied{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:flex-end;margin:4px 0 20px}
+.pc-bravo{margin:0;flex:1 1 280px;color:var(--juste);font-weight:650}
+.pc-suite{min-height:48px;font-size:1rem;padding:10px 18px}
+.pc-vers-fin{min-height:44px;margin-right:auto;color:var(--encre2)}
+.pc-apercu{width:100%;margin-top:10px;font-family:ui-monospace,Consolas,monospace;font-size:.8rem;border:1px solid var(--trait);
+  border-radius:var(--r);background:var(--carte2);color:var(--encre);padding:8px}
+.pc-recap td,.pc-recap th{text-align:left}
+.pc-score-final{font-size:1.2rem;margin:12px 0 4px;color:var(--tiede)}
+.pc-grade{margin:0;font-weight:650}
+.pc-objet{cursor:grab;touch-action:none}
+.pc-objet:active{cursor:grabbing}
+.pc-cible{fill:var(--accent);fill-opacity:.07;stroke:var(--accent);stroke-width:1.5;stroke-dasharray:5 4}
+@media (max-width:620px){
+  .pc-rond{width:36px;height:36px;font-size:.95rem}
+  .pc-chemin li+li::before{top:18px;right:calc(50% + 19px);left:calc(-50% + 19px)}
+  .pc-comp{font-size:.62rem;letter-spacing:.04em}
+}
+.plan.pc-large{grid-template-columns:minmax(0,2.2fr) minmax(260px,1fr)}
+/* une partie sans scene : les questions prennent la largeur, les propositions sur deux colonnes */
+.plan.pc-sans-scene{grid-template-columns:minmax(0,1fr)}
+.pc-sans-scene .pc-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,22em),1fr));gap:8px}
+.pc-sans-scene .pc-option{text-align:left}
+@media (max-width:820px){.plan.pc-large{grid-template-columns:1fr}}
+/* Pendant le parcours, la page laisse la place a la scene : le chapeau se replie */
+.pc-en-cours .tete{padding-bottom:6px;margin-bottom:6px}
+.pc-en-cours .tete .chapeau{display:none}
+.pc-en-cours .tete h1{font-size:1.3rem;margin:2px 0 0}
+@media print{.pc-tete,.pc-remise,.pc-q .rangee{display:none}}
+/* Entrainement au CCF (premiere, terminale) : deux modes, la paillasse empruntee, les appels professeur */
+.pc [hidden],.pc-voile[hidden],.pc-modes [hidden]{display:none!important}
+.pc-modes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 16px}
+.pc-mode{font:inherit;text-align:left;display:flex;flex-direction:column;gap:2px;padding:12px 14px;min-height:56px;cursor:pointer;
+  border-radius:var(--r);border:1.5px solid var(--trait);background:var(--carte);color:var(--encre)}
+.pc-mode b{font-size:1rem}
+.pc-mode span{font-size:.85rem;color:var(--encre2)}
+.pc-mode[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-doux)}
+.pc-en-cours .pc-modes{display:none}
+@media (max-width:480px){.pc-modes{grid-template-columns:1fr}.pc-info{flex-wrap:wrap}}
+.pc-problematique{margin:12px 0 0;padding:10px 12px;border-left:4px solid var(--accent);background:var(--carte2);border-radius:0 var(--r) var(--r) 0}
+.pc-grille{list-style:none;margin:10px 0;padding:0;border-top:1px solid var(--trait2)}
+.pc-grille li{padding:7px 0;border-bottom:1px solid var(--trait2)}
+.pc-grille-ligne{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.pc-grille-ou{font-size:.85rem;font-weight:650;color:var(--accent);text-align:right}
+.pc-grille-cap{font-size:.84rem;color:var(--encre2);margin-top:2px}
+.pc-appel-annonce{display:flex;gap:8px;align-items:flex-start}
+.pc-main{font-size:1.25rem;line-height:1;margin-right:.35em}
+.pc-q.pc-appel{border-style:dashed;border-color:var(--accent);background:var(--carte)}
+.pc-q[data-etat="attente"]{border-color:var(--tiede);border-style:solid}
+.pc-badge-appel{font:inherit;font-weight:700;font-size:.85rem;min-height:40px;padding:6px 12px;border-radius:999px;cursor:pointer;
+  border:2px solid var(--tiede);background:var(--carte);color:var(--encre);animation:pc-pulse 1.6s ease-in-out infinite}
+@keyframes pc-pulse{50%{box-shadow:0 0 0 5px var(--accent-doux)}}
+/* LA VIGILANCE (commun.js) : les sorties de la page en evaluation notee, lisibles du professeur qui passe */
+.pc-vigil{display:inline-flex;align-items:center;font-weight:700;font-size:.85rem;min-height:32px;padding:4px 10px;border-radius:999px;
+  border:2px solid var(--faux);color:var(--faux);background:var(--carte)}
+.pc-vigil[hidden]{display:none}
+.pc-vigil-retour{border-left-color:var(--faux);background:var(--faux-doux)}
+.pc-methode{margin:6px 0 0;font-size:.92rem;color:var(--encre2);border-left:3px solid var(--trait);padding-left:8px}
+.pc-aide-btn{color:var(--encre2)}
+.pc-aide-btn.pc-confirme{color:var(--accent);border-color:var(--accent);font-weight:700}
+.pc-autonomie{margin:10px 0 0}
+.pc-voile{position:fixed;inset:0;z-index:30;background:rgba(20,20,22,.5);display:grid;place-items:center;padding:16px}
+.pc-prof{width:min(100%,600px);max-height:90vh;overflow:auto;margin:0}
+.pc-prof-liste .pc-q{margin-top:10px}
+.pc-attendus{margin:0 0 10px;padding-left:1.2em;font-size:.92rem}
+.pc-cotes .pc-option{flex:1 1 9em}
+.pc-prof-pied{justify-content:flex-end;margin-top:10px}
+/* une partie qui emprunte la paillasse : la simulation a gauche, les questions a droite, qui restent en vue */
+.plan.pc-avec-paillasse{grid-template-columns:minmax(0,1.8fr) minmax(280px,1fr)}
+.pc-paillasse .plan{grid-template-columns:1fr}
+.pc-paillasse > .carte,.pc-paillasse .plan > .carte{background:var(--carte2);box-shadow:none;margin-bottom:12px}
+/* la scene reste a l'ecran pendant qu'on fait defiler les questions (demande de l'utilisateur, 14 octobre 2026) :
+   sur tablette et ordinateur, la colonne de gauche se fixe sous la tete du parcours et defile seule si elle est plus haute */
+@media (min-width:821px){.pc-ecran > .plan > .pc-scene{position:sticky;top:calc(var(--pc-haut,88px) + 4px);max-height:calc(100vh - var(--pc-haut,88px) - 16px);overflow:auto;overscroll-behavior:contain}}
+@media (max-width:820px){.plan.pc-avec-paillasse{grid-template-columns:minmax(0,1fr)}.pc-avec-paillasse > .pc-questions{position:static;max-height:none}}
+/* une colonne bornee ne grandit pas a la taille de son contenu : ce qui est large defile dans son cadre */
+.pc-avec-paillasse > *,.pc-paillasse,.pc-paillasse > *{min-width:0}
+.pc-paillasse .releve-zone{grid-template-columns:minmax(0,1fr)}
+/* LA TABLETTE COUCHEE (4 novembre 2026 : « ils sont tous sur tablettes mode paysage ») : a 1 024 px la scene
+   n'avait que 530 px, perdus entre deux cartes emboitees et une colonne de questions de 343 px. Les marges se
+   resserrent, la colonne des questions s'arrete a 320 px. « Agrandir la scene » donne a la scene toute la
+   largeur et passe les questions dessous (commun.js, AGRANDIR LA SCENE). */
+@media (min-width:821px) and (max-width:1400px){
+  .page{padding-left:10px;padding-right:10px}
+  .pc-ecran > .plan:not(.pc-sans-scene){grid-template-columns:minmax(0,1fr) minmax(270px,320px)}
+  .pc-scene{padding:10px}
+  .pc-paillasse > .carte,.pc-paillasse .plan > .carte{padding:10px}
+}
+.pc-agrandir{float:right;margin:0 0 8px 10px;min-height:38px;padding:6px 12px;font-size:.88rem}
+/* la consigne coule a cote du bouton, la scene passe dessous : a cote, avec son overflow, elle perdait 150 px */
+.pc-scene > :not(.pc-agrandir):not(.consigne){clear:both}
+.pc-agrandir[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+.pc-agrandir-barre{display:flex;justify-content:flex-end;margin:0 0 8px}
+.pc-agrandir-barre .pc-agrandir{float:none;margin:0}
+.plan.pc-grand{grid-template-columns:minmax(0,1fr)!important}
+.pc-ecran > .plan.pc-grand > .pc-scene{position:static!important;max-height:none!important;overflow:visible}
+@media (max-width:820px){.pc-agrandir,.pc-agrandir-barre{display:none}}
+@media print{.pc-agrandir,.pc-agrandir-barre{display:none}}
+.pc-paillasse .releve-zone > div,.pc-paillasse table.releve{overflow-x:auto}
+/* les documents d'un sujet : fiches, consignes, annexe */
+.pc-docs{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.pc-docs section{border:1px solid var(--trait);border-radius:var(--r);background:var(--carte2);padding:10px 12px}
+.pc-docs h3{font-size:.95rem;margin:0 0 6px}
+.pc-docs p{margin:0 0 6px;font-size:.93rem}
+.pc-docs table{width:100%}
+.pc-docs td{font-size:.88rem;vertical-align:top}
+.pc-docs .pc-annexe{border-style:dashed}
+.pc-paillasse .num{display:none}
+/* sur un telephone, la paillasse perd une epaisseur de marge, et un afficheur trop long passe a la ligne au lieu de deborder */
+@media (max-width:620px){
+  .pc-avec-paillasse > .pc-scene{padding:10px}
+  .pc-paillasse > .carte,.pc-paillasse .plan > .carte{padding:12px}
+  .afficheur .val{white-space:normal;overflow-wrap:anywhere}
+}
+/* la calculatrice des sites : son bouton dans la tete du parcours ; le bouton flottant s'efface pendant un parcours */
+.pc-calc{font:inherit;font-size:.85rem;font-weight:650;min-height:40px;padding:6px 12px;border-radius:999px;cursor:pointer;
+  border:1px solid var(--trait);background:var(--carte);color:var(--encre)}
+.pc-calc[aria-pressed="true"]{border-color:var(--encre);font-weight:750}
+.pc-en-cours .outils-flottants,.pc-visible .outils-flottants{display:none}
+.calc-titre{font-weight:700}
+/* le classement compact des epreuves : l'element a gauche, sa liste a droite */
+.pc-classer-ligne.pc-compact{flex-wrap:nowrap}
+.pc-classer-choix{font:inherit;font-size:.95rem;min-height:44px;padding:6px 10px;border-radius:var(--r);border:1px solid var(--trait);
+  background:var(--carte);color:var(--encre);max-width:60%;flex:0 1 auto}
+@media (max-width:480px){.pc-classer-ligne.pc-compact{flex-wrap:wrap}.pc-classer-choix{max-width:100%;width:100%}}
+/* le dossier, a gauche ; la calculatrice reste a droite */
+.pc-dossier-panneau{position:fixed;top:0;left:0;bottom:0;width:min(100%,460px);z-index:22;display:flex;flex-direction:column;
+  background:var(--fond);border-right:1px solid var(--trait);box-shadow:var(--ombre)}
+/* « display:flex » l'emportait sur l'attribut hidden : « Fermer » ne fermait rien (essai de l'utilisateur, 14 octobre 2026) */
+.pc-dossier-panneau[hidden]{display:none}
+.pc-dossier-tete{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--trait2);background:var(--carte)}
+.pc-dossier-corps{flex:1;overflow:auto;padding:12px;overscroll-behavior:contain}
+.pc-dossier-corps .pc-docs{grid-template-columns:minmax(0,1fr)}
+@media (min-width:1400px){body.dossier-ouvert{padding-left:460px}}
+@media print{.pc-dossier-panneau{display:none!important}body.dossier-ouvert{padding-left:0!important}}
+.pc-lu{display:block;font-weight:400;color:var(--encre2);margin-top:4px}
+.pc-corriger{display:block;margin-top:6px;font-weight:400;color:var(--encre)}
+.pc-corriger b{display:block;font-weight:700}
+.pc-corriger span{display:list-item;list-style:disc;margin-left:1.2em}
+
+/* La calculatrice · le panneau et le pave.
+   Une seule feuille pour le jeu d'entrainement et pour les sites de classe (option
+   « calculatrice: oui » de SITE.md, qui la recopie dans assets/). Les couleurs sont les
+   jetons du kit ; l'accent, l'erreur et la chasse fixe ont un repli, parce que les chartes
+   les nomment --froid, --chaud et .mono. Sortie de jeu.css le 6 octobre 2026. */
+/* le panneau : a droite, par-dessus sur telephone */
+.calculatrice{position:fixed;top:0;right:0;bottom:0;width:min(100%,380px);z-index:20;display:flex;flex-direction:column;
+  background:var(--carte);border-left:1px solid var(--trait);box-shadow:var(--ombre)}
+.calculatrice[hidden]{display:none}
+.calc-tete{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 12px;min-height:48px;
+  border-bottom:1px solid var(--trait2)}
+.calc-corps{flex:1;min-height:0;display:flex;flex-direction:column;gap:8px;padding:10px 12px 12px}
+.calc-angle{display:flex;gap:0;align-self:flex-start;border:1px solid var(--trait);border-radius:999px;overflow:hidden}
+.calc-angle button{font:600 .78rem/1 system-ui,sans-serif;padding:7px 12px;border:0;background:none;color:var(--encre2);cursor:pointer}
+.calc-angle button[aria-pressed="true"]{background:var(--encre);color:var(--carte)}
+.calc-ecran{flex:1;min-height:96px;overflow-y:auto;background:var(--carte2);border:1px solid var(--trait2);border-radius:var(--r,6px);
+  padding:6px 10px;display:flex;flex-direction:column}
+.calc-historique{list-style:none;margin:auto 0 0;padding:0}
+.calc-historique li{padding:5px 0;border-bottom:1px dashed var(--trait2)}
+.calc-historique li:last-child{border-bottom:0}
+.calc-expr,.calc-res{display:block;width:100%;border:0;background:none;padding:0;cursor:pointer;color:var(--encre);
+  font-family:var(--mono,ui-monospace,Consolas,monospace);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.calc-expr{text-align:left;font-size:.86rem;color:var(--encre2)}
+.calc-res{text-align:right;font-size:1.25rem;font-weight:650}
+.calc-res.erreur{font-family:system-ui,sans-serif;font-size:.9rem;color:var(--faux,var(--chaud,#ab432a));cursor:default}
+.calc-expr:hover,.calc-res:not(.erreur):hover{color:var(--accent,var(--froid,#2c6da6))}
+.calc-saisie{width:100%;font-family:var(--mono,ui-monospace,Consolas,monospace);font-size:1.2rem;padding:8px 10px;border:1.5px solid var(--trait);
+  border-radius:var(--r,6px);background:var(--carte);color:var(--encre)}
+.calc-saisie:focus{outline:none;border-color:var(--accent,var(--froid,#2c6da6))}
+.calc-touches{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.calc-touches button{min-height:42px;padding:0 2px;border-radius:var(--r,6px);border:1px solid var(--trait2);background:var(--carte2);
+  color:var(--encre);font:600 .9rem/1 system-ui,sans-serif;cursor:pointer;touch-action:manipulation}
+.calc-touches button:hover{border-color:var(--encre2)}
+.calc-touches button:active{transform:scale(.97)}
+.calc-touches .chiffre{background:var(--carte);border-color:var(--trait);font-family:var(--mono,ui-monospace,Consolas,monospace);font-size:1.1rem}
+.calc-touches .fonction{font-size:.82rem;color:var(--encre2)}
+.calc-touches .op{font-size:1.15rem}
+.calc-touches .efface{color:var(--faux,var(--chaud,#ab432a))}
+.calc-touches .egal{background:var(--encre);border-color:var(--encre);color:var(--carte);font-size:1.15rem}
+/* tablette en portrait : a cote, plus etroite ; la question prend la mise en page du telephone */
+@media (min-width:640px) and (max-width:899px){
+  .calculatrice{width:300px}
+  body.calc-ouverte{padding-right:300px}
+}
+@media (min-width:900px){
+  body.calc-ouverte{padding-right:380px}
+}
+.calc-fermer{font:inherit;font-size:.8rem;font-weight:600;color:var(--encre2);background:none;border:1px solid var(--trait);
+  border-radius:999px;padding:6px 12px;cursor:pointer;min-height:36px}
+.calc-fermer:hover{color:var(--encre);border-color:var(--encre2)}
+.calc-titre{font-weight:700;font-size:.95rem}
+@media print{ .calculatrice{display:none!important} body.calc-ouverte{padding-right:0!important} }
+/* sur un site de classe : au-dessus de la coquille de documentation, et les boutons qui
+   l'ouvrent (la barre haute les met en forme ; hors coquille, ils flottent en bas a droite).
+   Sur telephone, un seul bouton « Outils » remplace les deux. */
+.doc-shell .calculatrice{z-index:60}
+.bouton-outil[aria-pressed="true"]{font-weight:700;border-color:var(--encre)}
+.bouton-outil.etroit{display:none}
+@media (max-width:639px){ .bouton-outil.large{display:none} .bouton-outil.etroit{display:inline-flex} }
+.outils-flottants{position:fixed;right:16px;bottom:16px;z-index:40;display:flex;gap:8px}
+.outils-flottants .bouton-outil{font:inherit;font-size:.9rem;font-weight:600;padding:10px 16px;border-radius:999px;
+  border:1px solid var(--encre);background:var(--carte);color:var(--encre);box-shadow:var(--ombre);cursor:pointer}
+body.calc-ouverte .outils-flottants{display:none}
+/* Dans la coquille de documentation, le panneau prend la place du sommaire de droite ; entre
+   1 000 et 1 279 px, celle du plan aussi, qui revient a la fermeture. Sans cela, le texte de la
+   page tombait a 416 px de large sur un ecran de 1 280. */
+@media (min-width:1000px){
+  body.calc-ouverte .doc-corps{--col-som:0px}
+  body.calc-ouverte .doc-som{display:none}
+}
+@media (min-width:1000px) and (max-width:1279px){
+  body.calc-ouverte .doc-corps{--col-plan:0px}
+  body.calc-ouverte .doc-plan{display:none}
+}
+
+/* habillage du site : charte « cablage » */
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url(../assets/polices/jetbrains-mono-400-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url(../assets/polices/jetbrains-mono-400-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:700;font-display:swap;src:url(../assets/polices/jetbrains-mono-700-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:700;font-display:swap;src:url(../assets/polices/jetbrains-mono-700-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Red Hat Text';font-style:normal;font-weight:400;font-display:swap;src:url(../assets/polices/red-hat-text-400-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Red Hat Text';font-style:normal;font-weight:400;font-display:swap;src:url(../assets/polices/red-hat-text-400-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Red Hat Text';font-style:normal;font-weight:500;font-display:swap;src:url(../assets/polices/red-hat-text-500-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Red Hat Text';font-style:normal;font-weight:500;font-display:swap;src:url(../assets/polices/red-hat-text-500-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Red Hat Text';font-style:normal;font-weight:700;font-display:swap;src:url(../assets/polices/red-hat-text-700-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Red Hat Text';font-style:normal;font-weight:700;font-display:swap;src:url(../assets/polices/red-hat-text-700-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+
+:root{
+  --fond:#eef0ee;            /* la feuille du schéma */
+  --carte:#ffffff;
+  --carte2:#f4f6f4;
+  --encre:#17191c;
+  --encre2:#545a60;
+  --trait:#b4bab8;
+  --trait2:#d3d8d6;
+  /* les quatre paires T568 */
+  --p-orange:#e8720c;--p-vert:#1f9a3a;--p-bleu:#1f5fd0;--p-brun:#8b5a2b;
+  --led:#2ecc5b;
+  --froid:var(--p-bleu);--tiede:var(--p-orange);--chaud:#c6262e;
+  --vert:var(--p-vert);--violet:var(--p-brun);
+  --ombre:0 1px 0 rgba(23,25,28,.10);
+  --r:2px;
+}
+
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --fond:#121416;--carte:#1a1d20;--carte2:#22262a;--encre:#e8ebe9;--encre2:#9aa3a8;
+    --trait:#3b4246;--trait2:#2b3135;
+    --p-orange:#f28a3a;--p-vert:#3fbf5f;--p-bleu:#4f86e8;--p-brun:#b07a45;--chaud:#e2564f;
+    --ombre:0 1px 0 rgba(0,0,0,.6);
+  }
+}
+/* Les pages de la 2de CIEL faites avec les briques des simulations (les escape games de co-intervention,
+   16 novembre 2026) a la charte de leur site, « cablage » : Red Hat Text et JetBrains Mono, la feuille
+   du schema, les paires T568, le bleu de la paire 3 pour accent. Les jetons propres aux simulations
+   (juste, faux, scene) s'accordent a ceux de la charte. */
+:root{
+  --accent:var(--froid); --accent-doux:#dfe7f8;
+  --juste:var(--vert); --juste-doux:#dcefe1; --faux:var(--chaud); --faux-doux:#f6dfe0;
+  --scene:var(--carte);
+}
+body{font-family:"Red Hat Text","Helvetica Neue",Arial,sans-serif}
+h1,h2,h3{font-family:"Red Hat Text","Helvetica Neue",Arial,sans-serif;letter-spacing:-.01em}
+.tete h1{font-weight:700}
+.tete .surtitre,.mono,.afficheur .val,.curseur .val,table.releve td,.pc-comp,.pc-surtitre{font-family:"JetBrains Mono",ui-monospace,monospace}
+.carte{border-radius:2px}
+.tete{border-top:3px solid var(--p-orange);padding-top:18px}
+
+.partie{margin:34px 0 10px}
+.partie-1{margin-top:18px;padding:4px 18px 8px;background:var(--carte2);border:1px solid var(--trait2);border-radius:var(--r)}
+.partie-tete{border-top:4px solid var(--accent);padding-top:12px;margin-bottom:6px}
+.partie-1 .partie-tete{border-top:0;padding-top:14px}
+.partie-num{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.partie-titre{font-size:1.5rem;margin:2px 0 4px}
+.partie-chapeau{margin:0 0 6px;color:var(--encre2);max-width:70ch}
+@media (max-width:480px){.partie-1{padding:2px 10px 6px}.partie-titre{font-size:1.25rem}}
+.grille{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin:10px 0 22px}
+section h2{font-size:1.1rem;margin-top:8px}
+.carte-sim{display:flex;flex-direction:column;gap:3px;padding:12px 14px;border:1px solid var(--trait2);border-radius:var(--r);
+  background:var(--carte);box-shadow:var(--ombre);color:var(--encre);text-decoration:none}
+.carte-sim:hover{border-color:var(--encre2)}
+.carte-sim .code{font-size:.75rem;letter-spacing:.1em;color:var(--encre2);font-weight:650}
+.carte-sim .nom{font-weight:700}
+.carte-sim .quoi{font-size:.9rem;color:var(--encre2)}
+.carte-sim .origine{font-size:.75rem;color:var(--accent);font-weight:650;margin-top:2px}
+
+</style>
+<script>
+window.SIM_MODE = "td";
+window.SIM_PAGE = "index";
+
+</script>
+</head>
+<body>
+<div class="page">
+<header class="tete">
+<div class="surtitre">Maths · co-intervention · en groupe, sur tablette</div>
+<h1>Les escape games de la 2de CIEL</h1>
+<p class="chapeau">Un groupe de trois ou quatre par tablette, et des rôles qui tournent à chaque énigme : le lecteur, le traducteur, le calculateur, le vérificateur. Chaque équation se choisit, se résout et se vérifie, et c'est la vérification qui allume une lettre du mot de passe. Chaque partie existe aussi sur papier.</p>
+</header>
+<section><h2>Séquence 4 · les équations du premier degré</h2><div class="grille"><a class="carte-sim" href="escape-baie.html"><span class="code">ESC-01</span><span class="nom">La baie verrouillée</span><span class="quoi">équations a x + b = c : mettre en équation, résoudre, vérifier en remplaçant x ; un défi avec x des deux côtés</span><span class="origine">hors ligne</span></a></div></section>
+<footer class="pied">Pages hors ligne, sans compte : rien n'est envoyé. La partie en cours se garde sur la tablette.</footer>
+</div>
+<script>if (window.Sim && Sim.calculatrice) Sim.calculatrice();</script>
+</body>
+</html>

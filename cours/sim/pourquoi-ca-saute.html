@@ -285,6 +285,11 @@ details.modele ul{margin:8px 0 0;padding-left:1.2em;color:var(--encre2);font-siz
 .pc-badge-appel{font:inherit;font-weight:700;font-size:.85rem;min-height:40px;padding:6px 12px;border-radius:999px;cursor:pointer;
   border:2px solid var(--tiede);background:var(--carte);color:var(--encre);animation:pc-pulse 1.6s ease-in-out infinite}
 @keyframes pc-pulse{50%{box-shadow:0 0 0 5px var(--accent-doux)}}
+/* LA VIGILANCE (commun.js) : les sorties de la page en evaluation notee, lisibles du professeur qui passe */
+.pc-vigil{display:inline-flex;align-items:center;font-weight:700;font-size:.85rem;min-height:32px;padding:4px 10px;border-radius:999px;
+  border:2px solid var(--faux);color:var(--faux);background:var(--carte)}
+.pc-vigil[hidden]{display:none}
+.pc-vigil-retour{border-left-color:var(--faux);background:var(--faux-doux)}
 .pc-methode{margin:6px 0 0;font-size:.92rem;color:var(--encre2);border-left:3px solid var(--trait);padding-left:8px}
 .pc-aide-btn{color:var(--encre2)}
 .pc-aide-btn.pc-confirme{color:var(--accent);border-color:var(--accent);font-weight:700}
@@ -306,6 +311,26 @@ details.modele ul{margin:8px 0 0;padding-left:1.2em;color:var(--encre2);font-siz
 /* une colonne bornee ne grandit pas a la taille de son contenu : ce qui est large defile dans son cadre */
 .pc-avec-paillasse > *,.pc-paillasse,.pc-paillasse > *{min-width:0}
 .pc-paillasse .releve-zone{grid-template-columns:minmax(0,1fr)}
+/* LA TABLETTE COUCHEE (4 novembre 2026 : « ils sont tous sur tablettes mode paysage ») : a 1 024 px la scene
+   n'avait que 530 px, perdus entre deux cartes emboitees et une colonne de questions de 343 px. Les marges se
+   resserrent, la colonne des questions s'arrete a 320 px. « Agrandir la scene » donne a la scene toute la
+   largeur et passe les questions dessous (commun.js, AGRANDIR LA SCENE). */
+@media (min-width:821px) and (max-width:1400px){
+  .page{padding-left:10px;padding-right:10px}
+  .pc-ecran > .plan:not(.pc-sans-scene){grid-template-columns:minmax(0,1fr) minmax(270px,320px)}
+  .pc-scene{padding:10px}
+  .pc-paillasse > .carte,.pc-paillasse .plan > .carte{padding:10px}
+}
+.pc-agrandir{float:right;margin:0 0 8px 10px;min-height:38px;padding:6px 12px;font-size:.88rem}
+/* la consigne coule a cote du bouton, la scene passe dessous : a cote, avec son overflow, elle perdait 150 px */
+.pc-scene > :not(.pc-agrandir):not(.consigne){clear:both}
+.pc-agrandir[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+.pc-agrandir-barre{display:flex;justify-content:flex-end;margin:0 0 8px}
+.pc-agrandir-barre .pc-agrandir{float:none;margin:0}
+.plan.pc-grand{grid-template-columns:minmax(0,1fr)!important}
+.pc-ecran > .plan.pc-grand > .pc-scene{position:static!important;max-height:none!important;overflow:visible}
+@media (max-width:820px){.pc-agrandir,.pc-agrandir-barre{display:none}}
+@media print{.pc-agrandir,.pc-agrandir-barre{display:none}}
 .pc-paillasse .releve-zone > div,.pc-paillasse table.releve{overflow-x:auto}
 /* les documents d'un sujet : fiches, consignes, annexe */
 .pc-docs{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
@@ -1857,6 +1882,60 @@ var Sim = (function () {
   var NOTE_COPIE = window.SIM_MODE === "note";
   var COTES = { NA: "non acquis", ECA: "en cours d'acquisition", A: "acquis" };
   var INDICES_NOTE = 3;           // les indices d'une evaluation notee, pour toute la copie
+  /* LA VIGILANCE (14 novembre 2026, « un systeme anti triche pour eviter que les eleves ne changent de page ou que
+     cela soit signale dans le doc bilan ») : en evaluation notee seulement, de « Commencer l'evaluation » au rendu.
+     EVITER, autant qu'une page le peut : le plein ecran au depart (la barre des onglets disparait ; un bouton
+     « Plein ecran » le remet), et l'ecran garde allume (Wake Lock), pour qu'une tablette qui s'eteint pendant que
+     l'eleve reflechit ne passe pas pour une sortie. SIGNALER : chaque sortie est notee, heure et duree, et ecrite
+     dans la copie chiffree, ligne « Vigilance » ; trois sortes : la page cachee (autre onglet, autre application,
+     ecran eteint : visibilitychange), la page qui perd la main plus de 3 s alors qu'elle reste a l'ecran (autre
+     fenetre, ecran partage : blur), la page fermee ou rechargee (constatee a la reprise, depuis la derniere
+     sauvegarde). Une copie en cours effacee (« Repartir de zero ») ou rendue puis remplacee laisse une trace, gardee
+     avec le travail, que la copie suivante du meme jour ecrit (ligne « Effacees »). La tete du parcours compte les
+     sorties, et un bandeau le dit a l'eleve a son retour : la regle est annoncee a l'accueil. NOTER-LES-BILANS
+     l'affiche et l'exporte ; il ne retire aucun point, c'est au professeur de juger. Ce que la page ne voit pas :
+     un deuxieme appareil, une fenetre privee ou un autre navigateur ouverts a cote, le stockage efface a la main. */
+  var SEUIL_FENETRE = 3000;
+  function pleinPossible() { var d = document.documentElement; return !!(d.requestFullscreen || d.webkitRequestFullscreen); }
+  function enPlein() { return !!(document.fullscreenElement || document.webkitFullscreenElement); }
+  function pleinEcran() {
+    var d = document.documentElement;
+    try {
+      var p = d.requestFullscreen ? d.requestFullscreen({ navigationUI: "hide" }) : d.webkitRequestFullscreen ? d.webkitRequestFullscreen() : null;
+      if (p && p.catch) p.catch(function () { /* refuse (pas de geste, navigateur) : l'evaluation continue sans */ });
+    } catch (e) { /* idem */ }
+  }
+  function quitterPleinEcran() {
+    try {
+      if (!enPlein()) return;
+      var p = document.exitFullscreen ? document.exitFullscreen() : document.webkitExitFullscreen ? document.webkitExitFullscreen() : null;
+      if (p && p.catch) p.catch(function () {});
+    } catch (e) { /* rien */ }
+  }
+  var verrou = null, verrouVoulu = false;
+  function verrouEcran() {
+    verrouVoulu = true;
+    if (verrou || !navigator.wakeLock || document.visibilityState !== "visible") return;
+    try {
+      navigator.wakeLock.request("screen").then(function (v) {
+        verrou = v;
+        v.addEventListener("release", function () { verrou = null; });
+        if (!verrouVoulu) libererEcran();
+      }, function () { /* refuse : l'ecran s'eteindra comme d'habitude */ });
+    } catch (e) { /* idem */ }
+  }
+  function libererEcran() { verrouVoulu = false; if (verrou) { try { verrou.release(); } catch (e) { /* deja libere */ } verrou = null; } }
+  function duree(ms) {
+    if (ms < 1000) return "moins d'1 s";
+    var s = Math.round(ms / 1000);
+    if (s < 60) return s + " s";
+    var m = Math.floor(s / 60); s %= 60;
+    if (m < 60) return m + " min" + (s ? " " + deux(s) + " s" : "");
+    return Math.floor(m / 60) + " h " + deux(m % 60) + " min";
+  }
+  var SORTES = { masquee: "page cachée (autre onglet, autre application ou écran éteint)",
+    fenetre: "page à l'écran mais sans la main (autre fenêtre, écran partagé)",
+    fermee: "page fermée ou rechargée" };
   /* LA COPIE CHIFFREE (21 octobre 2026, « de preference un doc chiffre, que je dechiffrerai avec ton aide ») :
      en evaluation notee, le fichier rendu est chiffre pour le professeur. Une cle AES-256-GCM tiree pour la copie
      chiffre le texte ; la cle publique RSA-OAEP (SHA-256) ci-dessous chiffre cette cle. Seule la cle privee, HORS
@@ -1929,6 +2008,7 @@ var Sim = (function () {
     var MOT_FIN_COURT = NOTE ? (epreuve ? "Copie" : "Livrable") : "Bilan";
     var P = $(parent);
 
+    var grand = false, boutonsGrand = [];               // « Agrandir la scene », plus bas
     /* ---- deux facons d'utiliser la page : la simulation libre, ou le parcours ---- */
     var libre = o.libre ? $(o.libre) : null, barreModes = null, bLibre = null, bParcours = null;
     if (libre) {
@@ -1943,9 +2023,42 @@ var Sim = (function () {
       if (NOTE) barreModes.hidden = true;
       bLibre.addEventListener("click", function () { mode(false); });
       bParcours.addEventListener("click", function () { mode(true); });
+      /* le mode libre a aussi son « Agrandir la scene » : une barre au-dessus de CHAQUE grille a scene (une
+         par onglet, par experience ou par protocole), hors des cartes, qui partent dans la paillasse du
+         parcours sans l'emporter. Toutes les barres agissent ensemble. */
+      [].filter.call(libre.querySelectorAll(".plan"), function (x) {
+        return x.firstElementChild && x.firstElementChild.querySelector("svg") && !x.parentNode.closest(".plan");
+      }).forEach(function (x) {
+        x.parentNode.insertBefore(el("div", { classe: "pc-agrandir-barre" }, [boutonAgrandir()]), x);
+      });
     }
     P.appendChild(racine);
     if (!libre) document.body.classList.add("pc-visible");
+    /* AGRANDIR LA SCENE (4 novembre 2026 : « ils sont tous sur tablettes mode paysage » ; a 1 024 px, la
+       scene n'avait que 530 px et ses textes tombaient a 6 ou 8 px). Un bouton par partie, et un au-dessus de
+       la simulation libre : la scene prend toute la largeur, les questions passent dessous. Le choix vaut pour
+       toute la page jusqu'a ce qu'on le defasse ; il n'est pas garde. */
+    function boutonAgrandir() {
+      var b = el("button", { type: "button", classe: "bouton pc-agrandir", "aria-pressed": grand ? "true" : "false",
+        title: "La scène prend toute la largeur ; les questions passent dessous", texte: grand ? "Réduire la scène" : "Agrandir la scène" });
+      b.addEventListener("click", function () {
+        agrandir(!grand);
+        var cible = b.closest(".pc-scene") || b.parentNode;
+        if (grand && cible && cible.scrollIntoView) cible.scrollIntoView({ block: "start" });
+      });
+      boutonsGrand.push(b);
+      return b;
+    }
+    function agrandir(oui) {
+      grand = !!oui;
+      [].forEach.call(document.querySelectorAll(".pc-ecran > .plan, .pc-agrandir-barre + .plan"), function (x) {
+        x.classList.toggle("pc-grand", grand);
+      });
+      boutonsGrand.forEach(function (b) {
+        b.textContent = grand ? "Réduire la scène" : "Agrandir la scène";
+        b.setAttribute("aria-pressed", grand ? "true" : "false");
+      });
+    }
     function mode(p) {
       if (!libre) return;
       bLibre.setAttribute("aria-pressed", p ? "false" : "true");
@@ -2001,7 +2114,9 @@ var Sim = (function () {
     var niv = el("span", { classe: "pc-niveau" });
     var badge = el("button", { type: "button", classe: "pc-badge-appel", hidden: "hidden" });
     badge.addEventListener("click", function () { ouvrirProf(null); });
-    info.appendChild(badge); info.appendChild(niv); info.appendChild(score); info.appendChild(temps);
+    /* LA VIGILANCE, en evaluation notee : le compte des sorties de la page, visible du professeur qui passe */
+    var vigilBadge = el("span", { classe: "pc-vigil", hidden: "hidden" });
+    info.appendChild(badge); info.appendChild(vigilBadge); info.appendChild(niv); info.appendChild(score); info.appendChild(temps);
     /* le dossier : les documents de la partie 1, a relire depuis n'importe quelle partie, dans un panneau a gauche ;
        la calculatrice peut rester ouverte a droite en meme temps */
     var dossierFn = o.dossier === true ? o.phases[0].scene : (typeof o.dossier === "function" ? o.dossier : null), bDos = null, panDos = null;
@@ -2031,6 +2146,12 @@ var Sim = (function () {
       bCalc.addEventListener("click", function () { var c = calculatrice(); if (c) bCalc.setAttribute("aria-pressed", c.basculer() ? "true" : "false"); });
       info.appendChild(bCalc);
     }
+    var bPlein = null;                                     // revenir en plein ecran, en evaluation notee, la ou le navigateur le permet
+    if (NOTE_COPIE && pleinPossible()) {
+      bPlein = el("button", { type: "button", classe: "pc-calc pc-plein", hidden: "hidden", texte: "Plein écran" });
+      bPlein.addEventListener("click", function () { pleinEcran(); });
+      info.appendChild(bPlein);
+    }
     tete.appendChild(chemin); tete.appendChild(info);
     racine.appendChild(tete);
     /* la hauteur reelle de la tete, que la colonne de la scene garde au-dessus d'elle (elle passe sur deux lignes en tablette etroite) */
@@ -2047,7 +2168,8 @@ var Sim = (function () {
     /* le mode, dit a l'accueil : en TD, des indications et rien a rendre ; en note, ni verdict ni aide, et un fichier */
     var bandeauMode = el("p", { classe: "pc-bandeau-mode", html: NOTE
       ? "<b>Évaluation notée.</b> La page ne dit ni juste ni faux. <b>Trois indices</b> pour toute l'évaluation : « Voir l'indice » montre la méthode d'une question, jamais la valeur" + (ccf ? ", et fait perdre le bonus d'autonomie" : "") + ". « Enregistrer » garde votre réponse, " +
-        "que vous pouvez changer jusqu'à rendre votre copie. Rendre la copie produit le fichier pour le professeur et verrouille tout."
+        "que vous pouvez changer jusqu'à rendre votre copie. Rendre la copie produit le fichier pour le professeur et verrouille tout. " +
+        "<b>Restez sur cette page</b> : changer d'onglet, d'application ou de fenêtre, fermer ou recharger la page s'écrit dans votre copie, avec l'heure et la durée."
       : "<b>TD, non noté.</b> La page dit juste ou pas encore et donne la méthode quand ça coince. À la fin, un bilan à l'écran : " +
         "rien à rendre. L'évaluation notée se fait dans l'espace d'évaluation, avec la clé que donne le professeur, et d'autres valeurs." });
     if (niveaux.length > 1) {
@@ -2070,6 +2192,7 @@ var Sim = (function () {
       etat.debut = Date.now();
       niv.textContent = etat.niveau;
       document.body.classList.add("pc-en-cours");
+      if (NOTE) { pleinEcran(); verrouEcran(); majVigil(false); }
       ouvrir(0);
     });
     if (epreuve) {
@@ -2185,6 +2308,7 @@ var Sim = (function () {
       // une carte vide a gauche et ses questions serrees a droite : elles prennent la largeur.
       // Releve par l'utilisateur le 15 octobre 2026.
       if (!zone.firstChild) { zone.hidden = true; plan.classList.add("pc-sans-scene"); }
+      else { zone.insertBefore(boutonAgrandir(), zone.firstChild); plan.classList.toggle("pc-grand", grand); }
       var qs = questionsDe(i);
       etat.colonnes[i] = colQ;
       etat.fiches[i] = qs.map(function (q, j) { return q.type === "appel" ? poserAppel(colQ, q, i) : poserQuestion(colQ, q, i, j); });
@@ -2861,6 +2985,7 @@ var Sim = (function () {
         });
         recap.appendChild(t);
         if (ccf) recap.appendChild(el("p", { classe: "pc-autonomie", html: "<b>Autonomie</b> : " + autonomie().texte + "." }));
+        recap.appendChild(el("p", { classe: "pc-autonomie", html: "<b>Vigilance</b> : " + (vigil.s.length ? nSorties(vigil.s.length) + ", " + duree(horsPage()) + " hors de la page en tout" : "aucune sortie de la page") + "." }));
         recap.appendChild(el("p", { classe: "pc-score-final", html: minutes() + " min" }));
         return;
       }
@@ -2911,7 +3036,9 @@ var Sim = (function () {
     /* rendre la copie (mode note) : rejuger ce qui attendait une mesure, et tout verrouiller */
     function rendre() {
       if (!NOTE || etat.rendu) return;
+      fermerSortie();
       etat.rendu = true;
+      quitterPleinEcran(); libererEcran(); majVigil(false);
       etat.fiches.forEach(function (fs) { (fs || []).forEach(function (f) { if (f.verrouiller) f.verrouiller(); }); });
       majIndices();
       majChemin(); majTete();
@@ -2928,6 +3055,7 @@ var Sim = (function () {
           : "Bilan      : " + totalEtoiles() + " étoiles sur " + 3 * nOblig + ", en " + minutes() + " min" +
           (etoilesPlus() ? ", et " + etoilesPlus() + " de plus en partie facultative" : "")];
       if (NOTE) out.push("Indices    : " + etat.aides + " sur " + INDICES_NOTE);
+      if (NOTE) out.push.apply(out, lignesVigil(d));
       if (ccf) out.push("Autonomie  : " + autonomie().texte);
       if (u41) out.push("Grille     : BTS FED · U41", "Aides      : " + autonomie().texte);
       out.push(new Array(64).join("="), "");
@@ -2998,6 +3126,7 @@ var Sim = (function () {
       Object.keys(donnees).forEach(function (k) { if (pur(donnees[k])) d[k] = donnees[k]; });
       return { graine: GRAINE, niveau: etat.niveau, ecoule: Date.now() - etat.debut, courante: etat.courante, ouverte: etat.ouverte,
         aides: etat.aides, rendu: !!etat.rendu, exporte: etat.exporte, ident: etat.ident, donnees: d,
+        vigil: NOTE ? vigil : undefined, abandons: NOTE && abandons.length ? abandons : undefined,
         fiches: o.phases.map(function (ph, i) { return etat.fiches[i] ? etat.fiches[i].map(function (f) { return f.garde(); }) : null; }) };
     }
     function garder() {
@@ -3006,8 +3135,74 @@ var Sim = (function () {
     }
     function garderBientot() { if (!minuteur && etat.debut && !enReprise) minuteur = setTimeout(garder, 400); }
     ["click", "input", "change"].forEach(function (t) { racine.addEventListener(t, garderBientot, true); });
-    document.addEventListener("visibilitychange", function () { if (document.visibilityState === "hidden") garder(); });
     window.addEventListener("pagehide", garder);
+
+    /* ---- LA VIGILANCE (en-tete de ce fichier) : les sorties de la page, d'une evaluation commencee a son rendu ---- */
+    var vigil = { s: [], o: null };                        // s : les sorties closes {t, de, d} ; o : celle en cours {t, de}
+    var abandons = NOTE && travailLu && travailLu.abandons ? travailLu.abandons : [];
+    var chargeA = Date.now(), banVigil = null;
+    function surveille() { return NOTE && !!etat.debut && !etat.rendu && !enReprise; }
+    function ouvrirSortie(t) {
+      if (!surveille()) return;
+      if (vigil.o) { if (t === "masquee") vigil.o.t = "masquee"; return; }
+      vigil.o = { t: t, de: Date.now() };
+    }
+    function fermerSortie() {
+      var o = vigil.o; if (!o) return;
+      vigil.o = null;
+      var d = Date.now() - o.de;
+      if (o.t === "fenetre" && d < SEUIL_FENETRE) return;   // un clic dans la barre d'adresse, une notification : rien
+      vigil.s.push({ t: o.t, de: o.de, d: d });
+      majVigil(true); garderBientot();
+    }
+    function horsPage() { return vigil.s.reduce(function (a, x) { return a + x.d; }, 0); }
+    function nSorties(n) { return n + " sortie" + (n > 1 ? "s" : "") + " de la page"; }
+    /* la tete compte les sorties ; au retour, un bandeau le dit a l'eleve */
+    function majVigil(retour) {
+      var n = vigil.s.length;
+      vigilBadge.hidden = !NOTE || !n;
+      vigilBadge.textContent = "⚠ " + nSorties(n);
+      if (bPlein) bPlein.hidden = !surveille() || enPlein();
+      if (!retour || !n) return;
+      if (banVigil && banVigil.parentNode) banVigil.parentNode.removeChild(banVigil);
+      var der = vigil.s[n - 1], compris = el("button", { type: "button", classe: "bouton", texte: "Compris" });
+      banVigil = el("div", { classe: "pc-repris pc-vigil-retour", role: "alert" }, [
+        el("span", { html: "<b>Vous avez quitté la page</b> (" + (der.t === "fermee" ? "fermée ou rechargée, " : "") + duree(der.d) + "). " +
+          "C'est écrit dans votre copie, avec l'heure et la durée : " + nSorties(n) + " en tout." }), compris]);
+      compris.addEventListener("click", function () { if (banVigil.parentNode) banVigil.parentNode.removeChild(banVigil); });
+      tete.parentNode.insertBefore(banVigil, tete.nextSibling);
+    }
+    document.addEventListener("visibilitychange", function () {
+      if (document.visibilityState === "hidden") { ouvrirSortie("masquee"); garder(); return; }
+      if (document.hasFocus()) fermerSortie();
+      if (surveille()) verrouEcran();                      // le navigateur rend le verrou de l'ecran quand la page se cache
+    });
+    window.addEventListener("blur", function () {
+      if (document.visibilityState === "hidden") return;
+      var a = document.activeElement;
+      if (a && a.tagName === "IFRAME") return;             // un clic dans un cadre de la page n'est pas une sortie
+      ouvrirSortie("fenetre");
+    });
+    window.addEventListener("focus", fermerSortie);
+    ["pointerdown", "keydown"].forEach(function (t) {     // l'eleve agit dans la page : il est revenu, meme sans « focus »
+      document.addEventListener(t, function () { if (vigil.o && document.visibilityState === "visible") fermerSortie(); }, true);
+    });
+    ["fullscreenchange", "webkitfullscreenchange"].forEach(function (t) { document.addEventListener(t, function () { majVigil(false); }); });
+    /* les lignes de la copie : la vigilance, et les copies effacees sur cet appareil le meme jour */
+    function lignesVigil(d) {
+      var out = [], n = vigil.s.length, marge = "             ";
+      out.push("Vigilance  : " + (n ? nSorties(n) + ", " + duree(horsPage()) + " hors de la page en tout" : "aucune sortie de la page"));
+      vigil.s.forEach(function (x) { out.push(marge + heure(new Date(x.de)) + ", " + duree(x.d) + " : " + SORTES[x.t]); });
+      var jour = d.toDateString(), ab = abandons.filter(function (a) { return new Date(a.efface).toDateString() === jour; });
+      if (ab.length) {
+        out.push("Effacées   : " + ab.length + " copie" + (ab.length > 1 ? "s" : "") + " effacée" + (ab.length > 1 ? "s" : "") + " sur cet appareil le même jour, avant celle-ci");
+        ab.forEach(function (a) {
+          out.push(marge + "à " + heure(new Date(a.efface)) + ", une copie " + (a.rendu ? "rendue vers " + heure(new Date(a.dernier)) : "en cours, non rendue") +
+            " (" + (a.id ? "identifiant " + a.id + ", " : "sans identifiant, ") + a.n + " réponse" + (a.n > 1 ? "s" : "") + ", " + nSorties(a.s) + ")");
+        });
+      }
+      return out;
+    }
 
     /* reprendre : les parties deja ouvertes, dans l'ordre, comme l'eleve les a ouvertes ; puis leurs reponses */
     function reprendre(t) {
@@ -3015,6 +3210,12 @@ var Sim = (function () {
       etat.niveau = t.niveau; niv.textContent = t.niveau || "";
       etat.debut = Date.now() - (t.ecoule || 0); etat.aides = t.aides || 0;
       etat.ident = t.ident || ""; etat.exporte = !!t.exporte;
+      /* la vigilance revient avec la copie ; une copie en cours qu'on retrouve a ete fermee ou rechargee : c'est une
+         sortie, depuis le moment ou la page s'est cachee, ou a defaut depuis la derniere sauvegarde */
+      if (NOTE) {
+        vigil.s = (t.vigil && t.vigil.s) || []; vigil.o = null;
+        if (!t.rendu) { var de = t.vigil && t.vigil.o ? t.vigil.o.de : t.quand; vigil.s.push({ t: "fermee", de: de, d: Math.max(0, chargeA - de) }); }
+      }
       /* d.cfg, le tirage d'une page, revient AVANT les scenes : il ne se refait pas. Le reste revient APRES : d.regle et
          d.prepare gardent le reglage unique d'une scene (32 pages), et, restaures trop tot, ils l'auraient empeche. */
       var gardees = t.donnees || {};
@@ -3031,14 +3232,16 @@ var Sim = (function () {
       if (t.rendu) { etat.rendu = true; etat.fiches.forEach(function (fs) { (fs || []).forEach(function (f) { if (f.verrouiller) f.verrouiller(); }); }); }
       etat.fiches.forEach(function (fs, i) { if (fs) majPhase(i); });
       etat.ouverte = t.ouverte;
-      if (NOTE) majIndices();
+      if (NOTE) { majIndices(); if (!t.rendu) verrouEcran(); }
       majAppels();
       montrer(t.courante < 0 ? 0 : t.courante);
+      majVigil(false);
       enReprise = false;
       if (t.courante < nPh) {
         var compris = el("button", { type: "button", classe: "bouton", texte: "Compris" });
         var dit = el("div", { classe: "pc-repris", role: "status" }, [
-          el("span", { html: "<b>Votre travail est revenu</b> : les réponses, le temps, le même sujet. La simulation, elle, repart de zéro : si une question attend une mesure, refaites-la." }), compris]);
+          el("span", { html: "<b>Votre travail est revenu</b> : les réponses, le temps, le même sujet. La simulation, elle, repart de zéro : si une question attend une mesure, refaites-la." +
+            (NOTE ? " La page a été fermée ou rechargée : c'est écrit dans votre copie, avec l'heure et la durée." : "") }), compris]);
         compris.addEventListener("click", function () { dit.parentNode.removeChild(dit); });
         tete.parentNode.insertBefore(dit, tete.nextSibling);
       }
@@ -3062,11 +3265,18 @@ var Sim = (function () {
             ", " + ou + ", " + depuis + "." + id }),
         el("div", { classe: "rangee" }, [bReprendre, bZero])]);
       function fermerCarte() { carteReprise.parentNode.removeChild(carteReprise); carteReprise = null; }
-      bReprendre.addEventListener("click", function () { fermerCarte(); reprendre(t); });
+      bReprendre.addEventListener("click", function () { if (NOTE && !t.rendu) pleinEcran(); fermerCarte(); reprendre(t); });
       /* effacer le travail d'un eleve se confirme : c'est justement la fausse manipulation qu'on veut eviter */
       bZero.addEventListener("click", function () {
         if (!bZero.classList.contains("pc-confirme")) { bZero.classList.add("pc-confirme"); bZero.textContent = "Confirmer : tout effacer"; return; }
-        oublierTravail(); fermerCarte();
+        /* en evaluation notee, la copie effacee laisse une trace, que la copie suivante du meme jour ecrit (LA VIGILANCE) */
+        if (NOTE) {
+          var jour = new Date().toDateString();
+          abandons = abandons.filter(function (a) { return new Date(a.efface).toDateString() === jour; }).slice(-9);
+          abandons.push({ efface: Date.now(), dernier: t.quand, rendu: !!t.rendu, n: n, s: ((t.vigil && t.vigil.s) || []).length, id: t.ident || "" });
+          if (!ecrireTravail({ abandons: abandons })) oublierTravail();
+        } else oublierTravail();
+        fermerCarte();
       });
       accueil.insertBefore(carteReprise, accueil.firstChild);
     }
@@ -3079,6 +3289,7 @@ var Sim = (function () {
     if (libre) mode(NOTE || !!carteReprise || /^#(ccf|u41|parcours)$/.test(location.hash));
     /* la porte d'essai : etat interne et fichier, pour les controles */
     return window.__parcours = { etat: etat, donnees: donnees, ouvrir: ouvrir, fabriquer: fabriquer, rendre: rendre, note: NOTE, garder: garder, fiches: function () { return etat.fiches; },
+      vigilance: function () { return { sorties: vigil.s, ouverte: vigil.o, abandons: abandons }; },
       appels: appels, mode: mode, dossier: function () { if (dossierFn) basculerDossier(); return panDos; }, coter: function (f, x) { f.cote = x; f.heureCote = new Date(); f.note = x === "A"; f.afficher(); majPhase(f.phase); majAppels(); garder(); },
       choisirNiveau: function (n) { etat.niveau = n; niv.textContent = n; }, demarrer: function (n) {
         if (libre) mode(true);

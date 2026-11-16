@@ -3037,6 +3037,30 @@ SCHEMAS["led-et-sa-resistance"]=function(el){
 /* ─────────── TLE · la caisse qui se rechauffe : droite ou courbe ─────────── */
 
 
+/* ─────────── TLE · fiches S4 : la tension le long du chemin ─────────── */
+
+
+/* ─────────── TLE · fiches S4 : doubler l'intensite, quadrupler les pertes ─────────── */
+
+
+/* ─────────── TLE · fiches S4 : le banc du transformateur, d'autres bobines ─────────── */
+
+
+/* ─────────── TLE · fiches S4 : la meme puissance des deux cotes ─────────── */
+
+
+/* ─────────── TLE · fiches S5 : deux questions pour trouver le mode ─────────── */
+
+
+/* ─────────── TLE · fiches S5 : la glace fondue sous quatre habillages ─────────── */
+
+
+/* ─────────── TLE · fiches S5 : l'air isole tant qu'il ne bouge pas ─────────── */
+
+
+/* ─────────── TLE · fiches S5 : une hausse moyenne, prolongee depuis le depart ─────────── */
+
+
 /* ─────────── TLE · retirer toujours pareil, ou multiplier toujours pareil ─────────── */
 
 
