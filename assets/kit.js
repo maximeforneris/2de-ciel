@@ -3107,10 +3107,90 @@ SCHEMAS["led-et-sa-resistance"]=function(el){
 
 
 /* ─────────── 2DE CIEL · une equation est une balance ─────────── */
-
+SCHEMAS["balance-equation"]=function(el){
+  var W=724,H=330;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"3x + 4 = x + 16 resolue comme une balance : on enleve la meme chose des deux cotes"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "UNE ÉQUATION EST UNE BALANCE"));
+  /* la balance */
+  var CX=190,PY=150;
+  svg.appendChild(S("path",{d:"M "+(CX-22)+" "+(PY+60)+" L "+CX+" "+(PY+4)+" L "+(CX+22)+" "+(PY+60)+" Z",
+    fill:V("carte2"),stroke:V("encre2"),"stroke-width":"2"}));
+  svg.appendChild(S("line",{x1:CX-150,y1:PY,x2:CX+150,y2:PY,stroke:V("encre"),"stroke-width":"4",
+    "stroke-linecap":"round"}));
+  [[CX-130,"3x + 4","froid"],[CX+130,"x + 16","violet"]].forEach(function(p){
+    svg.appendChild(S("line",{x1:p[0],y1:PY,x2:p[0]-34,y2:PY+44,stroke:V("encre2"),"stroke-width":"1.5"}));
+    svg.appendChild(S("line",{x1:p[0],y1:PY,x2:p[0]+34,y2:PY+44,stroke:V("encre2"),"stroke-width":"1.5"}));
+    svg.appendChild(S("path",{d:"M "+(p[0]-50)+" "+(PY+44)+" Q "+p[0]+" "+(PY+78)+" "+(p[0]+50)+" "+(PY+44)+" Z",
+      fill:V(p[2]),opacity:".35",stroke:V(p[2]),"stroke-width":"2"}));
+    svg.appendChild(S("text",{x:p[0],y:PY-18,"text-anchor":"middle","class":"s-sym",fill:V(p[2])},p[1]));
+  });
+  svg.appendChild(S("text",{x:CX,y:PY+92,"text-anchor":"middle","class":"s-pet"},
+    "à l'équilibre : les deux plateaux pèsent autant"));
+  /* les trois gestes */
+  var X=400,Y0=66;
+  svg.appendChild(S("text",{x:X,y:Y0,"class":"s-lab"},"trois gestes, chacun des deux côtés"));
+  var lignes=[
+    ["3x + 4 = x + 16",""],
+    ["2x + 4 = 16","− x des deux côtés"],
+    ["2x = 12","− 4 des deux côtés"],
+    ["x = 6","÷ 2 des deux côtés"]];
+  lignes.forEach(function(l,i){
+    var y=Y0+40+i*46;
+    svg.appendChild(S("text",{x:X,y:y,"class":"s-sym",fill:V(i===3?"vert":"encre")},l[0]));
+    if(l[1]){
+      svg.appendChild(S("rect",{x:X+172,y:y-32,width:150,height:22,rx:"11",fill:V("tiede"),opacity:".25"}));
+      svg.appendChild(S("text",{x:X+247,y:y-16,"text-anchor":"middle","class":"s-pet"},l[1]));
+    }
+  });
+  svg.appendChild(S("text",{x:20,y:H-18,"class":"s-nom"},
+    "on vérifie en remplaçant : 3 × 6 + 4 = 22 et 6 + 16 = 22, la balance tient"));
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "Ce qu'on retire d'un plateau, on le retire de l'autre : l'équilibre ne bouge pas. "+
+    "<b>Aucun terme ne « passe de l'autre côté »</b> — on enlève la même chose des deux, "+
+    "et c'est tout ce que veut dire résoudre."));
+};
 
 /* ─────────── 2DE CIEL · de l'inequation a la reponse concrete ─────────── */
-
+SCHEMAS["inequation-concrete"]=function(el){
+  var W=724,H=330,X0=90,X1=660;
+  var svg=S("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"n au plus 16,75 donne 16 postes ; au moins 2,6 rouleaux donne 3 rouleaux"});
+  svg.appendChild(S("text",{x:20,y:26,"class":"s-tit"},
+    "LE CALCUL DONNE UNE BORNE, LA RÉPONSE EST UN NOMBRE D'OBJETS"));
+  function axe(y,a,b,borne,sens,coul,titre,bon,mauvais,note){
+    function px(v){return X0+(v-a)/(b-a)*(X1-X0);}
+    svg.appendChild(S("text",{x:20,y:y-46,"class":"s-lab"},titre));
+    var xb=px(borne);
+    svg.appendChild(S("rect",{x:sens<0?X0:xb,y:y-9,width:sens<0?xb-X0:X1-xb,height:18,
+      fill:V(coul),opacity:".25"}));
+    svg.appendChild(S("line",{x1:X0,y1:y,x2:X1,y2:y,stroke:V("encre2"),"stroke-width":"2"}));
+    for(var v=a;v<=b;v++){
+      svg.appendChild(S("line",{x1:px(v),y1:y-6,x2:px(v),y2:y+6,stroke:V("encre2"),"stroke-width":"1.5"}));
+      svg.appendChild(S("text",{x:px(v),y:y+24,"text-anchor":"middle","class":"s-pet"},String(v)));
+    }
+    svg.appendChild(S("line",{x1:xb,y1:y-20,x2:xb,y2:y+10,stroke:V(coul),"stroke-width":"3"}));
+    svg.appendChild(S("text",{x:xb,y:y-26,"text-anchor":"middle","class":"s-lab",fill:V(coul)},
+      String(borne).replace(".",",")));
+    [[bon,"vert","oui"],[mauvais,"chaud","non"]].forEach(function(p){
+      svg.appendChild(S("circle",{cx:px(p[0]),cy:y,r:"9",fill:V(p[1])}));
+      svg.appendChild(S("text",{x:px(p[0]),y:y+46,"text-anchor":"middle","class":"s-lab",fill:V(p[1])},
+        p[0]+" : "+p[2]));
+    });
+    svg.appendChild(S("text",{x:X1,y:y-46,"text-anchor":"end","class":"s-pet"},note));
+  }
+  axe(112,12,19,16.75,-1,"froid","« au plus » : 0,4 n ≤ 6,7 donc n ≤ 16,75",16,17,
+    "17 postes feraient sauter le fusible");
+  axe(248,0,6,2.6,1,"violet","« au moins » : 100 r ≥ 260 donc r ≥ 2,6",3,2,
+    "rouleaux de 100 m : 2 ne couvrent que 200 m sur 260");
+  el.appendChild(svg);
+  (el.parentNode||el).appendChild(E("p",{"class":"leg-schema"},
+    "Le calcul s'arrête sur une borne à virgule ; la réponse, elle, compte des objets. "+
+    "<b>Un maximum s'arrondit en dessous, un minimum au-dessus</b> — du côté où la "+
+    "contrainte reste respectée, jamais au plus proche."));
+};
 
 /* ─────────── 2DE CIEL · detecteurs piece par piece ─────────── */
 

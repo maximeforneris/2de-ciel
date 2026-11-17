@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="fr">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta name="robots" content="noindex, nofollow">
+<title>Séquence 4 — premier degré</title>
+<link rel="stylesheet" href="../assets/kit.css?v=0cb6aaa3">
+<link rel="stylesheet" href="../assets/site.css?v=0cb6aaa3">
+<link rel="stylesheet" href="../assets/cablage.css?v=0cb6aaa3">
+<link rel="stylesheet" href="../assets/vivant.css?v=0cb6aaa3">
+<link rel="stylesheet" href="../assets/doc.css?v=0cb6aaa3">
+<link rel="stylesheet" href="../assets/calculette.css?v=0cb6aaa3">
+<link rel="stylesheet" href="../assets/formulaire.css?v=0cb6aaa3">
+<link rel="stylesheet" href="../assets/impression.css?v=0cb6aaa3">
+<script src="../assets/kit.js?v=0cb6aaa3-25144c" defer></script>
+<script src="../assets/site.js?v=0cb6aaa3" defer></script>
+<script src="../assets/vivant.js?v=0cb6aaa3" defer></script>
+<script src="../assets/plan.js?v=0cb6aaa3" defer></script>
+<script src="../assets/doc.js?v=0cb6aaa3" defer></script>
+<script src="../assets/nombres.js?v=0cb6aaa3" defer></script>
+<script src="../assets/calculette.js?v=0cb6aaa3" defer></script>
+<script src="../assets/formulaire.js?v=0cb6aaa3" defer></script>
+<script src="../assets/formulaire-donnees.js?v=0cb6aaa3" defer></script>
+<script src="../assets/outils-page.js?v=0cb6aaa3" defer></script>
+
+<div class="page" data-site="ciel2" data-page="cours/S4">
+<div class="jauge-lecture" id="jauge-lecture"><i></i></div><div class="barre-site"><a class="accueil" href="../index.html">Maths et physique-chimie — 2de Bac Pro CIEL</a><span class="fleches"><a class="fleche" href="S3.html" rel="prev" title="Séquence 3 — loi d'Ohm" aria-label="Séquence 3 — loi d'Ohm">&lsaquo;</a></span><button type="button" class="lu" data-lu="cours/S4">Marquer comme lu</button></div>
+<header class="tete">
+  
+  <div class="titraille">
+    <p class="sur">2de Bac Pro CIEL</p>
+    <h1>Équations<span>et inéquations du premier degré</span></h1>
+  </div>
+  <p class="accroche">Une LED à protéger, un budget de câble, un fusible à ne pas faire sauter. Trois problèmes d'atelier, une seule méthode — et un piège à la fin, quand le calcul donne 16,75 postes.</p>
+  <p class="contenu">4 exercices · 24 items d'entraînement · 8 replis · 1 simulation · 3 figures</p>
+  <p class="k-savoirs">Savoirs travaillés</p><div class="savoirs"><span class="tag">PREM Résolution d'un problème du premier degré</span><span class="tag">ELEC Électricité — U, I, R, montages</span><span class="tag">AU Automatismes</span></div>
+</header>
+<aside class="prerequis"><p class="chapeau-p">Avant de commencer</p><ul><li><b><a href="S3.html">La loi d'Ohm et la LED</a></b><span class="ou">S 3 · Loi d'Ohm et diviseur de tension</span><span class="car">la résistance de la LED devient ici une équation à résoudre.</span></li><li><b><a href="../aide/AUTO-11-equations.html">Résoudre une équation simple</a></b><span class="ou">Auto 11 — les équations</span><span class="car">les gestes de base, repris ici sur des cas d'atelier.</span></li><li><b><a href="../aide/AUTO-10-transformer-une-formule.html">Transformer une formule</a></b><span class="ou">Auto 10 — transformer une formule</span><span class="car">isoler une lettre, c'est résoudre une équation sans nombres.</span></li></ul></aside>
+<nav class="somm"><div class="in"><a href="#la-situation">La situation</a><a href="#resoudre-une-equation">Résoudre une équation</a><a href="#de-la-phrase-a-l-equation">De la phrase à l’équation</a><a href="#la-led-mise-en-equation">La LED, mise en équation</a><a href="#isoler-une-lettre">Isoler une lettre</a><a href="#les-inequations-quand-il-y-a-au-plus">Les inéquations : quand il y a « au plus »</a><a href="#les-erreurs-qu-on-voit-le-plus">Les erreurs qu’on voit le plus</a><a href="#vous-verifier">Vous vérifier</a><a href="#la-sequence-en-quelques-gestes">La séquence en quelques gestes</a><a href="#pour-aller-plus-loin">Pour aller plus loin</a><a href="#la-salle-informatique">La salle informatique</a></div></nav>
+<h2 id="la-situation">La situation</h2>
+<p>Trois demandes arrivent à l’atelier le même matin.</p>
+<div class="enveloppe-tbl"><table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th></th>
+<th>La demande</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>La LED</strong></td>
+<td>une LED de <strong>2 V</strong> sous <strong>5 V</strong>, <strong>20 mA</strong> au plus : quelle résistance ?</td>
+</tr>
+<tr>
+<td><strong>Le câble</strong></td>
+<td>un budget de <strong>200 €</strong>, <strong>45 €</strong> de connectique, le câble à <strong>1,20 €</strong> le mètre : combien de mètres ?</td>
+</tr>
+<tr>
+<td><strong>Le fusible</strong></td>
+<td>un fusible de <strong>10 A</strong>, un switch à <strong>0,8 A</strong>, un onduleur à <strong>2,5 A</strong>, des postes à <strong>0,4 A</strong> : combien de postes ?</td>
+</tr>
+</tbody>
+</table></div>
+<div class="cle">
+<p><strong>Les trois cachent la même chose : un nombre inconnu.</strong> On l’appelle x, on écrit ce qu’on sait sur lui, et on le fait sortir. Les deux premiers donnent une <strong>équation</strong> ; le troisième, une <strong>inéquation</strong>, parce qu’il y a un « au plus ».</p>
+</div>
+<h2 id="resoudre-une-equation">Résoudre une équation</h2>
+<div class="formule">
+<p><strong>On fait la même chose des deux côtés du signe égal.</strong></p>
+<ul>
+<li>ajouter ou retirer <strong>le même nombre</strong> des deux côtés ;</li>
+<li>multiplier ou diviser les deux côtés <strong>par le même nombre</strong>, non nul.</li>
+</ul>
+<blockquote>
+<p>Méthode : regrouper les x d’un côté, les nombres de l’autre, puis diviser.</p>
+</blockquote>
+</div>
+<figure class="schema"><div class="dessin" data-schema="balance-equation"></div><figcaption>3x + 4 = x + 16, résolue en trois gestes.</figcaption></figure>
+<div class="piege">
+<p><strong>« Je passe le 4 de l’autre côté, il change de signe »</strong> : la phrase fonctionne, mais elle cache ce qu’on fait vraiment, et elle fait perdre pied dès qu’il y a une division. On <strong>retire 4 des deux côtés</strong> : c’est la même chose, et on sait pourquoi.</p>
+</div>
+<h3 id="la-méthode-écrite-en-entier">La méthode, écrite en entier</h3>
+<p>On écrit <strong>une ligne par geste</strong>, et <strong>le geste dans la marge</strong>. Les deux côtés restent égaux à chaque ligne : c’est ce qui permet de retrouver une erreur.</p>
+<div class="enveloppe-tbl"><table>
+<thead>
+<tr>
+<th>Ce qu’on écrit</th>
+<th>Le geste, des deux côtés</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>6x + 7 = 31</td>
+<td>l’équation de départ</td>
+</tr>
+<tr>
+<td>6x + 7 − 7 = 31 − 7</td>
+<td>on retire 7</td>
+</tr>
+<tr>
+<td>6x = 24</td>
+<td>on calcule chaque côté</td>
+</tr>
+<tr>
+<td>6x ÷ 6 = 24 ÷ 6</td>
+<td>on divise par 6</td>
+</tr>
+<tr>
+<td>x = 4</td>
+<td>la solution</td>
+</tr>
+<tr>
+<td>6 × 4 + 7 = 24 + 7 = 31</td>
+<td>on vérifie : on retrouve 31</td>
+</tr>
+</tbody>
+</table></div>
+<div class="cle">
+<p><strong>On défait dans l’ordre inverse.</strong> Dans 6x + 7, on a pris x, on l’a multiplié par 6, puis on a ajouté 7. Pour revenir à x, on commence par la fin : on retire 7, puis on divise par 6. Comme pour se déshabiller : la veste avant le pull.</p>
+</div>
+<h3 id="par-où-commencer">Par où commencer</h3>
+<div class="enveloppe-tbl"><table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>L’équation ressemble à</th>
+<th>Le premier geste</th>
+<th>Un exemple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>x + a = b</td>
+<td>retirer a</td>
+<td>x + 12 = 30, donc x = 18</td>
+</tr>
+<tr>
+<td>x − a = b</td>
+<td><strong>ajouter</strong> a</td>
+<td>x − 9 = 6, donc x = 15</td>
+</tr>
+<tr>
+<td>a × x = b</td>
+<td>diviser par a</td>
+<td>8x = 56, donc x = 7</td>
+</tr>
+<tr>
+<td>x ÷ a = b</td>
+<td><strong>multiplier</strong> par a</td>
+<td>x ÷ 4 = 6, donc x = 24</td>
+</tr>
+<tr>
+<td>a × x + b = c</td>
+<td>retirer b, <strong>puis</strong> diviser par a</td>
+<td>6x + 7 = 31, ci-dessus</td>
+</tr>
+<tr>
+<td>a − b × x = c</td>
+<td>ajouter b × x des deux côtés</td>
+<td>dépliez « Quand x est retiré »</td>
+</tr>
+<tr>
+<td>des x des deux côtés</td>
+<td>retirer le plus petit nombre de x</td>
+<td>dépliez « Des x des deux côtés »</td>
+</tr>
+<tr>
+<td>une parenthèse</td>
+<td>développer d’abord</td>
+<td>dépliez « Une parenthèse »</td>
+</tr>
+</tbody>
+</table></div>
+<div class="replis"><p class="chapeau">Pour aller plus loin</p><details class="appro"><summary><span class="niv"></span><span class="titre-appro">Quand x est retiré : 50 − 4x = 18</span><span class="etiq">Pour aller plus loin</span><span class="chev">&rsaquo;</span></summary><div class="corps"><p>Le x est <strong>retiré</strong> de 50. Deux façons d’y arriver, qui donnent la même solution.</p>
+<p><strong>La façon sûre : faire passer les x du côté où ils sont positifs.</strong></p>
+<div class="enveloppe-tbl"><table>
+<thead>
+<tr>
+<th>Ce qu’on écrit</th>
+<th>Le geste</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>50 − 4x = 18</td>
+<td></td>
+</tr>
+<tr>
+<td>50 = 18 + 4x</td>
+<td>on ajoute 4x des deux côtés</td>
+</tr>
+<tr>
+<td>32 = 4x</td>
+<td>on retire 18 des deux côtés</td>
+</tr>
+<tr>
+<td>8 = x</td>
+<td>on divise par 4</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>L’autre façon : retirer 50 tout de suite.</strong> On obtient −4x = −32, puis on divise par −4 : x = 8. Un nombre négatif divisé par un nombre négatif donne un nombre positif. C’est là qu’on se trompe le plus souvent : d’où la première façon.</p>
+<p><strong>On vérifie</strong> : 50 − 4 × 8 = 50 − 32 = 18. C’est juste.</p></div></details>
+<details class="appro"><summary><span class="niv"></span><span class="titre-appro">Des x des deux côtés : 9x − 4 = 5x + 20</span><span class="etiq">Pour aller plus loin</span><span class="chev">&rsaquo;</span></summary><div class="corps"><p>On veut <strong>les x d’un seul côté</strong>. On retire le plus petit nombre de x, ici 5x : il reste des x positifs à gauche, et plus aucun à droite.</p>
+<div class="enveloppe-tbl"><table>
+<thead>
+<tr>
+<th>Ce qu’on écrit</th>
+<th>Le geste</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>9x − 4 = 5x + 20</td>
+<td></td>
+</tr>
+<tr>
+<td>4x − 4 = 20</td>
+<td>on retire 5x des deux côtés</td>
+</tr>
+<tr>
+<td>4x = 24</td>
+<td>on ajoute 4 des deux côtés</td>
+</tr>
+<tr>
+<td>x = 6</td>
+<td>on divise par 4</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>On vérifie chaque côté à part</strong> : à gauche 9 × 6 − 4 = 50, à droite 5 × 6 + 20 = 50. Les deux côtés sont égaux : c’est juste.</p></div></details>
+<details class="appro"><summary><span class="niv"></span><span class="titre-appro">Une parenthèse : 3(x + 4) = 2x + 19</span><span class="etiq">Pour aller plus loin</span><span class="chev">&rsaquo;</span></summary><div class="corps"><p><strong>On développe d’abord</strong> : le 3 multiplie <strong>tout</strong> ce qui est dans la parenthèse, donc 3(x + 4) = 3x + 12, et non 3x + 4.</p>
+<div class="enveloppe-tbl"><table>
+<thead>
+<tr>
+<th>Ce qu’on écrit</th>
+<th>Le geste</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3(x + 4) = 2x + 19</td>
+<td></td>
+</tr>
+<tr>
+<td>3x + 12 = 2x + 19</td>
+<td>on développe</td>
+</tr>
+<tr>
+<td>x + 12 = 19</td>
+<td>on retire 2x des deux côtés</td>
+</tr>
+<tr>
+<td>x = 7</td>
+<td>on retire 12 des deux côtés</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>On vérifie</strong> dans l’équation de départ : 3 × (7 + 4) = 33 et 2 × 7 + 19 = 33.</p>
+<p>Un <strong>moins devant une parenthèse</strong> change tous les signes de l’intérieur : −(x − 2) = −x + 2.</p></div></details>
+<details class="appro"><summary><span class="niv"></span><span class="titre-appro">Un nombre à virgule devant x : 0,25x + 3 = 11</span><span class="etiq">Pour aller plus loin</span><span class="chev">&rsaquo;</span></summary><div class="corps"><p>Rien ne change : on retire 3, il reste <strong>0,25x = 8</strong>, puis on divise par 0,25. x = 8 ÷ 0,25 = <strong>32</strong>.</p>
+<p>Diviser par un nombre plus petit que 1 <strong>agrandit</strong> le résultat : c’est normal. Diviser par 0,25, c’est multiplier par 4 ; diviser par 0,5, c’est multiplier par 2.</p>
+<p><strong>On vérifie</strong> : 0,25 × 32 + 3 = 8 + 3 = 11.</p></div></details>
+</div><h3 id="vérifier-ce-nest-pas-refaire-le-calcul">Vérifier, ce n’est pas refaire le calcul</h3>
+<div class="etapes">
+<ol type="1">
+<li><strong>Remplacer x dans l’équation de départ</strong>, pas dans la dernière ligne : la dernière ligne peut déjà être fausse.</li>
+<li><strong>Calculer chaque côté à part</strong>, sans toucher à l’autre.</li>
+<li><strong>Comparer</strong> : deux résultats égaux, c’est juste.</li>
+<li>Sinon, remplacer x <strong>dans chaque ligne</strong> de la résolution : la première ligne où les deux côtés ne sont plus égaux contient l’erreur.</li>
+</ol>
+</div>
+<section class="serie" id="S4-s1" data-serie="S4-s1" data-savoir="PREM" data-a="IXgveGB4eHZ4LjU2eGBqdGp2eDN4YAEheCx4YG10aid2IXgseGBraHRqJ3YheCx4YGtsdGondiF4LHhganRvJwcn"><p class="k">Série · PREM</p><h4>Série 1 — un seul geste</h4><div class="enonce">
+
+</div><ol class="items"><li><span class="q">2x = 14</span></li><li><span class="q">x + 9 = 21</span></li><li><span class="q">x − 5 = 11</span></li><li><span class="q">6x = 3</span></li></ol><div class="indice" hidden>Un seul geste suffit : défaire l’opération qui touche x, des deux côtés.</div></section>
+<section class="serie" id="S4-s2" data-serie="S4-s2" data-savoir="PREM" data-a="IXgveGB4eHZ4LjU2eGBqdGp2eDN4YAEheCx4YG90aid2IXgseGBvdGondiF4LHhgaXRqJwcn"><p class="k">Série · PREM</p><h4>Série 2 — deux gestes</h4><div class="enonce">
+
+</div><ol class="items"><li><span class="q">3x + 5 = 20</span></li><li><span class="q">4x − 7 = 13</span></li><li><span class="q">10 − 2x = 4</span></li></ol><div class="indice" hidden>D’abord le nombre qui est ajouté ou retiré, ensuite la division. Pour 10 − 2x, retirez 10 des deux côtés : il reste − 2x.</div></section>
+<section class="serie" id="S4-s3" data-serie="S4-s3" data-savoir="PREM" data-a="IXgveGB4eHZ4LjU2eGBqdGp2eDN4YAEheCx4YG50aid2IXgseGBudGondiF4LHhgaXRqJwcn"><p class="k">Série · PREM</p><h4>Série 3 — des x des deux côtés</h4><div class="enonce">
+
+</div><ol class="items"><li><span class="q">5x = 2x + 12</span></li><li><span class="q">7x − 3 = 4x + 9</span></li><li><span class="q">2x + 8 = 5x − 1</span></li></ol><div class="indice" hidden>Retirez d’abord le plus petit nombre de x des deux côtés : il n’en reste plus que d’un côté.</div></section>
+<h2 id="de-la-phrase-a-l-equation">De la phrase à l’équation</h2>
+<p>Avant de résoudre, il faut écrire. Les mots de l’énoncé disent presque tout : ce qui se répète multiplie l’inconnue, ce qui ne compte qu’une fois s’ajoute.</p>
+<div class="enveloppe-tbl"><table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Dans l’énoncé</th>
+<th>Dans l’équation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>« chaque », « par », « le mètre », « l’heure »</td>
+<td>un nombre qui <strong>multiplie</strong> l’inconnue : 1,20 x</td>
+</tr>
+<tr>
+<td>« un forfait », « des frais fixes », « déjà »</td>
+<td>un nombre <strong>ajouté une seule fois</strong> : + 45</td>
+</tr>
+<tr>
+<td>« il reste », « on enlève », « on perd »</td>
+<td>une <strong>soustraction</strong></td>
+</tr>
+<tr>
+<td>« le double », « le triple »</td>
+<td>2x, 3x</td>
+</tr>
+<tr>
+<td>« au total », « fait », « vaut »</td>
+<td>le signe <strong>=</strong></td>
+</tr>
+<tr>
+<td>« au plus », « ne pas dépasser », « maximum »</td>
+<td>le signe <strong>≤</strong></td>
+</tr>
+<tr>
+<td>« au moins », « suffire », « minimum »</td>
+<td>le signe <strong>≥</strong></td>
+</tr>
+</tbody>
+</table></div>
+<div class="etapes">
+<ol type="1">
+<li><strong>Nommer l’inconnue</strong> : une lettre, ce qu’elle représente, et son unité.</li>
+<li><strong>Trier les données</strong> : ce qui se paie ou se répète pour chaque unité, et ce qui ne compte qu’une fois.</li>
+<li><strong>Écrire l’équation</strong>, puis la relire avec les mots de l’énoncé.</li>
+<li><strong>Estimer</strong> le résultat avant de calculer : un ordre de grandeur suffit.</li>
+<li><strong>Résoudre</strong> geste par geste, puis <strong>vérifier</strong>.</li>
+<li><strong>Répondre par une phrase</strong>, avec l’unité.</li>
+</ol>
+</div>
+<div class="replis"><p class="chapeau">Pour aller plus loin</p><details class="appro"><summary><span class="niv"></span><span class="titre-appro">Un exemple entier : la facture de stockage en ligne</span><span class="etiq">Pour aller plus loin</span><span class="chev">&rsaquo;</span></summary><div class="corps"><p>Un service de stockage facture <strong>9 €</strong> par mois, plus <strong>0,50 €</strong> par giga au-delà du forfait. La facture du mois fait <strong>21,50 €</strong>. Combien de gigas en plus ?</p>
+<div class="enveloppe-tbl"><table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>L’étape</th>
+<th>Ce qu’on écrit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nommer</td>
+<td>x, le nombre de gigas au-delà du forfait</td>
+</tr>
+<tr>
+<td>Trier</td>
+<td>9 € une fois par mois ; 0,50 € pour chaque giga, donc 0,50 x</td>
+</tr>
+<tr>
+<td>Écrire</td>
+<td>9 + 0,50 x = 21,50</td>
+</tr>
+<tr>
+<td>Estimer</td>
+<td>il reste un peu plus de 12 € à 0,50 € le giga : environ 25 gigas</td>
+</tr>
+<tr>
+<td>Résoudre</td>
+<td>0,50 x = 12,50, donc x = 12,50 ÷ 0,50 = 25</td>
+</tr>
+<tr>
+<td>Vérifier</td>
+<td>9 + 0,50 × 25 = 9 + 12,50 = 21,50</td>
+</tr>
+<tr>
+<td>Répondre</td>
+<td>Le mois a coûté 25 gigas au-delà du forfait.</td>
+</tr>
+</tbody>
+</table></div>
+<p>L’estimation sert de garde-fou : si le calcul avait donné 2,5 ou 250, on aurait su tout de suite qu’une ligne était fausse.</p></div></details>
+</div><h2 id="la-led-mise-en-equation">La LED, mise en équation</h2>
+<p>C’est le calcul de la séquence 3, écrit autrement. La LED garde <strong>2 V</strong>, la résistance prend <strong>0,020 × R</strong> : les deux ensemble font les <strong>5 V</strong> de l’alimentation.</p>
+<figure>
+<img src="img/S4/fig1-led.png" alt="Ce qui reste des 5 V après la LED tombe dans la résistance." />
+<figcaption aria-hidden="true">Ce qui reste des 5 V après la LED tombe dans la résistance.</figcaption>
+</figure>
+<div class="etapes">
+<ol type="1">
+<li><strong>Nommer l’inconnue</strong> : R, la résistance en ohms.</li>
+<li><strong>Écrire ce qu’on sait</strong> : 5 = 2 + 0,020 R.</li>
+<li><strong>Résoudre</strong> : 3 = 0,020 R, donc R = 3 ÷ 0,020.</li>
+<li><strong>Vérifier</strong> en remplaçant, puis <strong>répondre par une phrase</strong>, avec l’unité.</li>
+</ol>
+</div>
+<section class="exo" id="S4-e1" data-exo="S4-e1" data-type="calcul" data-savoir="PREM" data-a="IXgueGB4OTs2OS82eHZ4LHhgYmp0anZ4LjU2eGBrdGp2eC94YHgGL2ppO2N4Jw=="><p class="k">Exercice · PREM</p><h4>Une LED bleue</h4><div class="enonce">
+
+<p>Une LED bleue garde <strong>3,4 V</strong> à ses bornes. Sous <strong>5 V</strong>, avec <strong>20 mA</strong> au plus, quelle résistance faut-il ?</p>
+</div><div class="indice" hidden>Même équation, avec 3,4 à la place de 2 : 5 = 3,4 + 0,020 R.</div></section>
+<h2 id="isoler-une-lettre">Isoler une lettre</h2>
+<p>Une formule est une équation où les nombres sont remplacés par des lettres. On <strong>isole</strong> celle qu’on cherche avec les mêmes gestes.</p>
+<div class="formule">
+<p><strong>P = U × I, isoler I : on divise les deux côtés par U.</strong></p>
+<blockquote>
+<p><strong>I = P ÷ U</strong> — pour une lampe de 60 W sous 12 V, I = 60 ÷ 12 = 5 A.</p>
+</blockquote>
+</div>
+<p><strong>On regarde ce qui arrive à la lettre cherchée, et on le défait</strong>, dans l’ordre inverse, comme pour un nombre.</p>
+<div class="enveloppe-tbl"><table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>La lettre cherchée est…</th>
+<th>On…</th>
+<th>Un exemple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>multipliée</td>
+<td>divise les deux côtés</td>
+<td>d = v × t, isoler t : t = d ÷ v</td>
+</tr>
+<tr>
+<td>divisée</td>
+<td>multiplie les deux côtés</td>
+<td>v = d ÷ t, isoler d : d = v × t</td>
+</tr>
+<tr>
+<td>ajoutée</td>
+<td>retire des deux côtés</td>
+<td>Pt = P₁ + P₂, isoler P₂ : P₂ = Pt − P₁</td>
+</tr>
+<tr>
+<td>multipliée, puis ajoutée</td>
+<td>retire d’abord, <strong>puis</strong> divise</td>
+<td>C = 15 + 2g, isoler g : g = (C − 15) ÷ 2</td>
+</tr>
+</tbody>
+</table></div>
+<div class="replis"><p class="chapeau">Pour aller plus loin</p><details class="appro"><summary><span class="niv"></span><span class="titre-appro">Vérifier une formule transformée sur des nombres</span><span class="etiq">Pour aller plus loin</span><span class="chev">&rsaquo;</span></summary><div class="corps"><p>Une formule transformée se vérifie comme une équation : <strong>avec des nombres simples</strong>, choisis par soi.</p>
+<ol type="1">
+<li>On choisit une valeur facile pour la lettre, par exemple <strong>g = 8</strong>.</li>
+<li>On calcule l’autre avec la formule de départ : C = 15 + 2 × 8 = <strong>31</strong>.</li>
+<li>On met 31 dans la formule trouvée : g = (31 − 15) ÷ 2 = 16 ÷ 2 = <strong>8</strong>. On retrouve 8 : la formule est juste.</li>
+</ol>
+<p>Avec une formule fausse, g = 31 ÷ 2 − 15, on trouverait <strong>0,5</strong> au lieu de 8 : l’erreur saute aux yeux. Elle vient de l’ordre des gestes : on a divisé avant d’avoir retiré le 15.</p>
+<div class="cle">
+<p><strong>Les parenthèses de (C − 15) ÷ 2 ne sont pas décoratives.</strong> Sans elles, la calculatrice fait la division d’abord et calcule C − 7,5.</p>
+</div></div></details>
+</div><section class="serie" id="S4-s4" data-serie="S4-s4" data-savoir="PREM" data-a="IXgveGB4eHZ4LjU2eGBrdGp2eDN4YAEheDt4YAF4Nnpneht6dXoWeHZ4G3p1ehZ4Byd2IXg7eGABeDJ6Z3oMenV6chZ6Bi9qaj5tejZzeHZ4DHp1enIWegYvamo+bXo2c3h2eDJ6Z3oMenV6Fnp1ejZ4dngMenV6Fnp1ejZ4Byd2IXg7eGABeAh6Z3oPenV6E3h2eA96dXoTeAcnB3Z4N3hgeCkzPTQ/KXgn"><p class="k">Série · PREM</p><h4>Série 4 — isoler une lettre</h4><div class="enonce">
+
+</div><ol class="items"><li><span class="q">A = L × l, isoler l</span></li><li><span class="q">V = L × l × h, isoler h</span></li><li><span class="q">U = R × I, isoler R</span></li></ol><div class="indice" hidden>La lettre cherchée est multipliée par les autres : on divise les deux côtés par tout ce qui l’accompagne.</div></section>
+<h2 id="les-inequations-quand-il-y-a-au-plus">Les inéquations : quand il y a « au plus »</h2>
+<div class="formule">
+<p><strong>Une inéquation se résout comme une équation</strong>, avec ≤ ou ≥ à la place du =.</p>
+<blockquote>
+<p>La réponse n’est plus un nombre, mais <strong>tous les nombres d’un côté d’une borne</strong>. En 2de, on divise seulement par des nombres positifs : le sens ne change pas.</p>
+</blockquote>
+</div>
+<p>Pour le câble : 45 + 1,20 x ≤ 200, donc 1,20 x ≤ 155, donc x ≤ 129,17. <strong>On peut acheter au plus 129 mètres</strong> — 130 dépasseraient le budget.</p>
+<figure class="schema"><div class="dessin" data-schema="inequation-concrete"></div><figcaption>Deux bornes à virgule, deux réponses entières, et pas dans le même sens.</figcaption></figure>
+<div class="etapes">
+<ol type="1">
+<li><strong>Écrire l’inéquation</strong> : « au plus » donne ≤, « au moins » donne ≥.</li>
+<li><strong>La résoudre comme une équation</strong>, geste par geste. En divisant par un nombre positif, le signe ne bouge pas.</li>
+<li><strong>Lire la borne</strong> : un nombre souvent à virgule, qui n’est pas encore la réponse.</li>
+<li><strong>Arrondir dans le sens de la contrainte</strong> : en dessous pour un maximum, au-dessus pour un minimum.</li>
+<li><strong>Vérifier avec deux entiers</strong> : celui qu’on garde doit respecter la contrainte, le suivant non.</li>
+</ol>
+</div>
+<div class="enveloppe-tbl"><table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>La contrainte</th>
+<th>L’arrondi</th>
+<th>Un exemple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ne pas dépasser</strong> (≤) : budget, calibre, place</td>
+<td><strong>en dessous</strong></td>
+<td>une baie de 42 U, 6 U déjà pris, des serveurs de 5 U : 6 + 5n ≤ 42, n ≤ 7,2, donc <strong>7 serveurs</strong></td>
+</tr>
+<tr>
+<td><strong>en avoir assez</strong> (≥) : ports, stockage, autonomie</td>
+<td><strong>au-dessus</strong></td>
+<td>130 postes à brancher, des switchs de 24 ports : 24n ≥ 130, n ≥ 5,42, donc <strong>6 switchs</strong></td>
+</tr>
+</tbody>
+</table></div>
+<div class="replis"><p class="chapeau">Pour aller plus loin</p><details class="appro"><summary><span class="niv"></span><span class="titre-appro">Vérifier une inéquation avec deux entiers</span><span class="etiq">Pour aller plus loin</span><span class="chev">&rsaquo;</span></summary><div class="corps"><p>La vérification d’une inéquation teste <strong>l’entier gardé et son voisin</strong>.</p>
+<p><strong>Les serveurs</strong> : avec 7, on occupe 6 + 5 × 7 = 41 U, qui tiennent dans 42 U. Avec 8, on arriverait à 46 U : la baie déborde. On garde 7.</p>
+<p><strong>Les switchs</strong> : avec 5, on n’a que 5 × 24 = 120 ports, il manque 10 postes. Avec 6, on a 144 ports, assez pour 130. On garde 6, même si 5,42 est plus proche de 5.</p>
+<p>Si l’entier gardé ne respecte pas la contrainte, c’est l’arrondi qui est dans le mauvais sens. Si le suivant la respecte aussi, c’est la borne qui est fausse.</p></div></details>
+</div><div class="piege">
+<p><strong>On n’arrondit pas au plus proche.</strong> 16,75 postes ne donnent pas 17 postes : le dix-septième ferait passer 10,1 A dans un fusible de 10 A. <strong>La contrainte décide du sens de l’arrondi</strong>, pas la règle du 5.</p>
+</div>
+<section class="serie" id="S4-s5" data-serie="S4-s5" data-savoir="PREM" data-a="IXgveGB4eHZ4LjU2eGBqdGp2eDN4YAEheCx4YG10aid2IXgseGBsdGondiF4LHhgbXRqJwcn"><p class="k">Série · PREM</p><h4>Série 5 — inéquations : la borne</h4><div class="enonce">
+
+</div><ol class="items"><li><span class="q">3x ≤ 21, donc x ≤ …</span></li><li><span class="q">x + 4 ≥ 10, donc x ≥ …</span></li><li><span class="q">2x + 6 ≤ 20, donc x ≤ …</span></li></ol><div class="indice" hidden>Mêmes gestes que pour une équation. Le signe ≤ ou ≥ reste tel quel.</div></section>
+<section class="serie" id="S4-s6" data-serie="S4-s6" data-savoir="PREM" data-a="IXgveGB4eHZ4LjU2eGBqdGp2eDN4YAEheCx4YGlvdGondiF4LHhga2trdGondiF4LHhga210aicHJw=="><p class="k">Série · PREM</p><h4>Série 6 — jusqu’à la réponse concrète</h4><div class="enonce">
+
+</div><ol class="items larges"><li><span class="q">budget 500 €, forfait 80 €, 12 € la prise : combien de prises ?</span></li><li><span class="q">un rail de 2 m, des modules de 18 mm : combien de modules ?</span></li><li><span class="q">6 A disponibles, 0,35 A par écran : combien d’écrans ?</span></li></ol><div class="indice" hidden>Écrivez l’inéquation, résolvez-la, puis demandez-vous si la réponse est un maximum ou un minimum. Pour le rail, 2 m = 2 000 mm.</div></section>
+<h2 id="les-erreurs-qu-on-voit-le-plus">Les erreurs qu’on voit le plus</h2>
+<div class="enveloppe-tbl"><table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Ce qu’on écrit</th>
+<th>Ce qui ne va pas</th>
+<th>Ce qu’il faut écrire</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4x = 20, donc x = 20 − 4</td>
+<td>x est <strong>multiplié</strong> par 4 : on défait par une division</td>
+<td>x = 20 ÷ 4 = 5</td>
+</tr>
+<tr>
+<td>x − 6 = 10, donc x = 4</td>
+<td>le 6 est <strong>retiré</strong> : on le rajoute</td>
+<td>x = 10 + 6 = 16</td>
+</tr>
+<tr>
+<td>2x + 5 = 17, donc 2x = 22</td>
+<td>le 5 est <strong>ajouté</strong> : on le retire</td>
+<td>2x = 17 − 5 = 12</td>
+</tr>
+<tr>
+<td>3(x + 2) = 3x + 2</td>
+<td>le 3 multiplie <strong>tout</strong> ce qui est dans la parenthèse</td>
+<td>3x + 6</td>
+</tr>
+<tr>
+<td>7 = x + 3 : « x est du mauvais côté »</td>
+<td>le côté ne change rien, on fait les mêmes gestes</td>
+<td>7 − 3 = x, donc x = 4</td>
+</tr>
+<tr>
+<td>x ≤ 12,6, donc 13</td>
+<td>un maximum s’arrondit <strong>en dessous</strong></td>
+<td>12</td>
+</tr>
+</tbody>
+</table></div>
+<div class="cle">
+<p><strong>Quand le résultat paraît bizarre, on le remplace dans l’équation de départ.</strong> C’est plus rapide que de tout refaire, et cela dit si l’erreur existe vraiment.</p>
+</div>
+<h2 id="vous-verifier">Vous vérifier</h2>
+<section class="exo" id="S4-e2" data-exo="S4-e2" data-type="calcul" data-savoir="PREM" data-a="IXgueGB4OTs2OS82eHZ4LHhga2t0anZ4LjU2eGBqdGp2eC94YHgqNSkuPyl4Jw=="><p class="k">Exercice · PREM</p><h4>Le fusible, à 80 %</h4><div class="enonce">
+
+<p>Par prudence, on ne charge le fusible de 10 A qu’à <strong>80 %</strong>. Switch 0,8 A, onduleur 2,5 A, postes à 0,4 A : combien de postes peut-on brancher ?</p>
+</div><div class="indice" hidden>80 % de 10 A, c’est la nouvelle limite. Puis 0,8 + 2,5 + 0,4 n ≤ cette limite.</div></section>
+<section class="exo" id="S4-e3" data-exo="S4-e3" data-type="justification" data-savoir="PREM" data-a="IXgueGB4MC8pLjM8Mzk7LjM1NHgn"><p class="k">Exercice · PREM</p><h4>16,75 postes</h4><div class="enonce">
+
+<p>Le calcul donne n ≤ 16,75. Un camarade répond « 17 postes, on arrondit ». Expliquez-lui en deux phrases pourquoi c’est faux.</p>
+</div><div class="indice" hidden>Calculez l’intensité totale avec 17 postes, et comparez-la au calibre du fusible.</div><ul class="verifier" hidden><li>J’ai dit que 16,75 est un maximum à ne pas dépasser</li><li>J’ai dit ce qui arrive avec 17 postes : l’intensité dépasse 10 A</li><li>J’ai conclu sur 16 postes</li></ul></section>
+<h2 id="la-sequence-en-quelques-gestes">La séquence en quelques gestes</h2>
+<p>Ce qu’il faut retenir de la séquence, à manipuler : quelques étapes, un geste à chacune, et un défi pour finir.</p>
+<figure class="simulation"><iframe src="sim/balance-equation.html" title="La simulation : Pourquoi fait-on la même chose des deux côtés ?" loading="lazy"></iframe><figcaption><a href="sim/balance-equation.html" target="_blank" rel="noopener">l’ouvrir seule, en plein écran</a></figcaption></figure>
+<h2 id="pour-aller-plus-loin">Pour aller plus loin</h2>
+<div class="replis"><p class="chapeau">Pour aller plus loin</p><details class="appro"><summary><span class="niv"></span><span class="titre-appro">Et si l&#39;on divise par un nombre négatif ?</span><span class="etiq">Pour aller plus loin</span><span class="chev">&rsaquo;</span></summary><div class="corps"><p><strong>Le sens de l’inégalité se retourne.</strong> 2 &lt; 5, mais − 2 &gt; − 5 : multiplier par − 1 inverse l’ordre.</p>
+<p>Donc <strong>− 2x ≤ 6 donne x ≥ − 3</strong>, et non x ≤ − 3. Vérifiez avec x = 0 : − 2 × 0 = 0, qui est bien inférieur à 6 — et 0 est bien supérieur à − 3.</p>
+<div class="cle">
+<p>En atelier, on évite le cas en rangeant les x du côté où ils sont positifs. 10 − 2x ≥ 4 s’écrit aussi 6 ≥ 2x, et l’on divise par 2 sans rien retourner.</p>
+</div></div></details>
+</div><h1 id="exercices-bilan-de-séquence">Exercices bilan de séquence</h1>
+<p><em>Un seul problème, qui reprend toute la séquence. On le fait d’un bout à l’autre, comme un vrai : il n’y a pas d’indication de méthode en cours de route. À la fin, on produit son fichier de réponses.</em></p>
+<h2 id="la-salle-informatique">La salle informatique</h2>
+<p>Une salle de TP est alimentée par un circuit protégé à <strong>16 A</strong>, sous <strong>230 V</strong>. Le vidéoprojecteur et la box y tirent déjà <strong>1,5 A</strong> à eux deux. Chaque poste élève consomme <strong>150 W</strong>.</p>
+<p>Pour câbler les postes, le fournisseur propose un <strong>forfait de 35 €</strong> puis le câble à <strong>2,40 € le mètre</strong>. Le budget est de <strong>260 €</strong>.</p>
+<blockquote>
+<p><strong>La question</strong> : « <em>Combien de postes peut-on installer, et combien de mètres de câble peut-on commander ?</em> »</p>
+</blockquote>
+<p><strong>Lire la situation</strong></p>
+<p><strong>a)</strong> Relever les données, avec leurs unités.</p>
+<p><strong>b)</strong> Dire quelle grandeur manque pour pouvoir compter les postes.</p>
+<p><strong>Choisir la méthode</strong></p>
+<p><strong>c)</strong> Donner la formule qui relie la puissance, la tension et l’intensité, puis l’écrire pour isoler l’intensité.</p>
+<p><strong>d)</strong> Écrire l’inéquation qui porte sur le nombre de postes n, puis celle qui porte sur la longueur de câble x.</p>
+<p><strong>Calculer</strong></p>
+<p><strong>e)</strong> Calculer l’intensité tirée par un poste, arrondie au centième.</p>
+<p><strong>f)</strong> Résoudre l’inéquation des postes.</p>
+<p><strong>g)</strong> Résoudre l’inéquation du câble.</p>
+<p><strong>Conclure</strong></p>
+<p><strong>h)</strong> Donner le nombre de postes et la longueur de câble, en nombres entiers, et dire dans quel sens vous avez arrondi.</p>
+<p><strong>i)</strong> Répondre à la question par une phrase complète.</p>
+<section class="serie" id="S4-s7" data-serie="S4-s7" data-savoir="PREM" data-a="IXgveGB4eHZ4LjU2eGBrdGp2eDN4YAEheCx4YGp0bG8ndiF4LHhgaGh0aSd2IXgseGBoaHRqJ3YheCx4YGNpdG1vJ3YheCx4YGNpdGonByc="><p class="k">Série · PREM</p><h4>Les calculs du bilan</h4><div class="enonce">
+
+</div><ol class="items larges"><li><span class="q">l’intensité tirée par un poste, en ampères</span></li><li><span class="q">la borne trouvée pour n</span></li><li><span class="q">le nombre de postes à installer</span></li><li><span class="q">la borne trouvée pour x, en mètres</span></li><li><span class="q">la longueur de câble à commander, en mètres entiers</span></li></ol><div class="indice" hidden>I = P ÷ U pour un poste. Puis 1,5 + 0,65 n ≤ 16 et 35 + 2,40 x ≤ 260 : on résout, et l’on se demande de quel côté arrondir.</div></section>
+<section class="exo" id="S4-e4" data-exo="S4-e4" data-type="justification" data-savoir="PREM" data-a="IXgueGB4MC8pLjM8Mzk7LjM1NHgn"><p class="k">Exercice · PREM</p><h4>Le sens de l’arrondi</h4><div class="enonce">
+
+<p>93,75 est plus proche de 94 que de 93. Expliquer en deux phrases pourquoi on commande quand même 93 mètres.</p>
+</div><div class="indice" hidden>Calculez le prix de 94 mètres, forfait compris, et comparez-le au budget.</div><ul class="verifier" hidden><li>J’ai dit que 260 € est un maximum à ne pas dépasser</li><li>J’ai calculé ou décrit ce que coûteraient 94 mètres</li><li>J’ai dit qu’on arrondit du côté où la contrainte reste respectée</li></ul></section>
+<div class="remise">
+
+</div>
+<nav class="suite"><p class="chapeau-s">La suite</p><div class="pas-a-pas"><a class="av" href="S3.html" rel="prev"><span class="k">&lsaquo; Précédent</span><span class="t">Séquence 3 — loi d'Ohm</span></a></div></nav>
+<p class="pied">Cette page rappelle la séquence. Elle ne remplace pas les documents distribués et ne donne aucun corrigé. Tous les calculs se font dans votre tablette ; rien n'est enregistré.</p><p class="pied-site"><a class="mentions" href="../mentions-legales.html">Mentions légales</a></p>
+</div>
+
